@@ -62,11 +62,16 @@ button:disabled {
   position: relative;
   overflow: hidden auto;
   padding: max(20px, env(safe-area-inset-top)) clamp(16px, 4vw, 42px) max(32px, env(safe-area-inset-bottom));
-  background:
+  background-color: #7355d8;
+  background-image:
     radial-gradient(circle at 12% 16%, rgba(255,255,255,.55) 0 3px, transparent 4px),
     radial-gradient(circle at 82% 10%, rgba(255,255,255,.7) 0 4px, transparent 5px),
     radial-gradient(circle at 70% 32%, rgba(255,255,255,.45) 0 3px, transparent 4px),
-    linear-gradient(150deg, #ad8cf5 0%, #7f64e8 46%, #5f48ce 100%);
+    linear-gradient(150deg, rgba(126,91,220,.34), rgba(82,56,184,.52)),
+    url("./assets/backgrounds/rainbow-castle.jpg");
+  background-position: center, center, center, center, center;
+  background-repeat: no-repeat;
+  background-size: auto, auto, auto, cover, cover;
 }
 
 .gallery-header {

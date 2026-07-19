@@ -1,4 +1,4 @@
-const CACHE_NAME = "little-color-garden-v6";
+const CACHE_NAME = "little-color-garden-v7";
 const PAGE_IDS = [
   "solar-system",
   "space-kid",
