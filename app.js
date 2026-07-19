@@ -1,18 +1,18 @@
 "use strict";
 
 const PAGES = [
-  { id: "solar-system", file: "solar-system.png", voice: "the happy planets", card: "#fff3a8" },
-  { id: "space-kid", file: "space-kid.png", voice: "the little astronaut", card: "#c4efff" },
-  { id: "moon-flag", file: "moon-flag.png", voice: "the moon explorer", card: "#d5ccff" },
-  { id: "mars-rover", file: "mars-rover.png", voice: "the friendly space robot", card: "#ffd0ae" },
-  { id: "pink-princess", file: "pink-princess.png", voice: "the heart princess", card: "#ffd5eb" },
-  { id: "magic-princess", file: "magic-princess.png", voice: "the magic princess", card: "#eee0ff" },
-  { id: "mermaid-princess", file: "mermaid-princess.png", voice: "the ocean princess", card: "#c7f4ef" },
-  { id: "bird-princess", file: "bird-princess.png", voice: "the bird princess", card: "#ffe6ca" },
-  { id: "hibiscus", file: "hibiscus.png", voice: "the hibiscus flowers", card: "#ffd1d0" },
-  { id: "ginger-lily", file: "ginger-lily.png", voice: "the white flowers", card: "#ecf7c8" },
-  { id: "blue-pea", file: "blue-pea.png", voice: "the blue pea flowers", card: "#d4ddff" },
-  { id: "ylang-ylang", file: "ylang-ylang.png", voice: "the yellow flowers", card: "#fff4b9" }
+  { id: "solar-system", file: "solar-system.png", voice: "the happy planets", card: "#fff3a8", background: "space-soft.jpg" },
+  { id: "space-kid", file: "space-kid.png", voice: "the little astronaut", card: "#c4efff", background: "saturn.jpg" },
+  { id: "moon-flag", file: "moon-flag.png", voice: "the moon explorer", card: "#d5ccff", background: "moon.jpg" },
+  { id: "mars-rover", file: "mars-rover.png", voice: "the friendly space robot", card: "#ffd0ae", background: "moon.jpg" },
+  { id: "pink-princess", file: "pink-princess.png", voice: "the heart princess", card: "#ffd5eb", background: "rainbow-castle.jpg" },
+  { id: "magic-princess", file: "magic-princess.png", voice: "the magic princess", card: "#eee0ff", background: "rainbow-castle.jpg" },
+  { id: "mermaid-princess", file: "mermaid-princess.png", voice: "the ocean princess", card: "#c7f4ef", background: "rainbow-castle.jpg" },
+  { id: "bird-princess", file: "bird-princess.png", voice: "the bird princess", card: "#ffe6ca", background: "forest-friends.jpg" },
+  { id: "hibiscus", file: "hibiscus.png", voice: "the hibiscus flowers", card: "#ffd1d0", background: "spring-meadow.jpg" },
+  { id: "ginger-lily", file: "ginger-lily.png", voice: "the white flowers", card: "#ecf7c8", background: "spring-meadow.jpg" },
+  { id: "blue-pea", file: "blue-pea.png", voice: "the blue pea flowers", card: "#d4ddff", background: "spring-meadow.jpg" },
+  { id: "ylang-ylang", file: "ylang-ylang.png", voice: "the yellow flowers", card: "#fff4b9", background: "spring-meadow.jpg" }
 ];
 
 const COLORS = [
@@ -38,7 +38,12 @@ const canvasLoader = document.querySelector("#canvasLoader");
 const undoButton = document.querySelector("#undoButton");
 const clearButton = document.querySelector("#clearButton");
 const eraserButton = document.querySelector("#eraserButton");
+const peekButton = document.querySelector("#peekButton");
+const canvasStage = document.querySelector("#canvasStage");
+const referenceImage = document.querySelector("#referenceImage");
 const celebration = document.querySelector("#celebration");
+
+const REFERENCE_PREF_KEY = "little-color-garden:show-reference";
 
 const paintLayer = document.createElement("canvas");
 const paintContext = paintLayer.getContext("2d");
@@ -53,7 +58,10 @@ let currentColor = COLORS[0].value;
 let currentColorName = COLORS[0].name;
 let currentSize = 26;
 let usingEraser = false;
-let holdTimer = null;
+let referenceVisible = false;
+let clearArmed = false;
+let clearArmTimer = null;
+let clearedBackup = null;
 let frameRequested = false;
 
 function speak(message) {
@@ -139,7 +147,13 @@ function openPage(page) {
   galleryScreen.hidden = true;
   coloringScreen.hidden = false;
   canvasLoader.hidden = false;
+  coloringScreen.style.setProperty("--game-bg", `url("./assets/backgrounds/${page.background}")`);
   document.body.style.background = page.card;
+  disarmClear();
+  clearedBackup = null;
+  referenceVisible = loadReferencePref();
+  applyReferenceState();
+  referenceImage.src = `./assets/references/${page.id}.jpg`;
   strokes = loadStrokes(page.id);
   lineImage = new Image();
   lineImage.onload = () => {
@@ -162,6 +176,8 @@ function openPage(page) {
 
 function goHome() {
   saveStrokes();
+  disarmClear();
+  clearedBackup = null;
   activePage = null;
   lineImage = null;
   strokes = [];
@@ -181,6 +197,7 @@ function canvasPoint(event) {
 
 function beginStroke(event) {
   if (!lineImage || drawing) return;
+  if (clearArmed) disarmClear();
   event.preventDefault();
   drawing = true;
   activePointerId = event.pointerId;
@@ -216,6 +233,7 @@ function endStroke(event) {
   currentStroke = null;
   drawing = false;
   activePointerId = null;
+  clearedBackup = null;
   undoButton.disabled = false;
   saveStrokes();
   requestCompose();
@@ -276,8 +294,20 @@ function requestCompose() {
 }
 
 function undoLastStroke() {
+  if (!strokes.length && clearedBackup && clearedBackup.length) {
+    strokes = clearedBackup;
+    clearedBackup = null;
+    rebuildPaintLayer();
+    composeCanvas();
+    undoButton.disabled = strokes.length === 0;
+    saveStrokes();
+    tinyPop(560, 0.09);
+    speak("Here it is again!");
+    return;
+  }
   if (!strokes.length) return;
   strokes.pop();
+  clearedBackup = null;
   rebuildPaintLayer();
   composeCanvas();
   undoButton.disabled = strokes.length === 0;
@@ -286,33 +316,50 @@ function undoLastStroke() {
 }
 
 function clearPicture() {
+  clearedBackup = strokes.length ? strokes : clearedBackup;
   strokes = [];
   rebuildPaintLayer();
   composeCanvas();
-  undoButton.disabled = true;
+  undoButton.disabled = !(clearedBackup && clearedBackup.length);
   saveStrokes();
-  speak("All clean. Let's make a new picture!");
+  celebrateClearSound();
+  speak("All clean! Tap the yellow arrow if you want it back.");
 }
 
-function startClearHold(event) {
-  event.preventDefault();
-  clearButton.classList.add("is-holding");
+function celebrateClearSound() {
+  tinyPop(320, 0.07);
+  window.setTimeout(() => tinyPop(240, 0.09), 90);
+}
+
+function armClear() {
+  clearArmed = true;
+  clearButton.classList.add("is-armed");
+  if (clearArmTimer) window.clearTimeout(clearArmTimer);
+  clearArmTimer = window.setTimeout(disarmClear, 6000);
+  tinyPop(360);
+  speak("Tap the broom again to clean the whole picture.");
+}
+
+function disarmClear() {
+  clearArmed = false;
+  clearButton.classList.remove("is-armed");
+  if (clearArmTimer) {
+    window.clearTimeout(clearArmTimer);
+    clearArmTimer = null;
+  }
+}
+
+function handleClearTap() {
   if (!strokes.length) {
+    disarmClear();
     speak("The picture is already clean.");
     return;
   }
-  holdTimer = window.setTimeout(() => {
-    clearButton.classList.remove("is-holding");
-    holdTimer = null;
+  if (clearArmed) {
+    disarmClear();
     clearPicture();
-  }, 850);
-}
-
-function cancelClearHold() {
-  clearButton.classList.remove("is-holding");
-  if (holdTimer) {
-    window.clearTimeout(holdTimer);
-    holdTimer = null;
+  } else {
+    armClear();
   }
 }
 
@@ -333,6 +380,43 @@ function celebrate() {
   [523, 659, 784].forEach((frequency, index) => window.setTimeout(() => tinyPop(frequency, 0.18), index * 130));
   speak("Wow! Your picture is beautiful!");
   window.setTimeout(() => celebration.replaceChildren(), 3900);
+}
+
+function applyReferenceState() {
+  canvasStage.classList.toggle("is-split", referenceVisible);
+  peekButton.classList.toggle("is-on", referenceVisible);
+  peekButton.setAttribute("aria-pressed", String(referenceVisible));
+}
+
+function setReferenceVisible(visible, announce = false) {
+  referenceVisible = visible;
+  applyReferenceState();
+  try {
+    localStorage.setItem(REFERENCE_PREF_KEY, visible ? "1" : "0");
+  } catch (_) {
+    // Storage may be disabled; the toggle still works for this session.
+  }
+  if (!announce) return;
+  if (visible) {
+    tinyPop(620, 0.06);
+    speak("Here is one way it can look. You can color it your own way!");
+  } else {
+    tinyPop(420, 0.06);
+  }
+}
+
+function loadReferencePref() {
+  try {
+    const savedPreference = localStorage.getItem(REFERENCE_PREF_KEY);
+    return savedPreference === null ? true : savedPreference === "1";
+  } catch (_) {
+    return true;
+  }
+}
+
+function toggleReference() {
+  if (!activePage) return;
+  setReferenceVisible(!referenceVisible, true);
 }
 
 function storageKey() {
@@ -362,15 +446,13 @@ function loadStrokes(pageId) {
 }
 
 document.querySelector("#galleryVoiceButton").addEventListener("click", () => speak("Pick a picture to color."));
-document.querySelector("#voiceButton").addEventListener("click", () => speak("Pick a color, then draw with your finger. You can use the eraser or the undo arrow too."));
+document.querySelector("#voiceButton").addEventListener("click", () => speak("Pick a color, then draw with your finger. Tap the little picture button to see the finished picture next to yours."));
 document.querySelector("#homeButton").addEventListener("click", goHome);
 document.querySelector("#finishButton").addEventListener("click", celebrate);
 undoButton.addEventListener("click", undoLastStroke);
+clearButton.addEventListener("click", handleClearTap);
 
-clearButton.addEventListener("pointerdown", startClearHold);
-clearButton.addEventListener("pointerup", cancelClearHold);
-clearButton.addEventListener("pointercancel", cancelClearHold);
-clearButton.addEventListener("pointerleave", cancelClearHold);
+peekButton.addEventListener("click", toggleReference);
 
 eraserButton.addEventListener("click", () => {
   usingEraser = true;
@@ -400,7 +482,11 @@ window.addEventListener("keydown", (event) => {
     event.preventDefault();
     undoLastStroke();
   }
-  if (event.key === "Escape" && !coloringScreen.hidden) goHome();
+  if (event.key === "Escape" && !coloringScreen.hidden) {
+    if (referenceVisible) setReferenceVisible(false);
+    else if (clearArmed) disarmClear();
+    else goHome();
+  }
 });
 
 buildGallery();

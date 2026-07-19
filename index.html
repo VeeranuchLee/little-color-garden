@@ -5,7 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
     <meta name="theme-color" content="#7857e8" />
     <meta name="description" content="A simple, voice-guided coloring app made for young children." />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Color Garden" />
     <title>Little Color Garden</title>
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="./assets/icons/apple-touch-icon.png" />
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
@@ -43,12 +49,17 @@
           <button class="tool-button tool-button--voice" id="voiceButton" type="button" aria-label="Hear what to do">
             <span aria-hidden="true">🔊</span>
           </button>
+          <button class="tool-button tool-button--peek" id="peekButton" type="button" aria-label="Show the finished picture next to yours" aria-pressed="false">
+            <span class="peek-glyph" aria-hidden="true">
+              <i></i><i></i><i></i>
+            </span>
+          </button>
           <button class="tool-button tool-button--undo" id="undoButton" type="button" aria-label="Undo last mark" disabled>
             <span aria-hidden="true">↶</span>
           </button>
-          <button class="tool-button tool-button--clear" id="clearButton" type="button" aria-label="Hold to clear the picture">
+          <button class="tool-button tool-button--clear" id="clearButton" type="button" aria-label="Clean the whole picture">
             <span aria-hidden="true">🧹</span>
-            <i class="hold-ring" aria-hidden="true"></i>
+            <i class="arm-ring" aria-hidden="true"></i>
           </button>
           <button class="tool-button tool-button--finish" id="finishButton" type="button" aria-label="Celebrate my picture">
             <span aria-hidden="true">★</span>
@@ -56,6 +67,9 @@
         </header>
 
         <div class="canvas-stage" id="canvasStage">
+          <figure class="reference-frame" aria-label="Finished picture example">
+            <img id="referenceImage" class="reference-image" alt="" draggable="false" />
+          </figure>
           <div class="paper-frame">
             <canvas id="paintCanvas" width="724" height="1086" aria-label="Coloring canvas"></canvas>
             <div class="canvas-loader" id="canvasLoader" aria-hidden="true">

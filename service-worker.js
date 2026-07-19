@@ -1,21 +1,38 @@
-const CACHE_NAME = "little-color-garden-v3";
+const CACHE_NAME = "little-color-garden-v6";
+const PAGE_IDS = [
+  "solar-system",
+  "space-kid",
+  "moon-flag",
+  "mars-rover",
+  "pink-princess",
+  "magic-princess",
+  "mermaid-princess",
+  "bird-princess",
+  "hibiscus",
+  "ginger-lily",
+  "blue-pea",
+  "ylang-ylang"
+];
+const BACKGROUNDS = [
+  "space-soft.jpg",
+  "moon.jpg",
+  "saturn.jpg",
+  "rainbow-castle.jpg",
+  "forest-friends.jpg",
+  "spring-meadow.jpg"
+];
 const APP_FILES = [
   "./",
   "./index.html",
   "./styles.css",
   "./app.js",
-  "./assets/pages/solar-system.png",
-  "./assets/pages/space-kid.png",
-  "./assets/pages/moon-flag.png",
-  "./assets/pages/mars-rover.png",
-  "./assets/pages/pink-princess.png",
-  "./assets/pages/magic-princess.png",
-  "./assets/pages/mermaid-princess.png",
-  "./assets/pages/bird-princess.png",
-  "./assets/pages/hibiscus.png",
-  "./assets/pages/ginger-lily.png",
-  "./assets/pages/blue-pea.png",
-  "./assets/pages/ylang-ylang.png"
+  "./manifest.webmanifest",
+  "./assets/icons/icon-192.png",
+  "./assets/icons/icon-512.png",
+  "./assets/icons/apple-touch-icon.png",
+  ...PAGE_IDS.map((id) => `./assets/pages/${id}.png`),
+  ...PAGE_IDS.map((id) => `./assets/references/${id}.jpg`),
+  ...BACKGROUNDS.map((file) => `./assets/backgrounds/${file}`)
 ];
 
 self.addEventListener("install", (event) => {
