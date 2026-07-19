@@ -608,7 +608,8 @@ button:disabled {
   .bottom-tools {
     flex-direction: column;
     justify-content: center;
-    width: auto;
+    flex: 0 0 156px;
+    width: 156px;
     max-height: none;
     min-height: 0;
     padding: 10px max(10px, env(safe-area-inset-right)) 10px 10px;
@@ -618,22 +619,29 @@ button:disabled {
   }
   .brush-tools {
     display: grid;
-    grid-template-columns: repeat(2, auto);
+    grid-template-columns: repeat(2, 58px);
     justify-items: center;
+    justify-content: center;
+    width: 132px;
     border-right: 0;
     border-bottom: 3px dashed rgba(72,85,130,.19);
     padding: 0 0 8px;
   }
   .color-palette {
-    flex-direction: column;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(2, 58px);
+    grid-auto-rows: 58px;
     align-content: center;
+    justify-content: center;
     min-height: 0;
     max-width: none;
-    max-height: 100%;
-    width: auto;
-    overflow: auto hidden;
-    padding: 2px 5px 2px 9px;
+    max-height: none;
+    width: 132px;
+    overflow: visible;
+    padding: 8px;
+  }
+  .color-button.is-selected {
+    transform: scale(1.08);
   }
 }
 
@@ -642,8 +650,9 @@ button:disabled {
   .tool-button { width: 54px; height: 54px; border-radius: 18px; font-size: 29px; }
   .tool-button--home { font-size: 39px; }
   .canvas-stage { padding: 7px 3px; }
-  .bottom-tools { padding: 8px max(8px, env(safe-area-inset-right)) 8px 8px; }
-  .brush-tools { grid-template-columns: repeat(2, 45px); padding: 0 0 7px; }
+  .bottom-tools { flex-basis: 128px; width: 128px; padding: 8px max(8px, env(safe-area-inset-right)) 8px 8px; }
+  .brush-tools { grid-template-columns: repeat(2, 48px); width: 112px; padding: 0 0 7px; }
+  .color-palette { grid-template-columns: repeat(2, 48px); grid-auto-rows: 48px; width: 112px; padding: 8px; }
   .color-button { width: 48px; height: 48px; }
   .size-button { width: 44px; height: 44px; }
   .eraser-button { width: 48px; height: 48px; }
