@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+    <meta name="theme-color" content="#7857e8" />
+    <meta name="description" content="A simple, voice-guided coloring app made for young children." />
+    <title>Little Color Garden</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section id="galleryScreen" class="screen gallery-screen" aria-label="Choose a coloring picture">
+        <div class="sky-blob sky-blob--one" aria-hidden="true"></div>
+        <div class="sky-blob sky-blob--two" aria-hidden="true"></div>
+        <div class="sky-blob sky-blob--three" aria-hidden="true"></div>
+
+        <header class="gallery-header">
+          <button class="round-button sound-button" id="galleryVoiceButton" type="button" aria-label="Hear what to do">
+            <span aria-hidden="true">🔊</span>
+          </button>
+
+          <div class="brand-mark" aria-hidden="true">
+            <span class="brand-star brand-star--one">✦</span>
+            <span class="brand-star brand-star--two">✦</span>
+            <div class="rainbow">
+              <i></i><i></i><i></i><i></i>
+            </div>
+            <div class="paint-smile"><span></span><span></span></div>
+          </div>
+
+          <div class="header-spacer" aria-hidden="true"></div>
+        </header>
+
+        <div id="pageGallery" class="page-gallery" role="group" aria-label="Pictures to color"></div>
+      </section>
+
+      <section id="coloringScreen" class="screen coloring-screen" aria-label="Coloring page" hidden>
+        <header class="top-toolbar">
+          <button class="tool-button tool-button--home" id="homeButton" type="button" aria-label="Go home">
+            <span aria-hidden="true">⌂</span>
+          </button>
+          <button class="tool-button tool-button--voice" id="voiceButton" type="button" aria-label="Hear what to do">
+            <span aria-hidden="true">🔊</span>
+          </button>
+          <button class="tool-button tool-button--undo" id="undoButton" type="button" aria-label="Undo last mark" disabled>
+            <span aria-hidden="true">↶</span>
+          </button>
+          <button class="tool-button tool-button--clear" id="clearButton" type="button" aria-label="Hold to clear the picture">
+            <span aria-hidden="true">🧹</span>
+            <i class="hold-ring" aria-hidden="true"></i>
+          </button>
+          <button class="tool-button tool-button--finish" id="finishButton" type="button" aria-label="Celebrate my picture">
+            <span aria-hidden="true">★</span>
+          </button>
+        </header>
+
+        <div class="canvas-stage" id="canvasStage">
+          <div class="paper-frame">
+            <canvas id="paintCanvas" width="724" height="1086" aria-label="Coloring canvas"></canvas>
+            <div class="canvas-loader" id="canvasLoader" aria-hidden="true">
+              <span></span><span></span><span></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="bottom-tools" aria-label="Coloring tools">
+          <div class="brush-tools" role="group" aria-label="Brush size and eraser">
+            <button class="size-button" data-size="12" type="button" aria-label="Small brush"><i></i></button>
+            <button class="size-button is-selected" data-size="26" type="button" aria-label="Medium brush"><i></i></button>
+            <button class="size-button" data-size="48" type="button" aria-label="Big brush"><i></i></button>
+            <button class="eraser-button" id="eraserButton" type="button" aria-label="Eraser">
+              <span aria-hidden="true"></span>
+            </button>
+          </div>
+          <div id="colorPalette" class="color-palette" role="group" aria-label="Colors"></div>
+        </div>
+
+        <div id="celebration" class="celebration" aria-hidden="true"></div>
+      </section>
+    </main>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
