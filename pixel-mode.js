@@ -110,12 +110,15 @@
   // are not filled yet. Without it, copying a card means counting grid cells
   // to find where the shape goes (owner feedback, 2026-08-27: "show the area
   // to fill"); with it, the challenge is choosing the right colors.
+  // Neutral grey on purpose: the first cut used warm brown, which read at a
+  // glance as light-brown tiles (owner, testing live: "I still see light
+  // brown, not white") — a guide must never look like a palette color.
   function drawGhostTile(ctx, x, y, size) {
     const pad = size * 0.08;
     roundedPath(ctx, x + pad, y + pad, size - pad * 2, size - pad * 2, size * 0.24);
-    ctx.fillStyle = "rgba(150, 128, 86, 0.08)";
+    ctx.fillStyle = "rgba(124, 127, 140, 0.06)";
     ctx.fill();
-    ctx.strokeStyle = "rgba(150, 128, 86, 0.5)";
+    ctx.strokeStyle = "rgba(124, 127, 140, 0.55)";
     ctx.lineWidth = Math.max(1.5, size * 0.032);
     ctx.setLineDash([size * 0.13, size * 0.1]);
     ctx.stroke();
