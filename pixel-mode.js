@@ -106,23 +106,24 @@
     ctx.stroke();
   }
 
-  // The dashed ghost of a tile: marks cells that belong to the picture but
-  // are not filled yet. Without it, copying a card means counting grid cells
-  // to find where the shape goes (owner feedback, 2026-08-27: "show the area
-  // to fill"); with it, the challenge is choosing the right colors.
-  // Neutral grey on purpose: the first cut used warm brown, which read at a
-  // glance as light-brown tiles (owner, testing live: "I still see light
-  // brown, not white") — a guide must never look like a palette color.
+  // The highlighted ghost of a tile: marks cells that belong to the picture
+  // but are not filled yet. Without it, copying a card means counting grid
+  // cells to find where the shape goes (owner feedback, 2026-08-27: "show
+  // the area to fill"); with it, the challenge is choosing the right colors.
+  // Solid light grey, deliberately lighter than the palette's light grey and
+  // with no gloss — earlier cuts used brown dashes (read as brown tiles) then
+  // grey dashes (owner: "how about highlighted squares instead"); a guide
+  // must read as one quiet area, never as a color.
   function drawGhostTile(ctx, x, y, size) {
     const pad = size * 0.08;
     roundedPath(ctx, x + pad, y + pad, size - pad * 2, size - pad * 2, size * 0.24);
-    ctx.fillStyle = "rgba(124, 127, 140, 0.06)";
+    ctx.fillStyle = "#e8eaef";
     ctx.fill();
-    ctx.strokeStyle = "rgba(124, 127, 140, 0.55)";
-    ctx.lineWidth = Math.max(1.5, size * 0.032);
-    ctx.setLineDash([size * 0.13, size * 0.1]);
-    ctx.stroke();
-    ctx.setLineDash([]);
+    ctx.save();
+    ctx.clip();
+    ctx.fillStyle = "rgba(110, 115, 130, 0.13)";
+    ctx.fillRect(x, y + size - size * 0.14, size, size * 0.14);
+    ctx.restore();
   }
 
   function drawTile(ctx, x, y, size, hex, scale) {
