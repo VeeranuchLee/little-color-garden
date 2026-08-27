@@ -8,6 +8,29 @@ The app is designed landscape-first for tablets: in landscape the toolbar and co
 
 Open `index.html` directly, or run any small static file server in this directory.
 
+## Pixel Mosaic mode
+
+A second toy inside the same app, reached from the first gallery card ("Pixel
+Mosaic"): a pegboard-style 20 × 15 grid the child fills by tapping or dragging,
+with a challenge-card system — small pattern pictures (fruit, hearts, flowers,
+animals, faces, vehicles) to copy, plus a free board.
+
+- **Palette and cards are one system.** The palette is exactly 30 colors in
+  3 rows × 10 columns — hue families in light / medium / dark (the medium
+  row is the app's original ten colors), plus two neutral columns chosen by
+  the owner: **white / brown / dark brown** and **light grey / grey /
+  black**. Every card is authored *in palette indices*, so no card can ask
+  for a shade the child cannot pick. `tools/check-pixel-cards.js` holds
+  that promise mechanically — run it after editing `pixel-cards.js`.
+- **Board data** lives in `pixel-cards.js`; the mode's behaviour in
+  `pixel-mode.js` (self-contained — it never touches the brush mode's state,
+  and reuses only `speak()` / `tinyPop()` from `app.js`).
+- A finished copy of a card celebrates, earns a ♥ on its gallery card, and is
+  remembered in `localStorage`, one saved board per card (plus the free board).
+- On a challenge card, empty cells that belong to the picture carry a **dashed
+  outline** — the area to fill — so copying is about colors, not counting cells.
+  The free board shows no outline.
+
 ## Artwork
 
 Each picture has two assets that share a page id:

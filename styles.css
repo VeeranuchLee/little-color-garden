@@ -105,6 +105,21 @@ button:disabled {
   background: linear-gradient(145deg, #43d5ce, #20b6bb);
 }
 
+/* The hub arrow, top-left of the gallery header. White rather than one of the action
+   colours: leaving is not one of the things the app does, and the teal circle beside it
+   is. `display:grid` because this one is an <a> -- a <button> centres its own content,
+   a link does not. */
+.hub-button {
+  display: grid;
+  place-items: center;
+  background: #fff;
+  color: #3d5a80;
+  text-decoration: none;
+  box-shadow: var(--shadow);
+  transition: transform .16s ease;
+}
+.hub-button:active { transform: scale(.94); }
+
 .brand-mark {
   position: relative;
   width: 150px;
@@ -660,4 +675,334 @@ button:disabled {
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
+}
+
+/* ==========================================================================
+   Pixel Mosaic mode — a pegboard-style tile toy (owner concept, 2026-08-27).
+   A white recessed board with square pockets, puffy glossy tiles and a chunky
+   wood-toned frame, like the physical mosaic toy it copies. The palette below
+   the board is exactly 30 colors: 3 rows x 10 columns, light/mid/dark shades.
+   ========================================================================== */
+
+.px-gallery-screen {
+  position: relative;
+  overflow: hidden auto;
+  padding: max(20px, env(safe-area-inset-top)) clamp(16px, 4vw, 42px) max(32px, env(safe-area-inset-bottom));
+  background-color: #e88fb0;
+  background-image:
+    repeating-linear-gradient(0deg, rgba(255,255,255,.10) 0 30px, transparent 30px 60px),
+    repeating-linear-gradient(90deg, rgba(255,255,255,.10) 0 30px, transparent 30px 60px),
+    linear-gradient(160deg, #ffd2e3 0%, #ef9cbe 48%, #dd7ba9 100%);
+}
+
+/* A little six-tile mosaic instead of the paint-brand mark: same header shape,
+   its own identity. */
+.px-mark {
+  justify-self: center;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  width: 108px;
+  padding: 10px;
+  border: 4px solid rgba(255,255,255,.92);
+  border-radius: 20px;
+  background: #fffdf6;
+  box-shadow: var(--shadow);
+}
+
+.px-mark i {
+  display: block;
+  aspect-ratio: 1;
+  border-radius: 26%;
+}
+
+.px-mark i:nth-child(1) { background: #f04455; }
+.px-mark i:nth-child(2) { background: #ff8a35; }
+.px-mark i:nth-child(3) { background: #ffd93d; }
+.px-mark i:nth-child(4) { background: #51c86b; }
+.px-mark i:nth-child(5) { background: #3c83ef; }
+.px-mark i:nth-child(6) { background: #8257df; }
+
+.px-cards {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(14px, 2.2vw, 26px);
+  width: min(960px, 100%);
+  margin: 0 auto;
+  padding-bottom: 18px;
+}
+
+.px-card {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  min-height: 96px;
+  padding: 0;
+  overflow: hidden;
+  border: 5px solid rgba(255,255,255,.96);
+  border-radius: clamp(18px, 2.6vw, 28px);
+  background: #fffdf6;
+  box-shadow: var(--shadow);
+  transition: transform .18s ease, box-shadow .18s ease;
+}
+
+.px-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(145deg, rgba(255,255,255,.5), transparent 34%);
+}
+
+.px-card:hover {
+  transform: translateY(-5px) rotate(var(--tilt, 0deg));
+}
+
+.px-card:nth-child(3n+1) { --tilt: -1deg; }
+.px-card:nth-child(3n+2) { --tilt: 1deg; }
+
+.px-card--free { background: #eaf6ff; }
+
+.px-card-art {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+.px-card-badge {
+  position: absolute;
+  top: 6px;
+  right: 10px;
+  z-index: 2;
+  font-size: clamp(22px, 3vw, 30px);
+  line-height: 1;
+  color: #fff;
+  text-shadow: 0 3px 0 #d43d97;
+  opacity: 0;
+  transform: scale(.4) rotate(-14deg);
+  transition: opacity .3s ease, transform .3s cubic-bezier(.34,1.56,.64,1);
+}
+
+.px-card.is-done .px-card-badge {
+  opacity: 1;
+  transform: scale(1) rotate(-8deg);
+}
+
+.px-entry-art {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  mix-blend-mode: multiply;
+}
+
+.px-board-screen {
+  position: relative;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  overflow: hidden;
+  background-color: #9fdfe8;
+  background-image:
+    linear-gradient(rgba(200,247,250,.1), rgba(108,205,218,.16)),
+    linear-gradient(160deg, #b7ebf4 0%, #96dfe7 46%, #85d4df 100%);
+}
+
+/* The landscape override above turns .top-toolbar into a side column for the
+   brush screen. The mosaic screen keeps its toolbar on top and its palette
+   below the board (the owner's layout), so undo that here. Without this the
+   column of six buttons eats ~550px and the board collapses to a sliver. */
+@media (orientation: landscape) {
+  .px-board-screen .top-toolbar {
+    flex-direction: row;
+    justify-content: center;
+    gap: clamp(8px, 2vw, 18px);
+    padding: max(10px, env(safe-area-inset-top)) 12px 9px;
+    overflow: visible;
+  }
+}
+
+.px-stage {
+  min-height: 0;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 16px 10px;
+  container-type: size;
+}
+
+/* The toy itself: white frame, wood-toned rim, cream board with pockets. */
+.px-board-frame {
+  position: relative;
+  flex: 0 1 auto;
+  height: 100%;
+  width: auto;
+  aspect-ratio: 20 / 15;
+  max-width: 100%;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  border: 10px solid #fffdf6;
+  border-radius: 30px;
+  background: #fbf7ee;
+  box-shadow:
+    0 0 0 6px #ecc98f,
+    0 0 0 11px #fff,
+    0 14px 0 rgba(45,120,137,.14),
+    0 26px 46px rgba(37,107,126,.22);
+}
+
+@supports (height: 1cqh) {
+  .px-board-frame {
+    height: min(100cqh, 100cqw * 15 / 20);
+    max-width: none;
+  }
+}
+
+#pixelBoard {
+  display: block;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+  cursor: crosshair;
+}
+
+/* The pattern card to copy, docked at the end of the toolbar. */
+.px-thumb {
+  flex: 0 0 auto;
+  width: clamp(84px, 12vw, 108px);
+  aspect-ratio: 4 / 3;
+  padding: 0;
+  overflow: hidden;
+  border: 4px solid #fff;
+  border-radius: 16px;
+  background: #fffdf6;
+  box-shadow: var(--shadow);
+  transition: transform .16s ease, box-shadow .16s ease;
+}
+
+.px-thumb canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.px-thumb:active:not(:disabled) {
+  transform: translateY(4px) scale(.97);
+}
+
+.px-thumb[hidden] { display: none; }
+
+.px-bottom {
+  position: relative;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(10px, 1.6vw, 18px);
+  padding: 10px 12px max(12px, env(safe-area-inset-bottom));
+  background: rgba(255,255,255,.82);
+  border-top: 4px solid rgba(255,255,255,.94);
+  box-shadow: 0 -9px 24px rgba(37,107,126,.12);
+  backdrop-filter: blur(12px);
+  min-width: 0;
+  width: 100%;
+}
+
+.px-bottom .eraser-button {
+  flex: 0 0 auto;
+  margin-right: clamp(2px, 1vw, 10px);
+  padding-right: clamp(8px, 1.2vw, 14px);
+  border-right: 3px dashed rgba(72,85,130,.19);
+  border-radius: 0;
+}
+
+/* 30 colors: 3 rows x 10 columns, light over mid over dark. */
+.px-palette {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  gap: clamp(4px, 1vw, 9px);
+  width: min(94vw, 640px);
+}
+
+.px-swatch {
+  position: relative;
+  aspect-ratio: 1;
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+  padding: 0;
+  border: 3px solid #fff;
+  border-radius: 26%;
+  background: var(--swatch);
+  box-shadow: 0 4px 0 rgba(68,76,123,.17), 0 7px 14px rgba(72,75,116,.16);
+  transition: transform .14s ease, box-shadow .14s ease;
+}
+
+.px-swatch::after {
+  content: "";
+  position: absolute;
+  inset: 12% 16% auto;
+  height: 26%;
+  border-radius: 50%;
+  background: rgba(255,255,255,.38);
+  transform: rotate(-16deg);
+}
+
+.px-swatch.is-selected {
+  transform: translateY(-6px) scale(1.12);
+  outline: 5px solid #7355d8;
+  outline-offset: 2px;
+}
+
+.px-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 30;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(38,24,74,.45);
+  backdrop-filter: blur(6px);
+  cursor: pointer;
+}
+
+.px-overlay[hidden] { display: none; }
+
+.px-overlay-card {
+  padding: clamp(10px, 2vw, 18px);
+  border: 8px solid #fffdf6;
+  border-radius: 26px;
+  background: #fbf7ee;
+  box-shadow:
+    0 0 0 5px #ecc98f,
+    0 18px 40px rgba(20,14,48,.4);
+}
+
+.px-overlay-card canvas {
+  display: block;
+  width: min(82vw, 480px);
+  height: auto;
+  border-radius: 10px;
+}
+
+@media (max-width: 760px) {
+  .px-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .px-mark { transform: scale(.86); }
+  .px-board-frame { border-width: 7px; border-radius: 22px; }
+  .px-bottom { flex-wrap: wrap; gap: 8px; }
+  .px-bottom .eraser-button { margin: 0 auto; border-right: 0; border-bottom: 3px dashed rgba(72,85,130,.19); border-radius: 17px; padding: 0 0 7px; }
+  .px-palette { width: 100%; }
+  .px-swatch { border-width: 2px; }
+}
+
+/* Short landscape screens: shrink the tool row so the board keeps its size. */
+@media (max-height: 820px) and (orientation: landscape) {
+  .px-palette { width: min(94vw, 560px); }
+}
+
+@media (max-height: 680px) and (orientation: landscape) {
+  .px-thumb { width: 78px; }
 }

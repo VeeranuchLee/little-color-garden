@@ -22,9 +22,17 @@
         <div class="sky-blob sky-blob--three" aria-hidden="true"></div>
 
         <header class="gallery-header">
-          <button class="round-button sound-button" id="galleryVoiceButton" type="button" aria-label="Hear what to do">
-            <span aria-hidden="true">🔊</span>
-          </button>
+          <!-- Owner, 2026-08-27: *"need to make sure ALL games has back icon to the hub"*
+               -- a 4-year-old could not get out of the app. The header was
+               [voice][brand][dead spacer]; the arrow takes the left slot, which is where
+               it lives in every other game here, and the voice button takes the spacer's
+               place instead of a slot that did nothing. Absolute URL on purpose:
+               published, /little-color-garden/ and /children-apps/ are siblings, but in
+               the repo the hub lives under site/, so a relative link would work live and
+               404 in every local preview. -->
+          <a class="round-button hub-button" href="https://veeranuchlee.github.io/children-apps/" aria-label="Back to Children Games">
+            <span aria-hidden="true">&larr;</span>
+          </a>
 
           <div class="brand-mark" aria-hidden="true">
             <span class="brand-star brand-star--one">✦</span>
@@ -35,7 +43,9 @@
             <div class="paint-smile"><span></span><span></span></div>
           </div>
 
-          <div class="header-spacer" aria-hidden="true"></div>
+          <button class="round-button sound-button" id="galleryVoiceButton" type="button" aria-label="Hear what to do">
+            <span aria-hidden="true">🔊</span>
+          </button>
         </header>
 
         <div id="pageGallery" class="page-gallery" role="group" aria-label="Pictures to color"></div>
@@ -92,8 +102,70 @@
 
         <div id="celebration" class="celebration" aria-hidden="true"></div>
       </section>
+
+      <!-- Pixel Mosaic mode (owner concept, 2026-08-27): a pegboard-style tile
+           toy. Pick a pattern card, copy it on the big board. The palette is
+           exactly 30 colors in 3 rows x 10; cards use only those colors. -->
+      <section id="pixelGalleryScreen" class="screen px-gallery-screen" aria-label="Pixel mosaic pictures to copy" hidden>
+        <header class="gallery-header">
+          <button class="round-button hub-button" id="pixelGalleryBack" type="button" aria-label="Back to coloring pictures">
+            <span aria-hidden="true">&larr;</span>
+          </button>
+          <div class="px-mark" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+          <button class="round-button sound-button" id="pixelGalleryVoice" type="button" aria-label="Hear what to do">
+            <span aria-hidden="true">🔊</span>
+          </button>
+        </header>
+        <div id="pixelCards" class="px-cards" role="group" aria-label="Pictures to copy"></div>
+      </section>
+
+      <section id="pixelBoardScreen" class="screen px-board-screen" aria-label="Pixel mosaic board" hidden>
+        <header class="top-toolbar">
+          <button class="tool-button tool-button--home" id="pixelHome" type="button" aria-label="Go back to the cards">
+            <span aria-hidden="true">⌂</span>
+          </button>
+          <button class="tool-button tool-button--voice" id="pixelVoice" type="button" aria-label="Hear what to do">
+            <span aria-hidden="true">🔊</span>
+          </button>
+          <button class="tool-button tool-button--undo" id="pixelUndo" type="button" aria-label="Undo last tiles" disabled>
+            <span aria-hidden="true">↶</span>
+          </button>
+          <button class="tool-button tool-button--clear" id="pixelClear" type="button" aria-label="Clean the whole board">
+            <span aria-hidden="true">🧹</span>
+            <i class="arm-ring" aria-hidden="true"></i>
+          </button>
+          <button class="tool-button tool-button--finish" id="pixelFinish" type="button" aria-label="Celebrate my mosaic">
+            <span aria-hidden="true">★</span>
+          </button>
+          <button class="px-thumb" id="pixelThumb" type="button" aria-label="Show the picture card big">
+            <canvas id="pixelThumbCanvas" width="160" height="120" aria-hidden="true"></canvas>
+          </button>
+        </header>
+
+        <div class="px-stage">
+          <div class="px-board-frame" id="pixelBoardFrame">
+            <canvas id="pixelBoard" aria-label="Pixel mosaic board. Tap a color, then tap or drag on squares."></canvas>
+          </div>
+        </div>
+
+        <div class="px-bottom" aria-label="Mosaic tools">
+          <button class="eraser-button" id="pixelEraser" type="button" aria-label="Eraser">
+            <span aria-hidden="true"></span>
+          </button>
+          <div id="pixelPalette" class="px-palette" role="group" aria-label="Colors"></div>
+        </div>
+
+        <div id="pixelCardOverlay" class="px-overlay" hidden>
+          <div class="px-overlay-card">
+            <canvas id="pixelCardOverlayCanvas" width="480" height="360" aria-label="The picture to copy"></canvas>
+          </div>
+        </div>
+        <div id="pixelCelebration" class="celebration" aria-hidden="true"></div>
+      </section>
     </main>
 
     <script src="./app.js"></script>
+    <script src="./pixel-cards.js"></script>
+    <script src="./pixel-mode.js"></script>
   </body>
 </html>

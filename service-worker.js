@@ -1,4 +1,4 @@
-const CACHE_NAME = "little-color-garden-v8";
+const CACHE_NAME = "little-color-garden-v10";
 const PAGE_IDS = [
   "solar-system",
   "space-kid",
@@ -26,6 +26,8 @@ const APP_FILES = [
   "./index.html",
   "./styles.css",
   "./app.js",
+  "./pixel-cards.js",
+  "./pixel-mode.js",
   "./manifest.webmanifest",
   "./assets/icons/icon-192.png",
   "./assets/icons/icon-512.png",
