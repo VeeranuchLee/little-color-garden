@@ -21,6 +21,36 @@
   const EMPTY = -1;
   const FREE_ID = "free";
 
+  // Levels. Owner, 2026-08-27: "how about we add level too? like easy level,
+  // if tap on 'outside' the pic area (but still on the board, on the brown
+  // area) no color there?" Only the *help* changes across the three — the
+  // child still chooses every color themselves, which is the whole point of
+  // copying a card, so nothing here grades a tap as right or wrong.
+  const LEVELS = [
+    {
+      id: "easy",
+      dots: 1,
+      label: "Easy level. Only the picture squares can take a tile.",
+      say: "Easy. Only the picture squares take a tile.",
+      prompt: (name) => `Copy ${name}! Fill the shaded shape with the right colors. The rest of the board is closed.`
+    },
+    {
+      id: "medium",
+      dots: 2,
+      label: "Medium level. The picture shape is shown, and every square can take a tile.",
+      say: "Medium. The shape is shown. Every square can take a tile.",
+      prompt: (name) => `Copy ${name}! The shaded shape shows where the picture goes. Match the little card's colors.`
+    },
+    {
+      id: "hard",
+      dots: 3,
+      label: "Hard level. No shape is shown. Copy the little card.",
+      say: "Hard! No shape. Look at the little card and copy it.",
+      prompt: (name) => `Copy ${name}! Nothing is shown. Look at the little card and copy it.`
+    }
+  ];
+  const LEVEL_KEY = "little-color-garden:pixel:level";
+
   const charToIndex = new Map([[".", EMPTY]]);
   PALETTE.forEach((color, index) => charToIndex.set(index.toString(36), index));
 
@@ -39,6 +69,7 @@
   const galleryScreen = document.querySelector("#pixelGalleryScreen");
   const boardScreen = document.querySelector("#pixelBoardScreen");
   const cardsRow = document.querySelector("#pixelCards");
+  const levelsRow = document.querySelector("#pixelLevels");
   const boardCanvas = document.querySelector("#pixelBoard");
   const boardFrame = document.querySelector("#pixelBoardFrame");
   const paletteRow = document.querySelector("#pixelPalette");
@@ -65,6 +96,7 @@
   let activeCard = null; // card object, or null for the free board
   let activeId = FREE_ID;
   let selectedIndex = 10; // start on classic red
+  let levelId = loadLevel();
   let erasing = false;
   let painting = false;
   let activePointerId = null;
@@ -95,35 +127,116 @@
     ctx.closePath();
   }
 
-  function drawPocket(ctx, x, y, size) {
+  function drawPocket(ctx, x, y, size, sleeping) {
     const pad = size * 0.08;
     roundedPath(ctx, x + pad, y + pad, size - pad * 2, size - pad * 2, size * 0.2);
-    ctx.fillStyle = "#efe7d6";
+    ctx.fillStyle = sleeping ? "#f4eee1" : "#efe7d6";
     ctx.fill();
     // A soft lip along the top edge makes each empty square read as a pocket.
-    ctx.strokeStyle = "rgba(112, 92, 55, 0.14)";
+    // On the easy level the squares outside the picture take no tile at all,
+    // so their lip fades away: the board keeps its texture, but only the
+    // picture area looks open for work.
+    ctx.strokeStyle = sleeping ? "rgba(112, 92, 55, 0.045)" : "rgba(112, 92, 55, 0.14)";
     ctx.lineWidth = Math.max(1.5, size * 0.035);
     ctx.stroke();
   }
 
-  // The highlighted ghost of a tile: marks cells that belong to the picture
-  // but are not filled yet. Without it, copying a card means counting grid
-  // cells to find where the shape goes (owner feedback, 2026-08-27: "show
-  // the area to fill"); with it, the challenge is choosing the right colors.
-  // Solid light grey, deliberately lighter than the palette's light grey and
-  // with no gloss — earlier cuts used brown dashes (read as brown tiles) then
-  // grey dashes (owner: "how about highlighted squares instead"); a guide
-  // must read as one quiet area, never as a color.
-  function drawGhostTile(ctx, x, y, size) {
-    const pad = size * 0.08;
-    roundedPath(ctx, x + pad, y + pad, size - pad * 2, size - pad * 2, size * 0.24);
-    ctx.fillStyle = "#e8eaef";
-    ctx.fill();
-    ctx.save();
-    ctx.clip();
-    ctx.fillStyle = "rgba(110, 115, 130, 0.13)";
-    ctx.fillRect(x, y + size - size * 0.14, size, size * 0.14);
-    ctx.restore();
+  // The fill-area guide: every cell that belongs to the picture and holds no
+  // tile yet. Three cuts of this mark failed before this one — brown dashes
+  // (read as brown tiles), grey dashes, then solid light-grey chips (v12) —
+  // and the last one failed on measurement: #e8eaef chips on #efe7d6 pockets
+  // are 12 dE apart but only 0.9 L* apart, and at tile size the eye reads
+  // lightness first. Owner, 2026-08-27, with a screenshot of an empty board:
+  // "the different between two colors not enough, it's hard to make picture
+  // like this."
+  //
+  // What held every earlier cut pale was the fear of a guide that reads as a
+  // *color*. Drawing it as one continuous region retires that fear: it spans
+  // whole cells edge to edge, with no gap and no gloss, while a tile is
+  // always a separate rounded chip sitting inside its pocket. So the tone is
+  // free to drop ~12 L* below the pockets (dE 22), the shape gets a firm
+  // outline of its own, and the area reads as one place to fill instead of a
+  // hundred grey squares.
+  const GUIDE_FILL = "#bfc7d8";
+  const GUIDE_EDGE = "rgba(84, 99, 138, 0.62)";
+  const GUIDE_SEAM = "rgba(84, 99, 138, 0.15)";
+
+  // `guided(index)` is true for a picture cell that still holds no tile, so
+  // the shaded area shrinks as the copy progresses and a finished picture
+  // leaves no trace of the help behind.
+  function drawGuideRegion(ctx, cellSize, guided, shaped, cols, rows) {
+    const inside = (c, r) =>
+      c >= 0 && r >= 0 && c < cols && r < rows && guided(r * cols + c);
+    // Whether the cell belongs to the picture at all, tile or no tile. The
+    // firm outline follows *this* — so a tile dropped in the middle of the
+    // shape leaves a hole in the shading without drawing a heavy box around
+    // itself, and the silhouette holds its shape while the shading empties.
+    const inPicture = (c, r) =>
+      c >= 0 && r >= 0 && c < cols && r < rows && shaped(r * cols + c);
+
+    ctx.fillStyle = GUIDE_FILL;
+    for (let r = 0; r < rows; r += 1) {
+      for (let c = 0; c < cols; c += 1) {
+        if (inside(c, r)) ctx.fillRect(c * cellSize, r * cellSize, cellSize, cellSize);
+      }
+    }
+
+    // Light falls from above on this board, so a recess darkens along its top
+    // edge where a puffy tile would catch a highlight. That one inversion is
+    // what makes the region read as a hollow rather than a big flat sticker.
+    const depth = cellSize * 0.3;
+    for (let r = 0; r < rows; r += 1) {
+      for (let c = 0; c < cols; c += 1) {
+        if (!inside(c, r) || inside(c, r - 1)) continue;
+        const y = r * cellSize;
+        const shade = ctx.createLinearGradient(0, y, 0, y + depth);
+        shade.addColorStop(0, "rgba(64, 78, 116, 0.24)");
+        shade.addColorStop(1, "rgba(64, 78, 116, 0)");
+        ctx.fillStyle = shade;
+        ctx.fillRect(c * cellSize, y, cellSize, depth);
+      }
+    }
+
+    // Seams inside the region keep single squares countable — a child copying
+    // a card still has to land on the right one.
+    ctx.strokeStyle = GUIDE_SEAM;
+    ctx.lineWidth = Math.max(1, cellSize * 0.03);
+    ctx.beginPath();
+    for (let r = 0; r < rows; r += 1) {
+      for (let c = 0; c < cols; c += 1) {
+        if (!inside(c, r)) continue;
+        const x = c * cellSize;
+        const y = r * cellSize;
+        if (inside(c + 1, r)) {
+          ctx.moveTo(x + cellSize, y);
+          ctx.lineTo(x + cellSize, y + cellSize);
+        }
+        if (inside(c, r + 1)) {
+          ctx.moveTo(x, y + cellSize);
+          ctx.lineTo(x + cellSize, y + cellSize);
+        }
+      }
+    }
+    ctx.stroke();
+
+    // The shape's own edge, drawn last: the picture is visible as a silhouette
+    // before a single tile is placed.
+    ctx.strokeStyle = GUIDE_EDGE;
+    ctx.lineWidth = Math.max(2, cellSize * 0.075);
+    ctx.lineCap = "round";
+    ctx.beginPath();
+    for (let r = 0; r < rows; r += 1) {
+      for (let c = 0; c < cols; c += 1) {
+        if (!inside(c, r)) continue;
+        const x = c * cellSize;
+        const y = r * cellSize;
+        if (!inPicture(c, r - 1)) { ctx.moveTo(x, y); ctx.lineTo(x + cellSize, y); }
+        if (!inPicture(c, r + 1)) { ctx.moveTo(x, y + cellSize); ctx.lineTo(x + cellSize, y + cellSize); }
+        if (!inPicture(c - 1, r)) { ctx.moveTo(x, y); ctx.lineTo(x, y + cellSize); }
+        if (!inPicture(c + 1, r)) { ctx.moveTo(x + cellSize, y); ctx.lineTo(x + cellSize, y + cellSize); }
+      }
+    }
+    ctx.stroke();
   }
 
   function drawTile(ctx, x, y, size, hex, scale) {
@@ -160,25 +273,45 @@
     ctx.restore();
   }
 
-  function drawBoard(ctx, cellSize, board, withPockets, outline) {
-    for (let r = 0; r < H; r += 1) {
-      for (let c = 0; c < W; c += 1) {
-        const x = c * cellSize;
-        const y = r * cellSize;
-        if (withPockets) drawPocket(ctx, x, y, cellSize);
-        const value = board[r * W + c];
-        if (value !== EMPTY) {
-          let scale = 1;
+  // Three passes, because the guide is a region and not a per-cell mark:
+  // empty pockets first, then the picture area over them, then the tiles.
+  // `options.cols`/`rows` let the gallery's little level samples reuse the
+  // board's own drawing rather than imitating it.
+  function drawBoard(ctx, cellSize, board, options) {
+    const opts = options || {};
+    const cols = opts.cols || W;
+    const rows = opts.rows || H;
+    const outline = opts.outline || null;
+
+    const guided = (index) => outline !== null && outline[index] !== EMPTY && board[index] === EMPTY;
+
+    if (opts.pockets) {
+      for (let r = 0; r < rows; r += 1) {
+        for (let c = 0; c < cols; c += 1) {
+          const index = r * cols + c;
+          // Every tile sits in a pocket; only the shaded area replaces one.
+          if (guided(index)) continue;
+          drawPocket(ctx, c * cellSize, r * cellSize, cellSize, opts.closedOutside === true);
+        }
+      }
+    }
+
+    if (outline) drawGuideRegion(ctx, cellSize, guided, (index) => outline[index] !== EMPTY, cols, rows);
+
+    for (let r = 0; r < rows; r += 1) {
+      for (let c = 0; c < cols; c += 1) {
+        const value = board[r * cols + c];
+        if (value === EMPTY) continue;
+        let scale = 1;
+        if (opts.animate) {
           const effect = effects.find((item) => item.r === r && item.c === c);
           if (effect) {
             const t = Math.min(1, (performance.now() - effect.t0) / 190);
             // A little overshoot, like a tile pressed into a pocket.
             scale = t < 1 ? 1 - Math.pow(1 - t, 2) * 0.7 + (t > 0.6 ? Math.sin((t - 0.6) * 5) * 0.08 : 0) : 1;
           }
-          drawTile(ctx, x, y, cellSize, PALETTE[value].value, scale);
-        } else if (outline && outline[r * W + c] !== EMPTY) {
-          drawGhostTile(ctx, x, y, cellSize);
         }
+        drawTile(ctx, c * cellSize, r * cellSize, cellSize, PALETTE[value].value, scale);
       }
     }
   }
@@ -186,7 +319,12 @@
   function renderBoard() {
     context.fillStyle = "#fbf7ee";
     context.fillRect(0, 0, boardCanvas.width, boardCanvas.height);
-    drawBoard(context, CELL, grid, true, outlineGrid);
+    drawBoard(context, CELL, grid, {
+      pockets: true,
+      outline: outlineGrid,
+      closedOutside: levelId === "easy" && outlineGrid !== null,
+      animate: true
+    });
   }
 
   function requestRender() {
@@ -202,7 +340,7 @@
   function renderStill(ctx, canvas, board, cellSize) {
     ctx.fillStyle = "#fffdf6";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-    drawBoard(ctx, cellSize, board, false);
+    drawBoard(ctx, cellSize, board, {});
   }
 
   // --- persistence -----------------------------------------------------
@@ -258,6 +396,20 @@
     }
   }
 
+  function loadLevel() {
+    try {
+      const saved = localStorage.getItem(LEVEL_KEY);
+      if (LEVELS.some((item) => item.id === saved)) return saved;
+    } catch (_) {
+      // Storage may be disabled; medium is the level the mode shipped with.
+    }
+    return "medium";
+  }
+
+  function currentLevel() {
+    return LEVELS.find((item) => item.id === levelId) || LEVELS[1];
+  }
+
   // --- painting --------------------------------------------------------
   function cellFromPoint(event) {
     const rect = boardCanvas.getBoundingClientRect();
@@ -268,9 +420,27 @@
     return { c, r, inside: x >= 0 && y >= 0 && x < W && y < H };
   }
 
+  // Easy level: the board outside the picture takes no tile. The eraser is
+  // never blocked — a child who painted outside on another level must always
+  // be able to take it back.
+  function isClosed(index) {
+    return levelId === "easy" && outlineGrid !== null && outlineGrid[index] === EMPTY;
+  }
+
   function paintCell(c, r) {
     const index = r * W + c;
     const next = erasing ? EMPTY : selectedIndex;
+    if (!erasing && isClosed(index)) {
+      const knock = performance.now();
+      // A quiet low knock, well below the tile sounds: the tap was heard, the
+      // square is simply closed. Throttled so dragging across the board is
+      // not a drum roll.
+      if (knock - lastPopAt > 240) {
+        lastPopAt = knock;
+        pop(150, 0.035);
+      }
+      return;
+    }
     if (grid[index] === next) return;
     if (strokeChanges && !strokeChanges.has(index)) strokeChanges.set(index, grid[index]);
     grid[index] = next;
@@ -490,7 +660,7 @@
     activeCard = card || null;
     activeId = card ? card.id : FREE_ID;
     grid = loadBoard(activeId);
-    outlineGrid = card ? cardIndices.get(card.id) : null;
+    outlineGrid = card && levelId !== "hard" ? cardIndices.get(card.id) : null;
     undoStack = [];
     undoButton.disabled = true;
     matched = false;
@@ -501,7 +671,7 @@
     if (card) {
       renderStill(thumbCanvas.getContext("2d"), thumbCanvas, cardIndices.get(card.id), 8);
       renderStill(overlayCanvas.getContext("2d"), overlayCanvas, cardIndices.get(card.id), 24);
-      speak(`Copy ${card.name}! Fill the dashed squares with the right colors.`);
+      speak(currentLevel().prompt(card.name));
     } else {
       speak("Make your own picture! Tap a color, then fill the little squares.");
     }
@@ -581,6 +751,84 @@
       button.appendChild(badge);
       button.addEventListener("click", () => openBoard(card));
       cardsRow.appendChild(button);
+    });
+  }
+
+  // --- levels ------------------------------------------------------------
+  // Each button draws the board it chooses, through the board's own renderer:
+  // one half-built heart, shown the way that level would show it. A child who
+  // cannot read still picks a level by looking at it.
+  const LEVEL_SAMPLE = [
+    "........",
+    ".aa..xx.",
+    "aaaaxxxx",
+    "aaaaxxxx",
+    ".aaaxxx.",
+    "..aaxx..",
+    "...ax..."
+  ];
+
+  function buildLevels() {
+    const cols = LEVEL_SAMPLE[0].length;
+    const rows = LEVEL_SAMPLE.length;
+    const sample = new Array(cols * rows).fill(EMPTY);
+    const shape = new Array(cols * rows).fill(EMPTY);
+    LEVEL_SAMPLE.forEach((row, r) => {
+      for (let c = 0; c < cols; c += 1) {
+        const ch = row[c];
+        if (ch === ".") continue;
+        shape[r * cols + c] = 0; // any non-empty value marks a picture cell
+        if (ch !== "x") sample[r * cols + c] = charToIndex.get(ch);
+      }
+    });
+
+    LEVELS.forEach((level) => {
+      const button = document.createElement("button");
+      button.className = `px-level${level.id === levelId ? " is-selected" : ""}`;
+      button.type = "button";
+      button.dataset.level = level.id;
+      button.setAttribute("aria-label", level.label);
+      button.title = level.label;
+
+      const size = 22;
+      const canvas = document.createElement("canvas");
+      canvas.width = cols * size;
+      canvas.height = rows * size;
+      canvas.className = "px-level-art";
+      const ctx = canvas.getContext("2d");
+      ctx.fillStyle = "#fbf7ee";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      drawBoard(ctx, size, sample, {
+        cols,
+        rows,
+        pockets: true,
+        outline: level.id === "hard" ? null : shape,
+        closedOutside: level.id === "easy"
+      });
+      button.appendChild(canvas);
+
+      const dots = document.createElement("span");
+      dots.className = "px-level-dots";
+      dots.setAttribute("aria-hidden", "true");
+      for (let i = 0; i < LEVELS.length; i += 1) {
+        const dot = document.createElement("i");
+        if (i >= level.dots) dot.className = "is-off";
+        dots.appendChild(dot);
+      }
+      button.appendChild(dots);
+
+      button.addEventListener("click", () => {
+        levelId = level.id;
+        try {
+          localStorage.setItem(LEVEL_KEY, levelId);
+        } catch (_) {
+          // The level still applies to this session.
+        }
+        levelsRow.querySelectorAll(".px-level").forEach((item) => item.classList.toggle("is-selected", item === button));
+        pop(430 + level.dots * 110, 0.07);
+        speak(level.say);
+      });
+      levelsRow.appendChild(button);
     });
   }
 
@@ -669,9 +917,9 @@
   });
   homeButton.addEventListener("click", showPixelGallery);
   galleryBackButton.addEventListener("click", showMainGallery);
-  galleryVoiceButton.addEventListener("click", () => speak("Pick a picture to copy. Tap one, then match the little squares!"));
+  galleryVoiceButton.addEventListener("click", () => speak("Pick how much help you want at the top, then pick a picture to copy!"));
   voiceButton.addEventListener("click", () => {
-    if (activeCard) speak(`Copy ${activeCard.name}! The dashed squares show where the picture goes. Match the little card's colors.`);
+    if (activeCard) speak(currentLevel().prompt(activeCard.name));
     else speak("Tap a color, then fill the squares. Make anything you like!");
   });
   thumbButton.addEventListener("click", openOverlay);
@@ -696,6 +944,7 @@
     if (!boardScreen.hidden) saveBoard();
   });
 
+  buildLevels();
   buildPixelGallery();
   buildPalette();
   injectEntryCard();

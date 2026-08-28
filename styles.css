@@ -723,6 +723,68 @@ button:disabled {
 .px-mark i:nth-child(5) { background: #3c83ef; }
 .px-mark i:nth-child(6) { background: #8257df; }
 
+/* How much help: three levels, chosen above the picture cards. Each button
+   draws the same half-built heart through the board's own renderer, so a
+   child who cannot read still sees what the level does — the easy one shows
+   the board outside the picture closed (owner, 2026-08-27: "if tap on
+   'outside' the pic area ... no color there"). */
+.px-levels {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  gap: clamp(10px, 2vw, 22px);
+  width: min(960px, 100%);
+  margin: clamp(12px, 2vw, 20px) auto clamp(16px, 2.4vw, 26px);
+}
+
+.px-level {
+  flex: 0 1 clamp(112px, 17vw, 172px);
+  padding: clamp(6px, 1vw, 10px) clamp(6px, 1vw, 10px) clamp(5px, .8vw, 9px);
+  border: 5px solid rgba(255,255,255,.96);
+  border-radius: clamp(16px, 2.2vw, 24px);
+  background: #fffdf6;
+  box-shadow: var(--shadow);
+  transition: transform .16s ease, outline-color .16s ease;
+}
+
+.px-level:hover {
+  transform: translateY(-4px);
+}
+
+.px-level-art {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 9px;
+}
+
+.px-level-dots {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-top: clamp(5px, .8vw, 8px);
+}
+
+.px-level-dots i {
+  display: block;
+  width: clamp(9px, 1.2vw, 13px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: #8257df;
+}
+
+.px-level-dots i.is-off {
+  background: rgba(130, 87, 223, .2);
+}
+
+.px-level.is-selected {
+  transform: translateY(-4px) scale(1.04);
+  outline: 5px solid #7355d8;
+  outline-offset: 3px;
+  background: #fff;
+}
+
 .px-cards {
   position: relative;
   z-index: 1;
