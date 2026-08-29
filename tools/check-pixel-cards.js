@@ -35,7 +35,7 @@ const H = data.boardHeight;
 const validCell = new Set([".", ...Array.from({ length: 36 }, (_, i) => i.toString(36))]);
 
 // --- palette ---
-if (palette.length !== 30) problems.push(`palette has ${palette.length} colors, expected 30`);
+if (palette.length !== 36) problems.push(`palette has ${palette.length} colors, expected 36`);
 palette.forEach((color, index) => {
   if (!/^#[0-9a-f]{6}$/i.test(color.value)) problems.push(`palette ${index} has non-hex value ${color.value}`);
   if (typeof color.name !== "string" || !color.name) problems.push(`palette ${index} has no name`);

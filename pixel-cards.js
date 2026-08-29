@@ -2,7 +2,7 @@
 
 // Pixel Mosaic mode — palette and challenge cards, designed as one system.
 //
-// The palette is exactly 30 colors: 10 hue families across, light / medium / dark
+// The palette is exactly 36 colors: 12 hue families across, light / medium / dark
 // down. The medium row is the app's original ten colors, so the mode reads as the
 // same toy family. Every card is authored in these palette indices only — a cell
 // is either "." (empty) or a base-36 digit ("0"-"9", "a"-"t") naming a palette
@@ -54,7 +54,30 @@ window.PIXEL_CARDS = (() => {
     { name: "dark purple", value: "#5e2893" },   // q
     { name: "dark pink", value: "#bd2079" },     // r
     { name: "dark brown", value: "#57331d" },    // s
-    { name: "black", value: "#30313b" }          // t
+    { name: "black", value: "#30313b" },         // t
+    // Owner, 2026-08-28: "can we add even more color? ... maybe 36 or 48?
+    // equal to most children color set?" 36, because a card square is one
+    // base-36 character and 36 is exactly where that runs out — index 36
+    // would encode as "10" and silently corrupt every row it appeared in.
+    //
+    // These six are **appended, never inserted**: indices 0-29 keep their
+    // meaning, so all 11 cards stay valid without a single edit. The tray
+    // puts them in their proper place by hue (see PALETTE_COLUMNS in
+    // pixel-mode.js) rather than showing them tacked on the end.
+    //
+    // Families chosen by the owner: peach unlocks faces and hands, which no
+    // existing colour could carry (light orange is far too saturated for
+    // skin); lime separates grass from leaf green.
+    { name: "light lime", value: "#bdf06b" },    // u  nearest existing dE 27.2
+    { name: "lime", value: "#96c910" },          // v  nearest existing dE 38.4
+    { name: "dark lime", value: "#6b8c1c" },     // w  nearest existing dE 29.6
+    { name: "light peach", value: "#ffdcc6" },   // x  nearest existing dE 20.2
+    { name: "peach", value: "#e8956b" },         // y  nearest existing dE 22.5
+    { name: "dark peach", value: "#bf6634" }     // z  nearest existing dE 18.4
+    // The peach column sits in a crowded part of the space — light red, light
+    // orange, brown and dark orange all border it. After tuning, the tightest
+    // pair in the whole 36 is still light grey / grey at dE 17.9, which was
+    // already there. Nothing new lands below the existing floor.
   ];
 
   // Each card: 15 rows of 20 cells. Palette index -> base-36 character.

@@ -981,12 +981,15 @@ button:disabled {
   border-radius: 0;
 }
 
-/* 30 colors: 3 rows x 10 columns, light over mid over dark. */
+/* 36 colors: 3 rows x 12 columns, light over mid over dark. Growing the
+   palette added columns, not rows, so the tray is wider and no taller and the
+   board keeps its height. The width caps below are set so each chip stays the
+   size it was at ten columns — a four-year-old's finger did not shrink. */
 .px-palette {
   display: grid;
-  grid-template-columns: repeat(10, 1fr);
+  grid-template-columns: repeat(12, 1fr);
   gap: clamp(4px, 1vw, 9px);
-  width: min(94vw, 640px);
+  width: min(94vw, 780px);
 }
 
 .px-swatch {
@@ -1060,9 +1063,28 @@ button:disabled {
   .px-swatch { border-width: 2px; }
 }
 
+/* Portrait tablets: give the tray the full width by dropping the eraser onto
+   its own line. Sharing the row with the eraser costs about 9px per chip at
+   twelve columns, and portrait has vertical room to spare — the board is
+   already letterboxed there. Deliberately narrower than the 760px rule below
+   so the picture gallery keeps its four columns on a 768px iPad. */
+@media (max-width: 900px) and (orientation: portrait) {
+  .px-bottom { flex-wrap: wrap; gap: 8px; }
+  .px-bottom .eraser-button {
+    margin: 0 auto;
+    border-right: 0;
+    border-bottom: 3px dashed rgba(72, 85, 130, .19);
+    border-radius: 17px;
+    padding: 0 0 7px;
+  }
+  .px-palette { width: 100%; }
+}
+
 /* Short landscape screens: shrink the tool row so the board keeps its size. */
+/* The 9.7" iPad in landscape is 1024x768, so this is the rule that actually
+   governs the tray there. At twelve columns 560px would give 38px chips. */
 @media (max-height: 820px) and (orientation: landscape) {
-  .px-palette { width: min(94vw, 560px); }
+  .px-palette { width: min(94vw, 700px); }
 }
 
 @media (max-height: 680px) and (orientation: landscape) {

@@ -30,16 +30,16 @@
     {
       id: "easy",
       dots: 1,
-      label: "Easy level. Only the picture squares can take a tile.",
-      say: "Easy. Only the picture squares take a tile.",
-      prompt: (name) => `Copy ${name}! Fill the shaded shape with the right colors. The rest of the board is closed.`
+      label: "Easy level. The shaded squares show which color goes where, and only they can take a tile.",
+      say: "Easy. The shaded squares show the colors, and only they take a tile.",
+      prompt: (name) => `Copy ${name}! The shaded squares show which color goes where. The rest of the board is closed.`
     },
     {
       id: "medium",
       dots: 2,
-      label: "Medium level. The picture shape is shown, and every square can take a tile.",
-      say: "Medium. The shape is shown. Every square can take a tile.",
-      prompt: (name) => `Copy ${name}! The shaded shape shows where the picture goes. Match the little card's colors.`
+      label: "Medium level. The shaded squares show which color goes where, and every square can take a tile.",
+      say: "Medium. The shaded squares show the colors. Every square can take a tile.",
+      prompt: (name) => `Copy ${name}! The shaded squares show which color goes where.`
     },
     {
       id: "hard",
@@ -50,6 +50,39 @@
     }
   ];
   const LEVEL_KEY = "little-color-garden:pixel:level";
+
+  // The tray is 3 rows x 12 columns: one hue family per column, light over mid
+  // over dark. The original ten families keep their palette indices (a card
+  // square is a palette index, so changing one would rewrite every card); lime
+  // and peach were appended at 30-35 and are slotted in here by hue, so the
+  // tray still reads as a rainbow rather than showing the newcomers bolted on
+  // the end.
+  const PALETTE_COLUMNS = [
+    [0, 10, 20],   // red
+    [1, 11, 21],   // orange
+    [33, 34, 35],  // peach
+    [2, 12, 22],   // yellow
+    [30, 31, 32],  // lime
+    [3, 13, 23],   // green
+    [4, 14, 24],   // teal
+    [5, 15, 25],   // blue
+    [6, 16, 26],   // purple
+    [7, 17, 27],   // pink
+    [8, 18, 28],   // white / brown
+    [9, 19, 29]    // grey
+  ];
+
+  // Where each colour sits in the tray, so its tap tone rises left-to-right and
+  // deepens top-to-bottom however the columns are arranged.
+  const trayPosition = [];
+  PALETTE_COLUMNS.forEach((column, col) => {
+    column.forEach((index, row) => { trayPosition[index] = { col, row }; });
+  });
+
+  function swatchTone(index) {
+    const at = trayPosition[index] || { col: 0, row: 0 };
+    return 440 + at.col * 34 + at.row * 60;
+  }
 
   const charToIndex = new Map([[".", EMPTY]]);
   PALETTE.forEach((color, index) => charToIndex.set(index.toString(36), index));
@@ -127,10 +160,13 @@
     ctx.closePath();
   }
 
-  function drawPocket(ctx, x, y, size, sleeping) {
+  function drawPocket(ctx, x, y, size, sleeping, fill) {
     const pad = size * 0.08;
     roundedPath(ctx, x + pad, y + pad, size - pad * 2, size - pad * 2, size * 0.2);
-    ctx.fillStyle = sleeping ? "#f4eee1" : "#efe7d6";
+    // `fill` overrides the board cream for a picture square that already holds
+    // a tile: it keeps that square's own tint, so a placed tile does not get a
+    // bright cream ring drawn around it in the middle of the shaded area.
+    ctx.fillStyle = fill || (sleeping ? "#f4eee1" : "#efe7d6");
     ctx.fill();
     // A soft lip along the top edge makes each empty square read as a pocket.
     // On the easy level the squares outside the picture take no tile at all,
@@ -161,10 +197,71 @@
   const GUIDE_EDGE = "rgba(84, 99, 138, 0.62)";
   const GUIDE_SEAM = "rgba(84, 99, 138, 0.15)";
 
+  // --- colour maths ----------------------------------------------------
+  // Two things need to know how colours relate: the washed tints painted
+  // into the shaded area, and the "close enough" match. Both are computed
+  // once here, from the palette itself, so neither can drift from it.
+  function hexToRgb(hex) {
+    const value = parseInt(hex.slice(1), 16);
+    return [(value >> 16) & 255, (value >> 8) & 255, value & 255];
+  }
+
+  function rgbToLab([r, g, b]) {
+    const linear = (channel) => {
+      const c = channel / 255;
+      return c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+    };
+    const [lr, lg, lb] = [linear(r), linear(g), linear(b)];
+    const x = (lr * 0.4124564 + lg * 0.3575761 + lb * 0.1804375) / 0.95047;
+    const y = lr * 0.2126729 + lg * 0.7151522 + lb * 0.0721750;
+    const z = (lr * 0.0193339 + lg * 0.1191920 + lb * 0.9503041) / 1.08883;
+    const f = (t) => (t > 0.008856 ? Math.cbrt(t) : 7.787 * t + 16 / 116);
+    const [fx, fy, fz] = [f(x), f(y), f(z)];
+    return [116 * fy - 16, 500 * (fx - fy), 200 * (fy - fz)];
+  }
+
+  // Owner, 2026-08-28: "If the color is 'close enough' it's a pass."
+  //
+  // Measured over this palette, "same colour family" cannot express that:
+  // same-family shade steps span ΔE 18–64 while the closest *cross*-family
+  // pair is ΔE 19, so a family rule would forgive white-for-dark-brown (64)
+  // and still fail white-for-light-grey (19). Perceptual distance is the
+  // honest rule, because it forgives exactly what actually looks alike.
+  //
+  // ΔE 32 covers every same-family light→mid and mid→dark step plus six
+  // genuine look-alikes across families (light orange / light yellow,
+  // light blue / grey, dark brown / black, dark red / dark pink,
+  // light purple / light pink, light pink / grey). Red for orange (ΔE 44),
+  // white for brown (64) and red for blue (104) still fail — the picture
+  // still has to be the right picture.
+  const MATCH_TOLERANCE = 32;
+
+  // How much of a square's real colour shows through the shaded area.
+  // Owner, same message: "I want to see all the color vaguely on the gray
+  // area too." Vaguely is the operative word — enough to tell red from blue
+  // at a glance, faint enough that nobody mistakes it for a placed tile.
+  const GUIDE_TINT = 0.42;
+
+  const paletteLab = PALETTE.map((color) => rgbToLab(hexToRgb(color.value)));
+
+  const guideTints = PALETTE.map((color) => {
+    const [r, g, b] = hexToRgb(color.value);
+    const [gr, gg, gb] = hexToRgb(GUIDE_FILL);
+    const mix = (a, b2) => Math.round(a * GUIDE_TINT + b2 * (1 - GUIDE_TINT));
+    return `rgb(${mix(r, gr)}, ${mix(g, gg)}, ${mix(b, gb)})`;
+  });
+
+  // A 30x30 lookup built once: closeEnough[a][b] is true when a tile of
+  // colour `a` passes for a card asking for `b`.
+  const closeEnough = paletteLab.map((a) =>
+    paletteLab.map((b) => Math.hypot(a[0] - b[0], a[1] - b[1], a[2] - b[2]) <= MATCH_TOLERANCE)
+  );
+
   // `guided(index)` is true for a picture cell that still holds no tile, so
   // the shaded area shrinks as the copy progresses and a finished picture
   // leaves no trace of the help behind.
-  function drawGuideRegion(ctx, cellSize, guided, shaped, cols, rows) {
+  function drawGuideRegion(ctx, cellSize, cols, rows, at) {
+    const { guided, shaped, tint } = at;
     const inside = (c, r) =>
       c >= 0 && r >= 0 && c < cols && r < rows && guided(r * cols + c);
     // Whether the cell belongs to the picture at all, tile or no tile. The
@@ -174,10 +271,11 @@
     const inPicture = (c, r) =>
       c >= 0 && r >= 0 && c < cols && r < rows && shaped(r * cols + c);
 
-    ctx.fillStyle = GUIDE_FILL;
     for (let r = 0; r < rows; r += 1) {
       for (let c = 0; c < cols; c += 1) {
-        if (inside(c, r)) ctx.fillRect(c * cellSize, r * cellSize, cellSize, cellSize);
+        if (!inside(c, r)) continue;
+        ctx.fillStyle = tint(r * cols + c);
+        ctx.fillRect(c * cellSize, r * cellSize, cellSize, cellSize);
       }
     }
 
@@ -239,8 +337,15 @@
     ctx.stroke();
   }
 
-  function drawTile(ctx, x, y, size, hex, scale) {
-    const pad = size * 0.08;
+  // `loose` marks a tile that is not the colour this square wants. Owner,
+  // 2026-08-28: "when the tiles are filled, it need to show if it's 'pass' or
+  // not ... can't see color underneath." A loose tile is drawn well inside
+  // its square, so the square's own tint shows all the way around it — the
+  // child sees their colour and the wanted colour side by side, in place.
+  // A tile that passes sits flush and covers its square: no ring is the pass
+  // signal, which keeps a finished picture a picture rather than a checklist.
+  function drawTile(ctx, x, y, size, hex, scale, loose) {
+    const pad = size * (loose ? 0.19 : 0.08);
     let ix = x + pad;
     let iy = y + pad;
     let iw = size - pad * 2;
@@ -289,18 +394,41 @@
       for (let r = 0; r < rows; r += 1) {
         for (let c = 0; c < cols; c += 1) {
           const index = r * cols + c;
-          // Every tile sits in a pocket; only the shaded area replaces one.
+          // The shaded area replaces the pocket on squares still to fill. A
+          // picture square that already holds a tile keeps its pocket, tinted
+          // rather than cream so the region reads as one unbroken area.
           if (guided(index)) continue;
-          drawPocket(ctx, c * cellSize, r * cellSize, cellSize, opts.closedOutside === true);
+          const inPicture = outline !== null && outline[index] !== EMPTY;
+          drawPocket(
+            ctx,
+            c * cellSize,
+            r * cellSize,
+            cellSize,
+            opts.closedOutside === true,
+            inPicture ? guideTints[outline[index]] : null
+          );
         }
       }
     }
 
-    if (outline) drawGuideRegion(ctx, cellSize, guided, (index) => outline[index] !== EMPTY, cols, rows);
+    if (outline) {
+      drawGuideRegion(ctx, cellSize, cols, rows, {
+        guided,
+        shaped: (index) => outline[index] !== EMPTY,
+        tint: (index) => guideTints[outline[index]] || GUIDE_FILL
+      });
+    }
+
+    // Judging follows the guide: easy and medium show it, hard shows nothing
+    // at all and stays a real copy-it-yourself challenge.
+    const judging = outline !== null && opts.judge === true;
+    const wrong = (index, value) =>
+      judging && !(outline[index] !== EMPTY && closeEnough[value][outline[index]]);
 
     for (let r = 0; r < rows; r += 1) {
       for (let c = 0; c < cols; c += 1) {
-        const value = board[r * cols + c];
+        const index = r * cols + c;
+        const value = board[index];
         if (value === EMPTY) continue;
         let scale = 1;
         if (opts.animate) {
@@ -311,7 +439,7 @@
             scale = t < 1 ? 1 - Math.pow(1 - t, 2) * 0.7 + (t > 0.6 ? Math.sin((t - 0.6) * 5) * 0.08 : 0) : 1;
           }
         }
-        drawTile(ctx, c * cellSize, r * cellSize, cellSize, PALETTE[value].value, scale);
+        drawTile(ctx, c * cellSize, r * cellSize, cellSize, PALETTE[value].value, scale, wrong(index, value));
       }
     }
   }
@@ -323,6 +451,7 @@
       pockets: true,
       outline: outlineGrid,
       closedOutside: levelId === "easy" && outlineGrid !== null,
+      judge: true,
       animate: true
     });
   }
@@ -451,7 +580,7 @@
     }
     if (now - lastPopAt > 70) {
       lastPopAt = now;
-      pop(erasing ? 290 : 440 + (selectedIndex % 10) * 40 + Math.floor(selectedIndex / 10) * 60, 0.05);
+      pop(erasing ? 290 : swatchTone(selectedIndex), 0.05);
     }
     requestRender();
   }
@@ -583,11 +712,16 @@
   }
 
   // --- challenge matching ----------------------------------------------
+  // The shape still has to be right — an empty square stays empty and a
+  // filled one stays filled. Only the *colour* is forgiven, and only as far
+  // as MATCH_TOLERANCE: this is a toy for a four-year-old, not a colour exam.
   function boardMatchesCard() {
     if (!activeCard) return false;
     const target = cardIndices.get(activeCard.id);
     for (let i = 0; i < CELLS; i += 1) {
-      if (grid[i] !== target[i]) return false;
+      if (grid[i] === target[i]) continue;
+      if (grid[i] === EMPTY || target[i] === EMPTY) return false;
+      if (!closeEnough[grid[i]][target[i]]) return false;
     }
     return true;
   }
@@ -777,8 +911,11 @@
       for (let c = 0; c < cols; c += 1) {
         const ch = row[c];
         if (ch === ".") continue;
-        shape[r * cols + c] = 0; // any non-empty value marks a picture cell
-        if (ch !== "x") sample[r * cols + c] = charToIndex.get(ch);
+        // "x" is a square still to fill: it carries the heart's own colour so
+        // the sample shows the tinted shading the level actually draws.
+        const index = charToIndex.get(ch === "x" ? "a" : ch);
+        shape[r * cols + c] = index;
+        if (ch !== "x") sample[r * cols + c] = index;
       }
     });
 
@@ -863,24 +1000,30 @@
   }
 
   // --- palette -----------------------------------------------------------
+  // The grid fills row by row, so the buttons are appended row by row: all
+  // twelve lights, then the mids, then the darks.
   function buildPalette() {
-    PALETTE.forEach((color, index) => {
-      const button = document.createElement("button");
-      button.className = `px-swatch${index === selectedIndex ? " is-selected" : ""}`;
-      button.type = "button";
-      button.style.setProperty("--swatch", color.value);
-      button.setAttribute("aria-label", color.name);
-      button.title = color.name;
-      button.addEventListener("click", () => {
-        selectedIndex = index;
-        erasing = false;
-        paletteRow.querySelectorAll(".px-swatch").forEach((item) => item.classList.toggle("is-selected", item === button));
-        eraserButton.classList.remove("is-selected");
-        pop(440 + (index % 10) * 40 + Math.floor(index / 10) * 60);
-        speak(color.name);
+    for (let row = 0; row < 3; row += 1) {
+      PALETTE_COLUMNS.forEach((column) => {
+        const index = column[row];
+        const color = PALETTE[index];
+        const button = document.createElement("button");
+        button.className = `px-swatch${index === selectedIndex ? " is-selected" : ""}`;
+        button.type = "button";
+        button.style.setProperty("--swatch", color.value);
+        button.setAttribute("aria-label", color.name);
+        button.title = color.name;
+        button.addEventListener("click", () => {
+          selectedIndex = index;
+          erasing = false;
+          paletteRow.querySelectorAll(".px-swatch").forEach((item) => item.classList.toggle("is-selected", item === button));
+          eraserButton.classList.remove("is-selected");
+          pop(swatchTone(index));
+          speak(color.name);
+        });
+        paletteRow.appendChild(button);
       });
-      paletteRow.appendChild(button);
-    });
+    }
   }
 
   // --- wiring ------------------------------------------------------------

@@ -1,4 +1,4 @@
-const CACHE_NAME = "little-color-garden-v13";
+const CACHE_NAME = "little-color-garden-v15";
 const PAGE_IDS = [
   "solar-system",
   "space-kid",
@@ -42,9 +42,12 @@ self.addEventListener("install", (event) => {
   self.skipWaiting();
 });
 
-/* Cache isolation (private PR #288): evict only this app's own old caches - sibling apps on this origin keep theirs. */
 self.addEventListener("activate", (event) => {
   event.waitUntil(
+    /* Evict only this app's old versions (little-color-garden-v*). Several repo
+       apps share one origin when published, each with its own worker — deleting
+       every cache that is not ours would evict the neighbours' offline caches.
+       Foreign cache names are not ours to touch. */
     caches.keys().then((keys) => Promise.all(keys.filter((key) => /^little-color-garden-v/.test(key) && key !== CACHE_NAME).map((key) => caches.delete(key))))
   );
   self.clients.claim();
