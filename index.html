@@ -43,8 +43,8 @@
             <div class="paint-smile"><span></span><span></span></div>
           </div>
 
-          <button class="round-button sound-button" id="galleryVoiceButton" type="button" aria-label="Hear what to do">
-            <span aria-hidden="true">🔊</span>
+          <button class="round-button sound-button music-off" id="galleryMusicButton" type="button" aria-label="Play music" aria-pressed="false">
+            <span aria-hidden="true">♫</span>
           </button>
         </header>
 
@@ -63,9 +63,6 @@
             <span class="peek-glyph" aria-hidden="true">
               <i></i><i></i><i></i>
             </span>
-          </button>
-          <button class="tool-button tool-button--undo" id="undoButton" type="button" aria-label="Undo last mark" disabled>
-            <span aria-hidden="true">↶</span>
           </button>
           <button class="tool-button tool-button--clear" id="clearButton" type="button" aria-label="Clean the whole picture">
             <span aria-hidden="true">🧹</span>
@@ -88,15 +85,38 @@
           </div>
         </div>
 
-        <div class="bottom-tools" aria-label="Coloring tools">
-          <div class="brush-tools" role="group" aria-label="Brush size and eraser">
-            <button class="size-button" data-size="12" type="button" aria-label="Small brush"><i></i></button>
-            <button class="size-button is-selected" data-size="26" type="button" aria-label="Medium brush"><i></i></button>
-            <button class="size-button" data-size="48" type="button" aria-label="Big brush"><i></i></button>
-            <button class="eraser-button" id="eraserButton" type="button" aria-label="Eraser">
-              <span aria-hidden="true"></span>
-            </button>
+        <div class="studio-tools" aria-label="Art tools">
+          <p class="studio-message" id="studioMessage" aria-live="polite"></p>
+          <div class="primary-tools" role="group" aria-label="Choose a tool">
+            <button class="primary-tool is-selected" data-tool="brush" type="button"><span aria-hidden="true">🖌️</span><b>Brush</b></button>
+            <button class="primary-tool" data-tool="fill" type="button"><span aria-hidden="true">🪣</span><b>Fill</b></button>
+            <button class="primary-tool" data-tool="gradient" type="button"><span aria-hidden="true">🌈</span><b>Gradient</b></button>
+            <button class="primary-tool" data-tool="stamp" type="button"><span aria-hidden="true">⭐</span><b>Stamp</b></button>
+            <button class="primary-tool" id="undoButton" type="button" aria-label="Undo last mark" disabled><span aria-hidden="true">↶</span><b>Undo</b></button>
           </div>
+          <div class="secondary-tools" id="secondaryTools">
+            <div class="tool-options" data-options="brush" role="group" aria-label="Brush controls">
+              <button class="size-button" data-size="12" type="button" aria-label="Small brush"><i></i></button>
+              <button class="size-button is-selected" data-size="26" type="button" aria-label="Medium brush"><i></i></button>
+              <button class="size-button" data-size="48" type="button" aria-label="Big brush"><i></i></button>
+              <button class="eraser-button" id="eraserButton" type="button" aria-label="Eraser"><span aria-hidden="true"></span></button>
+            </div>
+            <div class="tool-options" data-options="fill" role="group" aria-label="Fill controls" hidden><span>Tap a space to fill it.</span></div>
+            <div class="tool-options gradient-options" data-options="gradient" role="group" aria-label="Gradient controls" hidden>
+              <label>From <input id="gradientStart" type="color" value="#f46eb3" aria-label="Gradient first color"></label>
+              <label>To <input id="gradientEnd" type="color" value="#3c83ef" aria-label="Gradient second color"></label>
+            </div>
+            <div class="tool-options stamp-options" data-options="stamp" role="group" aria-label="Stamp controls" hidden>
+              <button class="stamp-choice is-selected" data-stamp="★" type="button" aria-label="Star stamp">★</button>
+              <button class="stamp-choice" data-stamp="♥" type="button" aria-label="Heart stamp">♥</button>
+              <button class="stamp-choice" data-stamp="✿" type="button" aria-label="Flower stamp">✿</button>
+              <label>Size <input id="stampSize" type="range" min="36" max="140" value="72"></label>
+              <label>Turn <input id="stampRotation" type="range" min="-180" max="180" value="0"></label>
+            </div>
+          </div>
+          <!-- The colours are their own row, never sharing the tool row. Ten 48 px
+               swatches plus gaps is 552 px inside a 748 px row at 768 px wide, so the
+               strip fits whichever tool is selected and never scrolls. -->
           <div id="colorPalette" class="color-palette" role="group" aria-label="Colors"></div>
         </div>
 

@@ -42,8 +42,17 @@ const peekButton = document.querySelector("#peekButton");
 const canvasStage = document.querySelector("#canvasStage");
 const referenceImage = document.querySelector("#referenceImage");
 const celebration = document.querySelector("#celebration");
+const galleryMusicButton = document.querySelector("#galleryMusicButton");
+const studioMessage = document.querySelector("#studioMessage");
+const gradientStart = document.querySelector("#gradientStart");
+const gradientEnd = document.querySelector("#gradientEnd");
+const stampSize = document.querySelector("#stampSize");
+const stampRotation = document.querySelector("#stampRotation");
 
 const REFERENCE_PREF_KEY = "little-color-garden:show-reference";
+const galleryMusic = new Audio("./assets/audio/garden-bed.m4a");
+galleryMusic.loop = true;
+galleryMusic.volume = 0.26;
 
 const paintLayer = document.createElement("canvas");
 const paintContext = paintLayer.getContext("2d");
@@ -63,6 +72,45 @@ let clearArmed = false;
 let clearArmTimer = null;
 let clearedBackup = null;
 let frameRequested = false;
+let currentTool = "brush";
+let currentStamp = "★";
+let linePixels = null;
+
+function showMessage(message) {
+  studioMessage.textContent = message;
+  window.clearTimeout(showMessage.timer);
+  showMessage.timer = window.setTimeout(() => { studioMessage.textContent = ""; }, 3200);
+}
+
+function updateMusicButton(playing) {
+  galleryMusicButton.classList.toggle("music-off", !playing);
+  galleryMusicButton.setAttribute("aria-pressed", String(playing));
+  galleryMusicButton.setAttribute("aria-label", playing ? "Stop music" : "Play music");
+  galleryMusicButton.querySelector("span").textContent = playing ? "♫" : "♪";
+}
+
+// Leaving the gallery stops the bed, every way out. `openPage` already did this;
+// Pixel Mosaic is the other door and it lives in its own file, so the stop is
+// exposed the way this app exposes `speak` and `tinyPop` — a top-level function
+// on `window` that the other script picks up if it is there.
+function stopGalleryMusic() {
+  galleryMusic.pause();
+  updateMusicButton(false);
+}
+
+async function toggleGalleryMusic() {
+  if (!galleryMusic.paused) {
+    galleryMusic.pause();
+    updateMusicButton(false);
+    return;
+  }
+  try {
+    await galleryMusic.play();
+    updateMusicButton(true);
+  } catch (_) {
+    updateMusicButton(false);
+  }
+}
 
 function speak(message) {
   if (!("speechSynthesis" in window)) return;
@@ -139,10 +187,11 @@ function selectColor(button, announce = false) {
   currentColorName = button.dataset.name;
   usingEraser = false;
   tinyPop(460 + COLORS.findIndex((item) => item.value === currentColor) * 45);
-  if (announce) speak(currentColorName);
+  if (announce) showMessage(currentColorName[0].toUpperCase() + currentColorName.slice(1));
 }
 
 function openPage(page) {
+  stopGalleryMusic();
   activePage = page;
   galleryScreen.hidden = true;
   coloringScreen.hidden = false;
@@ -161,6 +210,12 @@ function openPage(page) {
     paintCanvas.height = lineImage.naturalHeight;
     paintLayer.width = paintCanvas.width;
     paintLayer.height = paintCanvas.height;
+    const lineCanvas = document.createElement("canvas");
+    lineCanvas.width = paintCanvas.width;
+    lineCanvas.height = paintCanvas.height;
+    const lineContext = lineCanvas.getContext("2d", { willReadFrequently: true });
+    lineContext.drawImage(lineImage, 0, 0, paintCanvas.width, paintCanvas.height);
+    linePixels = lineContext.getImageData(0, 0, paintCanvas.width, paintCanvas.height).data;
     rebuildPaintLayer();
     composeCanvas();
     canvasLoader.hidden = true;
@@ -203,13 +258,28 @@ function beginStroke(event) {
   activePointerId = event.pointerId;
   paintCanvas.setPointerCapture(event.pointerId);
   const point = canvasPoint(event);
+  if (currentTool === "fill") {
+    const action = { type: "fill", color: currentColor, point };
+    strokes.push(action);
+    applyAction(action);
+    finishInstantAction();
+    return;
+  }
+  if (currentTool === "stamp") {
+    const action = { type: "stamp", color: currentColor, point, stamp: currentStamp, size: Number(stampSize.value), rotation: Number(stampRotation.value) };
+    strokes.push(action);
+    applyAction(action);
+    finishInstantAction();
+    return;
+  }
   currentStroke = {
+    type: currentTool,
     color: currentColor,
     size: currentSize,
     erase: usingEraser,
     points: [point]
   };
-  drawSegment(currentStroke, point, point);
+  if (currentTool === "brush") drawSegment(currentStroke, point, point);
   requestCompose();
 }
 
@@ -222,17 +292,38 @@ function continueStroke(event) {
   const dy = point.y - previous.y;
   if (dx * dx + dy * dy < 2.5) return;
   currentStroke.points.push(point);
-  drawSegment(currentStroke, previous, point);
+  if (currentTool === "brush") drawSegment(currentStroke, previous, point);
   requestCompose();
 }
 
 function endStroke(event) {
   if (!drawing || event.pointerId !== activePointerId || !currentStroke) return;
   event.preventDefault();
+  if (currentStroke.type === "gradient") {
+    currentStroke.end = currentStroke.points[currentStroke.points.length - 1];
+    currentStroke.start = currentStroke.points[0];
+    if (currentStroke.start.x === currentStroke.end.x && currentStroke.start.y === currentStroke.end.y) {
+      currentStroke.end = { x: currentStroke.start.x + 1, y: currentStroke.start.y };
+    }
+    currentStroke.color = gradientStart.value;
+    currentStroke.endColor = gradientEnd.value;
+    currentStroke.points = undefined;
+    applyAction(currentStroke);
+  }
   strokes.push(currentStroke);
   currentStroke = null;
   drawing = false;
   activePointerId = null;
+  clearedBackup = null;
+  undoButton.disabled = false;
+  saveStrokes();
+  requestCompose();
+}
+
+function finishInstantAction() {
+  drawing = false;
+  activePointerId = null;
+  currentStroke = null;
   clearedBackup = null;
   undoButton.disabled = false;
   saveStrokes();
@@ -261,7 +352,36 @@ function drawSegment(stroke, from, to) {
 
 function rebuildPaintLayer() {
   paintContext.clearRect(0, 0, paintLayer.width, paintLayer.height);
-  strokes.forEach((stroke) => {
+  strokes.forEach(applyAction);
+}
+
+function applyAction(stroke) {
+    if (stroke.type === "fill") {
+      floodFill(stroke.point, stroke.color);
+      return;
+    }
+    if (stroke.type === "gradient") {
+      const gradient = paintContext.createLinearGradient(stroke.start.x, stroke.start.y, stroke.end.x, stroke.end.y);
+      gradient.addColorStop(0, stroke.color);
+      gradient.addColorStop(1, stroke.endColor);
+      paintContext.save();
+      paintContext.fillStyle = gradient;
+      paintContext.fillRect(0, 0, paintLayer.width, paintLayer.height);
+      paintContext.restore();
+      return;
+    }
+    if (stroke.type === "stamp") {
+      paintContext.save();
+      paintContext.translate(stroke.point.x, stroke.point.y);
+      paintContext.rotate(stroke.rotation * Math.PI / 180);
+      paintContext.fillStyle = stroke.color;
+      paintContext.font = `900 ${stroke.size}px Arial, sans-serif`;
+      paintContext.textAlign = "center";
+      paintContext.textBaseline = "middle";
+      paintContext.fillText(stroke.stamp, 0, 0);
+      paintContext.restore();
+      return;
+    }
     if (stroke.points.length === 1) {
       drawSegment(stroke, stroke.points[0], stroke.points[0]);
       return;
@@ -269,7 +389,35 @@ function rebuildPaintLayer() {
     stroke.points.forEach((point, index) => {
       if (index) drawSegment(stroke, stroke.points[index - 1], point);
     });
-  });
+}
+
+function floodFill(point, color) {
+  if (!linePixels) return;
+  const width = paintLayer.width;
+  const height = paintLayer.height;
+  const startX = Math.max(0, Math.min(width - 1, Math.round(point.x)));
+  const startY = Math.max(0, Math.min(height - 1, Math.round(point.y)));
+  const output = paintContext.getImageData(0, 0, width, height);
+  const rgba = color.match(/[a-f\d]{2}/gi).map((part) => parseInt(part, 16));
+  const visited = new Uint8Array(width * height);
+  const stack = [startY * width + startX];
+  const isBoundary = (index) => {
+    const offset = index * 4;
+    return linePixels[offset + 3] > 90 && linePixels[offset] + linePixels[offset + 1] + linePixels[offset + 2] < 430;
+  };
+  while (stack.length) {
+    const index = stack.pop();
+    if (visited[index] || isBoundary(index)) continue;
+    visited[index] = 1;
+    const offset = index * 4;
+    output.data[offset] = rgba[0]; output.data[offset + 1] = rgba[1]; output.data[offset + 2] = rgba[2]; output.data[offset + 3] = 255;
+    const x = index % width;
+    if (x) stack.push(index - 1);
+    if (x < width - 1) stack.push(index + 1);
+    if (index >= width) stack.push(index - width);
+    if (index < width * (height - 1)) stack.push(index + width);
+  }
+  paintContext.putImageData(output, 0, 0);
 }
 
 function composeCanvas() {
@@ -426,10 +574,14 @@ function storageKey() {
 function saveStrokes() {
   if (!activePage) return;
   try {
-    const trimmed = strokes.slice(-180).map((stroke) => ({
-      ...stroke,
-      points: stroke.points.map((point) => ({ x: Math.round(point.x), y: Math.round(point.y) }))
-    }));
+    const trimmed = strokes.slice(-180).map((stroke) => {
+      const saved = { ...stroke };
+      if (stroke.points) saved.points = stroke.points.map((point) => ({ x: Math.round(point.x), y: Math.round(point.y) }));
+      if (stroke.point) saved.point = { x: Math.round(stroke.point.x), y: Math.round(stroke.point.y) };
+      if (stroke.start) saved.start = { x: Math.round(stroke.start.x), y: Math.round(stroke.start.y) };
+      if (stroke.end) saved.end = { x: Math.round(stroke.end.x), y: Math.round(stroke.end.y) };
+      return saved;
+    });
     localStorage.setItem(storageKey(), JSON.stringify(trimmed));
   } catch (_) {
     // Storage may be disabled; the current session still works.
@@ -445,7 +597,7 @@ function loadStrokes(pageId) {
   }
 }
 
-document.querySelector("#galleryVoiceButton").addEventListener("click", () => speak("Pick a picture to color."));
+galleryMusicButton.addEventListener("click", toggleGalleryMusic);
 document.querySelector("#voiceButton").addEventListener("click", () => speak("Pick a color, then draw with your finger. Tap the little picture button to see the finished picture next to yours."));
 document.querySelector("#homeButton").addEventListener("click", goHome);
 document.querySelector("#finishButton").addEventListener("click", celebrate);
@@ -455,12 +607,30 @@ clearButton.addEventListener("click", handleClearTap);
 peekButton.addEventListener("click", toggleReference);
 
 eraserButton.addEventListener("click", () => {
+  selectTool("brush");
   usingEraser = true;
   document.querySelectorAll(".color-button").forEach((button) => button.classList.remove("is-selected"));
   eraserButton.classList.add("is-selected");
   tinyPop(340);
-  speak("Eraser");
+  showMessage("Eraser");
 });
+
+function selectTool(tool) {
+  currentTool = tool;
+  document.querySelectorAll(".primary-tool[data-tool]").forEach((button) => button.classList.toggle("is-selected", button.dataset.tool === tool));
+  document.querySelectorAll(".tool-options").forEach((options) => { options.hidden = options.dataset.options !== tool; });
+  colorPalette.hidden = false;
+  if (tool !== "brush") usingEraser = false;
+  const directions = { brush: "Draw with your finger.", fill: "Tap a space to fill it.", gradient: "Drag across the picture to blend two colors.", stamp: "Tap the picture to add a stamp." };
+  showMessage(directions[tool]);
+  tinyPop(430 + ["brush", "fill", "gradient", "stamp"].indexOf(tool) * 60);
+}
+
+document.querySelectorAll(".primary-tool[data-tool]").forEach((button) => button.addEventListener("click", () => selectTool(button.dataset.tool)));
+document.querySelectorAll(".stamp-choice").forEach((button) => button.addEventListener("click", () => {
+  currentStamp = button.dataset.stamp;
+  document.querySelectorAll(".stamp-choice").forEach((item) => item.classList.toggle("is-selected", item === button));
+}));
 
 document.querySelectorAll(".size-button").forEach((button) => {
   button.addEventListener("click", () => {
@@ -491,6 +661,7 @@ window.addEventListener("keydown", (event) => {
 
 buildGallery();
 buildPalette();
+updateMusicButton(false);
 
 if (
   "serviceWorker" in navigator &&

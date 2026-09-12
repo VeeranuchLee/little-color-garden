@@ -147,6 +147,7 @@
   // window so this IIFE's own names cannot shadow them mid-initialisation.
   const speak = typeof window.speak === "function" ? window.speak : () => {};
   const pop = typeof window.tinyPop === "function" ? window.tinyPop : () => {};
+  const stopMusic = typeof window.stopGalleryMusic === "function" ? window.stopGalleryMusic : () => {};
 
   // --- drawing ---------------------------------------------------------
   function roundedPath(ctx, x, y, w, h, r) {
@@ -992,6 +993,10 @@
     renderStill(canvas.getContext("2d"), canvas, cardIndices.get(rainbow.id), 12);
     button.appendChild(canvas);
     button.addEventListener("click", () => {
+      // The music button lives in the gallery header, which this hides, so a bed
+      // left playing here has no off switch anywhere on screen. Opening a
+      // coloring page already stops it; this is the same door.
+      stopMusic();
       mainGallery.hidden = true;
       showPixelGallery();
       pop(520, 0.06);

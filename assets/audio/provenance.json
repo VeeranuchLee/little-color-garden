@@ -1,0 +1,10 @@
+{
+  "file": "garden-bed.m4a",
+  "source": "site/children-apps/audio/hub-bed.m4a",
+  "reuse": "Byte-identical copy of the project's existing children-apps hub bed; no new generation or paid API call.",
+  "tool": "ElevenLabs Music API /v1/music",
+  "model": "music_v1",
+  "generatedOn": "2026-08-29",
+  "promptSource": "site/children-apps/tools/render-hub-bed.py",
+  "sha256": "9b4c457b3dfe7dd74ac2bcee9e08fe2993a5a45c591855eecac469c0d8667fa2"
+}

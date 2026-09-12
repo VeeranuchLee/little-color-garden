@@ -104,6 +104,11 @@ button:disabled {
 .sound-button {
   background: linear-gradient(145deg, #43d5ce, #20b6bb);
 }
+.sound-button.music-off { filter: saturate(.35); opacity: .72; }
+.sound-button.music-off::after {
+  content: ""; position: absolute; width: 68%; height: 5px; border-radius: 9px;
+  background: #734f80; transform: rotate(-42deg);
+}
 
 /* The hub arrow, top-left of the gallery header. White rather than one of the action
    colours: leaving is not one of the things the app does, and the teal circle beside it
@@ -675,6 +680,44 @@ button:disabled {
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
+}
+
+/* Compact studio surface: five primary choices, then only the chosen tool's controls. */
+.studio-tools { position:relative; z-index:6; display:grid; gap:7px; width:100%; padding:7px max(10px,env(safe-area-inset-right)) max(10px,env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-left)); background:rgba(255,255,255,.92); border-top:4px solid rgba(82,67,126,.14); box-shadow:0 -5px 20px rgba(64,77,117,.12); }
+.primary-tools { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:7px; }
+.primary-tool { min-width:0; min-height:58px; padding:5px 3px; border:0; border-radius:17px; background:#efeaff; color:#4c3e72; box-shadow:inset 0 -4px 0 rgba(74,57,119,.14); font:inherit; touch-action:manipulation; }
+.primary-tool span { display:block; font-size:24px; line-height:25px; }
+.primary-tool b { display:block; font-size:14px; line-height:20px; }
+.primary-tool.is-selected { background:#ffe66d; box-shadow:inset 0 -4px 0 #e1b835,0 0 0 3px #fff; }
+.primary-tool:disabled { opacity:.42; }
+/* The selected tool's own controls, and nothing else. It wraps rather than
+   scrolling: a control pushed off the end of a scroll strip is a control a child
+   cannot find, and `scrollbar-width:none` left no cue that anything was there. */
+.secondary-tools { display:flex; align-items:center; flex-wrap:wrap; gap:10px; min-height:52px; overflow:visible; }
+.tool-options { display:flex; align-items:center; gap:8px; flex:0 0 auto; color:#4c3e72; font-weight:800; }
+.tool-options[hidden],.color-palette[hidden] { display:none; }
+.gradient-options label,.stamp-options label { display:flex; align-items:center; gap:5px; white-space:nowrap; font-size:14px; }
+.gradient-options input[type="color"] { width:48px; height:48px; padding:2px; border:2px solid #fff; border-radius:14px; background:#ddd4fa; }
+.stamp-choice { width:48px; height:48px; border:0; border-radius:14px; background:#eee8ff; color:#ef568f; font-size:29px; }
+.stamp-choice.is-selected { background:#ffe66d; box-shadow:inset 0 0 0 3px #fff,0 0 0 2px #d4a928; }
+.stamp-options input[type="range"] { width:92px; min-height:48px; }
+/* Its own row, centred, wrapping. Ten swatches spend 552 px of the 748 px a
+   768 px screen gives this row, so nothing is ever hidden whichever tool is
+   showing; wrapping keeps that true if an eleventh colour is ever added. */
+.studio-tools .color-palette { display:flex; flex-wrap:wrap; justify-content:center; gap:8px; max-width:none; overflow:visible; padding:0; }
+.studio-tools .color-button { width:48px; height:48px; flex:0 0 48px; }
+/* A message is a reserved line in the tool surface, never an overlay. The
+   canvas stage establishes its own containing block (`container-type: size`
+   implies layout containment), so absolutely positioning the message from
+   there can paint it over controls outside the stage even though the anchor
+   itself is correct. Keeping it in flow protects both the art and the tools. */
+.studio-message { justify-self:center; max-width:100%; margin:0; padding:9px 16px; border-radius:18px; background:rgba(68,52,109,.9); color:#fff; font-weight:900; line-height:20px; text-align:center; pointer-events:none; }
+.studio-message:empty { display:none; }
+@media (orientation:landscape) {
+  .studio-tools { width:190px; min-height:0; border-top:0; border-left:4px solid rgba(255,255,255,.94); overflow-y:auto; }
+  .studio-message { width:100%; padding:8px 7px; font-size:14px; white-space:normal; }
+  .primary-tools { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .studio-tools .color-palette { display:grid; grid-template-columns:repeat(2,48px); justify-content:center; }
 }
 
 /* ==========================================================================

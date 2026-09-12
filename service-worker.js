@@ -1,4 +1,4 @@
-const CACHE_NAME = "little-color-garden-v15";
+const CACHE_NAME = "little-color-garden-v16";
 const PAGE_IDS = [
   "solar-system",
   "space-kid",
@@ -54,11 +54,35 @@ self.addEventListener("activate", (event) => {
 });
 
 self.addEventListener("fetch", (event) => {
-  if (event.request.method !== "GET") return;
+  const request = event.request;
+  if (request.method !== "GET") return;
+
+  /* v16 ships this app's first media file (the gallery music bed), and a media
+     element asks for it with `Range: bytes=0-`. The server answers 206, and
+     `cache.put` REJECTS a partial response -- unhandled, inside the worker, every
+     time the bed plays. The pattern below is the one writing-book/service-worker.js
+     proves against a Range-honouring server; it is copied deliberately rather than
+     invented. It does NOT make the bed available offline: nothing here can cache a
+     206, so the bed needs the network. Do not claim otherwise.
+
+     Guard 1 -- anything ranged goes straight to the browser. */
+  if (request.headers.has("range")) return;
+
+  /* Guard 2 -- the audio by path, because a no-cors media request does not expose
+     its Range header in every engine. */
+  const url = new URL(request.url);
+  if (url.origin !== self.location.origin) return;
+  if (url.pathname.indexOf("/assets/audio/") !== -1) return;
+
   event.respondWith(
-    caches.match(event.request).then((cached) => cached || fetch(event.request).then((response) => {
-      const copy = response.clone();
-      caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
+    caches.match(request).then((cached) => cached || fetch(request).then((response) => {
+      /* 200 exactly, not response.ok: ok is every 2xx, and 206 is the one that
+         breaks cache.put. This also stops an error page being cached, which would
+         pin the failure until the next version bump. */
+      if (response && response.status === 200 && response.type === "basic") {
+        const copy = response.clone();
+        caches.open(CACHE_NAME).then((cache) => cache.put(request, copy));
+      }
       return response;
     }))
   );
