@@ -5,9 +5,14 @@ const PAGES = [
   { id: "space-kid", file: "space-kid.png", voice: "the little astronaut", card: "#c4efff", background: "saturn.jpg" },
   { id: "moon-flag", file: "moon-flag.png", voice: "the moon explorer", card: "#d5ccff", background: "moon.jpg" },
   { id: "mars-rover", file: "mars-rover.png", voice: "the friendly space robot", card: "#ffd0ae", background: "moon.jpg" },
+  { id: "star-astronaut", file: "star-astronaut.png", voice: "the star astronaut", card: "#cfe9ff", background: "saturn.jpg" },
+  { id: "space-ufo", file: "space-ufo.png", voice: "the friendly spaceship", card: "#d9f7d2", background: "space-soft.jpg" },
+  { id: "space-cat", file: "space-cat.png", voice: "the space cat", card: "#ffe0d0", background: "moon.jpg" },
   { id: "pink-princess", file: "pink-princess.png", voice: "the heart princess", card: "#ffd5eb", background: "rainbow-castle.jpg" },
   { id: "magic-princess", file: "magic-princess.png", voice: "the magic princess", card: "#eee0ff", background: "rainbow-castle.jpg" },
   { id: "mermaid-princess", file: "mermaid-princess.png", voice: "the ocean princess", card: "#c7f4ef", background: "rainbow-castle.jpg" },
+  { id: "mermaid-dolphin", file: "mermaid-dolphin.png", voice: "the mermaid and the dolphin", card: "#c9f0f7", background: "rainbow-castle.jpg" },
+  { id: "mermaid-flower", file: "mermaid-flower.png", voice: "the mermaid with a flower", card: "#ffe2f0", background: "rainbow-castle.jpg" },
   { id: "bird-princess", file: "bird-princess.png", voice: "the bird princess", card: "#ffe6ca", background: "forest-friends.jpg" },
   { id: "hibiscus", file: "hibiscus.png", voice: "the hibiscus flowers", card: "#ffd1d0", background: "spring-meadow.jpg" },
   { id: "ginger-lily", file: "ginger-lily.png", voice: "the white flowers", card: "#ecf7c8", background: "spring-meadow.jpg" },
@@ -15,20 +20,43 @@ const PAGES = [
   { id: "ylang-ylang", file: "ylang-ylang.png", voice: "the yellow flowers", card: "#fff4b9", background: "spring-meadow.jpg" }
 ];
 
-const COLORS = [
-  { name: "red", value: "#f04455" },
-  { name: "orange", value: "#ff8a35" },
-  { name: "yellow", value: "#ffd93d" },
-  { name: "green", value: "#51c86b" },
-  { name: "turquoise", value: "#31c8c6" },
-  { name: "blue", value: "#3c83ef" },
-  { name: "purple", value: "#8257df" },
-  { name: "pink", value: "#f46eb3" },
-  { name: "brown", value: "#9b623c" },
-  { name: "black", value: "#30313b" }
+// The Coloring palette: 48 colours, 12 hue families across × 4 shades down
+// (owner brief, 2026-09-14: "use a richer palette of 48 colors", "organized
+// and child-friendly"). The tray is one grid in both orientations -- 12
+// columns × 4 rows, light over bright over classic over dark -- so it reads
+// exactly like the pixel tray one screen away. The classic row keeps the
+// app's original ten colours unchanged; the rows around them lean pastel,
+// which is what this UI looks like. Colouring pages also need skin, wood and
+// paper tones, so peach and brown are families of their own and the last
+// column is the white→grey→black ramp a page of line art cannot do without.
+const COLOR_FAMILIES = [
+  { hue: "red",    shades: [{ name: "light red", value: "#ffd3cc" }, { name: "bright red", value: "#ff9184" }, { name: "red", value: "#f04455" }, { name: "dark red", value: "#a8203e" }] },
+  { hue: "orange", shades: [{ name: "light orange", value: "#ffe3c2" }, { name: "bright orange", value: "#ffb877" }, { name: "orange", value: "#ff8a35" }, { name: "dark orange", value: "#d15f11" }] },
+  { hue: "peach",  shades: [{ name: "light peach", value: "#ffeade" }, { name: "soft peach", value: "#ffd3b3" }, { name: "peach", value: "#f0a878" }, { name: "dark peach", value: "#cf7f4e" }] },
+  { hue: "yellow", shades: [{ name: "light yellow", value: "#fff8c9" }, { name: "bright yellow", value: "#ffef9e" }, { name: "yellow", value: "#ffd93d" }, { name: "gold", value: "#eab215" }] },
+  { hue: "lime",   shades: [{ name: "light lime", value: "#edf9b8" }, { name: "bright lime", value: "#d4f28a" }, { name: "lime", value: "#b0e04f" }, { name: "dark lime", value: "#84b62d" }] },
+  { hue: "green",  shades: [{ name: "light green", value: "#cff3d3" }, { name: "bright green", value: "#96e19d" }, { name: "green", value: "#51c86b" }, { name: "dark green", value: "#239a4d" }] },
+  { hue: "teal",   shades: [{ name: "light teal", value: "#ccf4ee" }, { name: "bright teal", value: "#93e6da" }, { name: "turquoise", value: "#31c8c6" }, { name: "dark teal", value: "#0f9b93" }] },
+  { hue: "blue",   shades: [{ name: "light blue", value: "#cfe3ff" }, { name: "bright blue", value: "#97bdff" }, { name: "blue", value: "#3c83ef" }, { name: "dark blue", value: "#1f4fc4" }] },
+  { hue: "purple", shades: [{ name: "light purple", value: "#e7dbff" }, { name: "bright purple", value: "#c1a8f7" }, { name: "purple", value: "#8257df" }, { name: "dark purple", value: "#5930a8" }] },
+  { hue: "pink",   shades: [{ name: "light pink", value: "#ffdcec" }, { name: "bright pink", value: "#ffa9d2" }, { name: "pink", value: "#f46eb3" }, { name: "dark pink", value: "#d63d92" }] },
+  { hue: "brown",  shades: [{ name: "light brown", value: "#efe0cf" }, { name: "soft brown", value: "#d9b48f" }, { name: "brown", value: "#9b623c" }, { name: "dark brown", value: "#5c3a24" }] },
+  { hue: "grey",   shades: [{ name: "white", value: "#ffffff" }, { name: "light grey", value: "#d9dce4" }, { name: "grey", value: "#9a9aa5" }, { name: "black", value: "#30313b" }] }
 ];
 
+// Flattened shade-band by shade-band (all lights, then all brights...), which
+// is the row order the 12-column tray draws: every row is one rainbow.
+const COLORS = [];
+for (let shade = 0; shade < 4; shade += 1) {
+  COLOR_FAMILIES.forEach((family) => COLORS.push(family.shades[shade]));
+}
+
+// Both colouring surfaces open on classic red, the middle of its family and
+// the colour the app has always started on.
+const DEFAULT_COLOR = COLORS.find((color) => color.name === "red") || COLORS[0];
+
 const galleryScreen = document.querySelector("#galleryScreen");
+const modeMenuScreen = document.querySelector("#modeMenuScreen");
 const coloringScreen = document.querySelector("#coloringScreen");
 const pageGallery = document.querySelector("#pageGallery");
 const colorPalette = document.querySelector("#colorPalette");
@@ -41,6 +69,11 @@ const eraserButton = document.querySelector("#eraserButton");
 const peekButton = document.querySelector("#peekButton");
 const canvasStage = document.querySelector("#canvasStage");
 const referenceImage = document.querySelector("#referenceImage");
+// The reference card's landscape home is a second figure down in the studio
+// column (portrait draws the stage's own copy beside the paper), so it needs
+// its own hooks for the image and the peek state.
+const studioReference = document.querySelector("#studioReference");
+const studioReferenceImage = document.querySelector("#studioReferenceImage");
 const celebration = document.querySelector("#celebration");
 const galleryMusicButton = document.querySelector("#galleryMusicButton");
 const studioMessage = document.querySelector("#studioMessage");
@@ -63,8 +96,8 @@ let strokes = [];
 let drawing = false;
 let activePointerId = null;
 let currentStroke = null;
-let currentColor = COLORS[0].value;
-let currentColorName = COLORS[0].name;
+let currentColor = DEFAULT_COLOR.value;
+let currentColorName = DEFAULT_COLOR.name;
 let currentSize = 26;
 let usingEraser = false;
 let referenceVisible = false;
@@ -166,28 +199,91 @@ function buildGallery() {
   pageGallery.appendChild(fragment);
 }
 
-function buildPalette() {
+// Blank Page is the first card of the Coloring gallery (owner brief,
+// 2026-09-14). Its art is drawn here rather than shipped: a white page with a
+// few soft pastel strokes, so it reads as "a page you draw on yourself" next
+// to the printed line-art pages. blank-page.js owns the screen itself; it
+// loads after this file, so the card only opens it once it is there.
+function buildBlankCard() {
+  const button = document.createElement("button");
+  button.className = "page-card page-card--blank";
+  button.type = "button";
+  button.setAttribute("aria-label", "Blank page. Draw your own picture.");
+  button.style.setProperty("--card-color", "#ffffff");
+
+  const canvas = document.createElement("canvas");
+  canvas.width = 290;
+  canvas.height = 362;
+  canvas.setAttribute("aria-hidden", "true");
+  const context = canvas.getContext("2d");
+  context.fillStyle = "#ffffff";
+  context.fillRect(0, 0, canvas.width, canvas.height);
+  const strokes = [
+    { color: "#f9a8c9", from: [58, 92], bend: [104, 64], to: [158, 138] },
+    { color: "#7fd4e8", from: [96, 258], bend: [152, 280], to: [226, 306] },
+    { color: "#ffd93d", from: [186, 92], bend: [224, 122], to: [212, 168] },
+    { color: "#b8a6ef", from: [64, 300], bend: [92, 310], to: [118, 334] }
+  ];
+  strokes.forEach((stroke) => {
+    context.strokeStyle = stroke.color;
+    context.lineWidth = 16;
+    context.lineCap = "round";
+    context.globalAlpha = 0.9;
+    context.beginPath();
+    context.moveTo(stroke.from[0], stroke.from[1]);
+    context.quadraticCurveTo(stroke.bend[0], stroke.bend[1], stroke.to[0], stroke.to[1]);
+    context.stroke();
+  });
+  button.appendChild(canvas);
+  button.addEventListener("click", () => {
+    if (typeof window.openBlankPage === "function") window.openBlankPage();
+  });
+  pageGallery.appendChild(button);
+}
+
+// One palette builder serves both colouring surfaces (the page screen and
+// Blank Page). Selection state is scoped to the container it builds into:
+// two palettes live in the document at once, and a tap on one must never
+// move the other's ring.
+function buildColorPalette(container, onSelect) {
+  const initialIndex = COLORS.indexOf(DEFAULT_COLOR);
+  const api = {};
   COLORS.forEach((color, index) => {
     const button = document.createElement("button");
-    button.className = `color-button${index === 0 ? " is-selected" : ""}`;
+    button.className = `color-button${index === initialIndex ? " is-selected" : ""}`;
     button.type = "button";
     button.style.setProperty("--swatch", color.value);
     button.setAttribute("aria-label", color.name);
     button.dataset.color = color.value;
     button.dataset.name = color.name;
-    button.addEventListener("click", () => selectColor(button, true));
-    colorPalette.appendChild(button);
+    button.addEventListener("click", () => api.select(button));
+    container.appendChild(button);
   });
+  api.select = (button) => {
+    container.querySelectorAll(".color-button").forEach((item) => item.classList.toggle("is-selected", item === button));
+    onSelect(button);
+  };
+  api.clearSelection = () => {
+    container.querySelectorAll(".color-button").forEach((item) => item.classList.remove("is-selected"));
+  };
+  // Bringing a tool back after the eraser must restore the ring the eraser
+  // cleared (owner: "selected color must be visually obvious"). Silent, and
+  // deliberately not api.select: restoring state is not a tap, so it plays
+  // no tone and announces nothing.
+  api.markSelected = (value) => {
+    container.querySelectorAll(".color-button").forEach((item) => item.classList.toggle("is-selected", item.dataset.color === value));
+  };
+  return api;
 }
 
-function selectColor(button, announce = false) {
-  document.querySelectorAll(".color-button").forEach((item) => item.classList.toggle("is-selected", item === button));
-  eraserButton.classList.remove("is-selected");
-  currentColor = button.dataset.color;
-  currentColorName = button.dataset.name;
-  usingEraser = false;
-  tinyPop(460 + COLORS.findIndex((item) => item.value === currentColor) * 45);
-  if (announce) showMessage(currentColorName[0].toUpperCase() + currentColorName.slice(1));
+// The tap tone rises across the tray's columns and deepens down its rows, the
+// same shape of mapping the pixel tray uses, kept inside a child-friendly
+// band now that there are 48 positions.
+function swatchTone(color) {
+  const index = COLORS.findIndex((item) => item.value === color);
+  const column = index < 0 ? 0 : index % 12;
+  const row = index < 0 ? 0 : Math.floor(index / 12);
+  return 440 + column * 26 + row * 55;
 }
 
 function openPage(page) {
@@ -203,6 +299,7 @@ function openPage(page) {
   referenceVisible = loadReferencePref();
   applyReferenceState();
   referenceImage.src = `./assets/references/${page.id}.jpg`;
+  studioReferenceImage.src = referenceImage.src;
   strokes = loadStrokes(page.id);
   lineImage = new Image();
   lineImage.onload = () => {
@@ -237,9 +334,28 @@ function goHome() {
   lineImage = null;
   strokes = [];
   coloringScreen.hidden = true;
+  showColoringGallery();
+}
+
+// --- the level above the galleries -------------------------------------
+// The mode menu is the app's first screen now (owner brief, 2026-09-14).
+// Every screen's back arrow climbs exactly one level, and the hub arrow that
+// used to live on the coloring gallery moved up with the menu, unchanged.
+
+function showColoringGallery() {
+  modeMenuScreen.hidden = true;
   galleryScreen.hidden = false;
   document.body.style.background = "#8a6bea";
   speak("Pick a picture to color.");
+}
+
+function showModeMenu() {
+  // Leaving the gallery stops the bed, every way out -- this is now one of them.
+  stopGalleryMusic();
+  galleryScreen.hidden = true;
+  modeMenuScreen.hidden = false;
+  document.body.style.background = "#6f52d6";
+  speak("Pixel or Coloring? Pick one!");
 }
 
 function canvasPoint(event) {
@@ -513,7 +629,9 @@ function handleClearTap() {
 
 function celebrate() {
   celebration.replaceChildren();
-  const colors = COLORS.slice(0, 8).map((item) => item.value);
+  // The classic row of the 48 (shade band 2 of 4) -- confetti wants the loud
+  // versions, not the pastels the palette now opens with.
+  const colors = COLORS.filter((_, index) => index % 4 === 2).map((item) => item.value);
   for (let index = 0; index < 72; index += 1) {
     const piece = document.createElement("i");
     piece.className = "confetti";
@@ -532,6 +650,9 @@ function celebrate() {
 
 function applyReferenceState() {
   canvasStage.classList.toggle("is-split", referenceVisible);
+  // is-split splits the portrait stage; the studio card is the same state
+  // showing through landscape's copy of the figure.
+  studioReference.hidden = !referenceVisible;
   peekButton.classList.toggle("is-on", referenceVisible);
   peekButton.setAttribute("aria-pressed", String(referenceVisible));
 }
@@ -606,14 +727,32 @@ clearButton.addEventListener("click", handleClearTap);
 
 peekButton.addEventListener("click", toggleReference);
 
+const galleryPalette = buildColorPalette(colorPalette, (button) => {
+  currentColor = button.dataset.color;
+  currentColorName = button.dataset.name;
+  usingEraser = false;
+  eraserButton.classList.remove("is-selected");
+  tinyPop(swatchTone(currentColor));
+  showMessage(currentColorName[0].toUpperCase() + currentColorName.slice(1));
+});
+
 eraserButton.addEventListener("click", () => {
   selectTool("brush");
   usingEraser = true;
-  document.querySelectorAll(".color-button").forEach((button) => button.classList.remove("is-selected"));
+  galleryPalette.clearSelection();
   eraserButton.classList.add("is-selected");
   tinyPop(340);
   showMessage("Eraser");
 });
+
+document.querySelector("#galleryBackButton").addEventListener("click", showModeMenu);
+document.querySelector("#modeColoring").addEventListener("click", showColoringGallery);
+document.querySelector("#modePixel").addEventListener("click", () => {
+  // pixel-mode.js owns the pixel screens and the renderer that drew this
+  // card's art; it publishes the door once it has loaded.
+  if (typeof window.openPixelGallery === "function") window.openPixelGallery();
+});
+document.querySelector("#modeMenuVoice").addEventListener("click", () => speak("Pixel or Coloring? Pick one to play."));
 
 function selectTool(tool) {
   currentTool = tool;
@@ -621,6 +760,10 @@ function selectTool(tool) {
   document.querySelectorAll(".tool-options").forEach((options) => { options.hidden = options.dataset.options !== tool; });
   colorPalette.hidden = false;
   if (tool !== "brush") usingEraser = false;
+  // Every tool paints with currentColor, so leaving the eraser for any of
+  // them brings the ring back on it. The eraser's own handler calls this
+  // first and clears after, so erasing still leaves the palette unmarked.
+  galleryPalette.markSelected(currentColor);
   const directions = { brush: "Draw with your finger.", fill: "Tap a space to fill it.", gradient: "Drag across the picture to blend two colors.", stamp: "Tap the picture to add a stamp." };
   showMessage(directions[tool]);
   tinyPop(430 + ["brush", "fill", "gradient", "stamp"].indexOf(tool) * 60);
@@ -659,8 +802,8 @@ window.addEventListener("keydown", (event) => {
   }
 });
 
+buildBlankCard();
 buildGallery();
-buildPalette();
 updateMusicButton(false);
 
 if (

@@ -243,6 +243,15 @@ button:disabled {
   mix-blend-mode: multiply;
 }
 
+/* The Blank Page card draws its own art (a white page, a few pastel strokes)
+   rather than shipping an image file; it sizes like the printed pages beside it. */
+.page-card--blank canvas {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
 .page-card:hover {
   transform: translateY(-5px) rotate(var(--tilt, 0deg));
 }
@@ -432,7 +441,8 @@ button:disabled {
   box-shadow: 0 4px 0 rgba(54, 36, 112, 0.16), 0 9px 18px rgba(63, 47, 122, 0.18);
 }
 
-#paintCanvas {
+#paintCanvas,
+#blankCanvas {
   display: block;
   width: 100%;
   height: 100%;
@@ -468,44 +478,27 @@ button:disabled {
 
 @keyframes bounce { to { transform: translateY(-18px); } }
 
-.bottom-tools {
-  position: relative;
-  z-index: 5;
-  display: flex;
-  align-items: center;
+/* The 48-swatch colouring palette (owner brief, 2026-09-14: 48 colours, and
+   "do not make swatches too small just to fit everything"). Portrait is one
+   grid: 12 columns x 4 rows of 48px swatches with 8px gaps, so 664px wide by
+   216px tall. A 768px-wide portrait screen gives this band 748px of row, so
+   all four rows show and nothing scrolls. Landscape stands the same 48
+   swatches up as a four-column shelf in their own right-hand column -- see
+   the landscape override on .coloring-screen. Swatches stay 48px everywhere;
+   the owner's floor is 44px and this never goes below it on the iPad. */
+.color-palette {
+  display: grid;
+  grid-template-columns: repeat(12, 48px);
   justify-content: center;
-  gap: 12px;
-  padding: 10px 12px max(12px, env(safe-area-inset-bottom));
-  background: rgba(255,255,255,.82);
-  border-top: 4px solid rgba(255,255,255,.94);
-  box-shadow: 0 -9px 24px rgba(37,107,126,.12);
-  backdrop-filter: blur(12px);
-  min-width: 0;
-  width: 100%;
-}
-
-.brush-tools,
-.color-palette {
-  display: flex;
-  align-items: center;
   gap: 8px;
+  padding: 4px max(10px, env(safe-area-inset-right)) max(10px, env(safe-area-inset-bottom)) max(10px, env(safe-area-inset-left));
+  background: rgba(255, 255, 255, .92);
 }
 
-.brush-tools {
-  flex: 0 0 auto;
-  padding-right: 12px;
-  border-right: 3px dashed rgba(72,85,130,.19);
+.color-palette .color-button {
+  width: 48px;
+  height: 48px;
 }
-
-.color-palette {
-  overflow-x: auto;
-  overflow-y: hidden;
-  max-width: min(720px, 69vw);
-  padding: 5px 2px 9px;
-  scrollbar-width: none;
-}
-
-.color-palette::-webkit-scrollbar { display: none; }
 
 .color-button,
 .size-button,
@@ -596,10 +589,14 @@ button:disabled {
   .top-toolbar { gap: clamp(5px, 1.6vw, 12px); }
   .tool-button { width: clamp(48px, 13.5vw, 66px); height: clamp(48px, 13.5vw, 66px); border-radius: 20px; }
   .tool-button--home { font-size: clamp(28px, 8vw, 42px); }
-  .bottom-tools { flex-direction: column; gap: 8px; padding-top: 8px; overflow: hidden; }
-  .brush-tools { border-right: 0; border-bottom: 3px dashed rgba(72,85,130,.19); padding: 0 0 7px; }
-  .color-palette { width: 100%; max-width: 100%; justify-content: flex-start; }
-  .color-button { width: 54px; height: 54px; }
+  /* Phones (below the 768px iPad): 12 columns of 48px cannot fit a narrow
+     portrait row, so the grid re-flows to 6 x 44px -- still above the owner's
+     44px floor -- and the band scrolls if eight rows outgrow the viewport.
+     Held sideways a phone meets the landscape shelf above instead, and this
+     block's max-height/overflow keeps it contained there. The iPad this app
+     is built for never sees this rule. */
+  .color-palette { grid-template-columns: repeat(6, 44px); gap: 6px; max-height: 40vh; overflow-y: auto; }
+  .color-palette .color-button { width: 44px; height: 44px; }
   .size-button { width: 44px; height: 44px; }
   .eraser-button { width: 48px; height: 48px; }
   .canvas-stage { padding-left: 7px; padding-right: 7px; gap: 8px; }
@@ -614,9 +611,41 @@ button:disabled {
   }
 }
 
-/* Landscape is the home layout on tablets: tool columns on the sides, art in the middle. */
+/* Landscape is the home layout on tablets: a round-button rail on the left,
+   the art at full height in the middle, then the studio tools and the colours
+   as two right-hand columns. The 48 swatches stand up in a side shelf -- the
+   first run of this layout said a side column "cannot hold 48 at any legal
+   size", and that arithmetic only priced two columns. Four columns of 48px
+   plus 3 x 8px gaps = 216px wide, 12 rows plus 11 gaps = 664px tall, and
+   664 + padding = 678px of a 768px screen: it fits with room to spare, and
+   the canvas keeps the full height (458x695 at 1024x768, where the old tray
+   under the canvas left it 329x502). Standing the grid up also transposes it:
+   portrait's rows were shade bands, the shelf's rows are hue families, one
+   family per row, light-to-dark across -- the DOM order is untouched, only
+   the wrap changes. */
 @media (orientation: landscape) {
-  .coloring-screen { grid-template-columns: auto minmax(0, 1fr) auto; grid-template-rows: 1fr; }
+  .coloring-screen {
+    grid-template-columns: auto minmax(0, 1fr) 190px 252px;
+    grid-template-rows: minmax(0, 1fr);
+    grid-template-areas: "tools canvas studio palette";
+  }
+  .coloring-screen > .top-toolbar { grid-area: tools; }
+  .coloring-screen > .canvas-stage { grid-area: canvas; }
+  .coloring-screen > .studio-tools { grid-area: studio; }
+  .coloring-screen > .color-palette {
+    grid-area: palette;
+    grid-template-columns: repeat(4, 48px);
+    grid-template-rows: repeat(12, 48px);
+    grid-auto-flow: column;
+    align-content: center;
+    justify-content: center;
+    gap: 8px;
+    /* 4px border + 14px left + 18px right around the 216px grid: the 18px
+       keeps the lifted selected ring (scale 1.12 + 5px outline + 2px offset
+       reaches ~10px past the swatch) inside the viewport with ~9px spare. */
+    padding: 4px max(18px, env(safe-area-inset-right)) max(10px, env(safe-area-inset-bottom)) 14px;
+    border-left: 4px solid rgba(82, 67, 126, .14);
+  }
   .top-toolbar {
     flex-direction: column;
     justify-content: center;
@@ -625,44 +654,23 @@ button:disabled {
     overflow: hidden auto;
   }
   .canvas-stage { padding: 8px 6px; }
-  .bottom-tools {
-    flex-direction: column;
-    justify-content: center;
-    flex: 0 0 156px;
-    width: 156px;
-    max-height: none;
-    min-height: 0;
-    padding: 10px max(10px, env(safe-area-inset-right)) 10px 10px;
-    border-top: 0;
-    border-left: 4px solid rgba(255,255,255,.94);
-    box-shadow: -9px 0 24px rgba(37,107,126,.12);
+
+  /* With the shelf beside the canvas there is no longer room to split the
+     stage: the paper is 2:3, so a 600px-tall canvas is 400px wide, two of
+     those plus the gap and stage padding is ~815px, and 815 + 216 of
+     swatches already passes 1024 with no tools and no rail. The second run
+     answered that with a small card absolutely pinned over the page's
+     corner -- and the controller's live re-measure caught it sitting on the
+     swatch shelf: the card anchored itself to .coloring-screen (the stage's
+     container-type did not make it a containing block in the QA browser),
+     and even a correct stage anchor lands on the paper's corner. The third
+     run gives landscape its own copy of the figure down in the studio
+     column (see the .studio-tools block below); the stage's copy is
+     portrait's side-by-side split and is simply hidden here. */
+  .canvas-stage.is-split .paper-frame {
+    height: min(100cqh, 100cqw * 1086 / 724);
   }
-  .brush-tools {
-    display: grid;
-    grid-template-columns: repeat(2, 58px);
-    justify-items: center;
-    justify-content: center;
-    width: 132px;
-    border-right: 0;
-    border-bottom: 3px dashed rgba(72,85,130,.19);
-    padding: 0 0 8px;
-  }
-  .color-palette {
-    display: grid;
-    grid-template-columns: repeat(2, 58px);
-    grid-auto-rows: 58px;
-    align-content: center;
-    justify-content: center;
-    min-height: 0;
-    max-width: none;
-    max-height: none;
-    width: 132px;
-    overflow: visible;
-    padding: 8px;
-  }
-  .color-button.is-selected {
-    transform: scale(1.08);
-  }
+  .canvas-stage.is-split .reference-frame { display: none; }
 }
 
 @media (max-height: 680px) and (orientation: landscape) {
@@ -670,10 +678,12 @@ button:disabled {
   .tool-button { width: 54px; height: 54px; border-radius: 18px; font-size: 29px; }
   .tool-button--home { font-size: 39px; }
   .canvas-stage { padding: 7px 3px; }
-  .bottom-tools { flex-basis: 128px; width: 128px; padding: 8px max(8px, env(safe-area-inset-right)) 8px 8px; }
-  .brush-tools { grid-template-columns: repeat(2, 48px); width: 112px; padding: 0 0 7px; }
-  .color-palette { grid-template-columns: repeat(2, 48px); grid-auto-rows: 48px; width: 112px; padding: 8px; }
-  .color-button { width: 48px; height: 48px; }
+  /* The shelf drops to the owner's 44px floor on short landscapes: 48px
+     swatches need 12 x 48 + 11 x 8 + padding = 678px, which only fits from
+     ~682px of height up. At 44px with 6px gaps the shelf is 594px tall and a
+     680px landscape holds it whole -- no scrolling at either size. */
+  .coloring-screen > .color-palette { grid-template-columns: repeat(4, 44px); grid-template-rows: repeat(12, 44px); gap: 6px; }
+  .color-palette .color-button { width: 44px; height: 44px; }
   .size-button { width: 44px; height: 44px; }
   .eraser-button { width: 48px; height: 48px; }
 }
@@ -701,30 +711,192 @@ button:disabled {
 .stamp-choice { width:48px; height:48px; border:0; border-radius:14px; background:#eee8ff; color:#ef568f; font-size:29px; }
 .stamp-choice.is-selected { background:#ffe66d; box-shadow:inset 0 0 0 3px #fff,0 0 0 2px #d4a928; }
 .stamp-options input[type="range"] { width:92px; min-height:48px; }
-/* Its own row, centred, wrapping. Ten swatches spend 552 px of the 748 px a
-   768 px screen gives this row, so nothing is ever hidden whichever tool is
-   showing; wrapping keeps that true if an eleventh colour is ever added. */
-.studio-tools .color-palette { display:flex; flex-wrap:wrap; justify-content:center; gap:8px; max-width:none; overflow:visible; padding:0; }
-.studio-tools .color-button { width:48px; height:48px; flex:0 0 48px; }
-/* A message is a reserved line in the tool surface, never an overlay. The
-   canvas stage establishes its own containing block (`container-type: size`
-   implies layout containment), so absolutely positioning the message from
-   there can paint it over controls outside the stage even though the anchor
-   itself is correct. Keeping it in flow protects both the art and the tools. */
+/* The colours are no longer inside .studio-tools: the 48-swatch band sits
+   directly under it in portrait and stands up as the landscape shelf in its
+   own column (see the .coloring-screen landscape override). The rules above
+   size the tools; the palette's own block sizes the swatches. */
+/* A message is a reserved line in the tool surface, never an overlay. An
+   absolutely positioned message anchored from the canvas stage paints over
+   controls outside it -- and the third-run re-measure showed the stage's
+   container-type does not reliably make it the containing block at all (the
+   reference card escaped to .coloring-screen; see the landscape block above).
+   Keeping it in flow protects both the art and the tools. */
 .studio-message { justify-self:center; max-width:100%; margin:0; padding:9px 16px; border-radius:18px; background:rgba(68,52,109,.9); color:#fff; font-weight:900; line-height:20px; text-align:center; pointer-events:none; }
 .studio-message:empty { display:none; }
 @media (orientation:landscape) {
-  .studio-tools { width:190px; min-height:0; border-top:0; border-left:4px solid rgba(255,255,255,.94); overflow-y:auto; }
+  /* align-content:start is the stretched-chip fix: a grid shares its leftover
+     height out to auto rows, and in a full-height column that grew Blank
+     Page's two tool chips into 80x751 columns. The options also wrap inside
+     the 166px of column left by border and padding -- unwrapped, the stamp
+     row alone is ~440px wide, and that minimum set this grid's column width,
+     which is what pushed Fill and Stamp past the right edge of the old
+     landscape screen. */
+  .studio-tools { width:190px; min-height:0; align-content:start; border-top:0; border-left:4px solid rgba(255,255,255,.94); overflow-y:auto; }
   .studio-message { width:100%; padding:8px 7px; font-size:14px; white-space:normal; }
   .primary-tools { grid-template-columns:repeat(2,minmax(0,1fr)); }
-  .studio-tools .color-palette { display:grid; grid-template-columns:repeat(2,48px); justify-content:center; }
+  .secondary-tools { justify-content:center; }
+  /* max-width is what makes that wrap real: .tool-options is a flex:0 0 auto
+     row, so unclamped it laid out at its max-content 220px and overhung the
+     166px column -- the brush chips ran 13px into the canvas column and 17px
+     into the swatch shelf, wrap declared but never fired. Clamped to the
+     column the chips wrap in place, three sizes then the eraser, all inside
+     the column at their full 48px. */
+  .tool-options { flex-wrap:wrap; justify-content:center; max-width:100%; }
+  /* The landscape home of the finished-picture reference: in flow below the
+     tool controls, the one band of the landscape screen that belongs to
+     neither the art nor a control. The same 160x240 card fits the 166px of
+     content column with the tool rows ending around y 310 of 768 above it;
+     if a taller tool ever grows past it the column scrolls rather than
+     covering anything. #studioReference (index.html) is a second copy of
+     the stage's figure because portrait draws that one inside the stage's
+     size container; app.js mirrors the image src and the peek state onto
+     this copy's [hidden]. */
+  .studio-tools .reference-frame { display:block; width:160px; height:auto; justify-self:center; margin:0; }
+  .studio-tools .reference-frame[hidden] { display:none; }
+}
+
+/* ==========================================================================
+   Top-level mode menu (owner brief, 2026-09-14) — the app's first screen.
+   Two large cards, not a list, in the gallery's own family: purple sky,
+   white rounded frames, the brand mark, the hub arrow in its usual corner.
+   Each preview is the activity itself — a pixel card rendered by the board's
+   own card renderer, a coloring page shown as line art.
+   ========================================================================== */
+.mode-menu-screen {
+  position: relative;
+  overflow: hidden auto;
+  padding: max(20px, env(safe-area-inset-top)) clamp(16px, 4vw, 42px) max(32px, env(safe-area-inset-bottom));
+  background-color: #6f52d6;
+  background-image:
+    radial-gradient(circle at 12% 16%, rgba(255,255,255,.55) 0 3px, transparent 4px),
+    radial-gradient(circle at 82% 10%, rgba(255,255,255,.7) 0 4px, transparent 5px),
+    radial-gradient(circle at 70% 32%, rgba(255,255,255,.45) 0 3px, transparent 4px),
+    linear-gradient(150deg, rgba(126,91,220,.5), rgba(82,56,184,.7));
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: auto, auto, auto, cover;
+}
+
+.mode-title {
+  position: relative;
+  z-index: 1;
+  margin: 0 auto clamp(14px, 2.4vw, 24px);
+  width: min(960px, 100%);
+  color: #fff;
+  font-size: clamp(30px, 5vw, 52px);
+  line-height: 1.15;
+  text-align: center;
+  text-shadow: 0 4px 0 rgba(54, 36, 112, .25);
+}
+
+.mode-cards {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(18px, 3.4vw, 40px);
+  width: min(880px, 100%);
+  margin: 0 auto;
+  padding-bottom: 18px;
+}
+
+.mode-card {
+  display: grid;
+  gap: clamp(6px, 1.2vw, 12px);
+  justify-items: center;
+  padding: clamp(14px, 2.4vw, 26px);
+  border: 5px solid rgba(255,255,255,.96);
+  border-radius: clamp(24px, 3.4vw, 38px);
+  background: #fff;
+  box-shadow: var(--shadow);
+  transition: transform .18s ease, box-shadow .18s ease;
+}
+
+.mode-card:hover { transform: translateY(-6px) rotate(var(--tilt, 0deg)); }
+.mode-card:first-child { --tilt: -1deg; }
+.mode-card:last-child { --tilt: 1deg; }
+
+.mode-art {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border-radius: 16px;
+  background: #fff;
+}
+
+.mode-art canvas,
+.mode-art img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.mode-art img { mix-blend-mode: multiply; }
+
+.mode-name {
+  color: #4c3e72;
+  font-size: clamp(26px, 4vw, 42px);
+  line-height: 1.1;
+}
+
+.mode-tag {
+  color: #7a6ea8;
+  font-size: clamp(14px, 2vw, 19px);
+  font-weight: 800;
+  text-align: center;
+}
+
+@media (max-width: 760px) {
+  .mode-cards { grid-template-columns: minmax(0, 420px); justify-content: center; }
+}
+
+/* ==========================================================================
+   Blank Page — the first card of Coloring (owner brief, 2026-09-14). The
+   coloring screen's own family (same stage, same paper, same tool surface)
+   carrying only brush, eraser and clear: "do not turn this into a complex
+   art studio."
+   ========================================================================== */
+.blank-screen {
+  --game-bg: linear-gradient(160deg, #f6ecff 0%, #e3f2ff 46%, #dcf6ea 100%);
+}
+
+.blank-tools {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  width: min(320px, 100%);
+  margin: 0 auto;
+}
+
+@media (orientation: landscape) {
+  .blank-tools { width: 100%; margin: 0; }
+}
+
+/* The eraser's pink block, the same glyph the brush screen's eraser button
+   wears, sized to sit inside a primary-tool button. */
+.eraser-chip {
+  display: grid;
+  place-items: center;
+  height: 25px;
+}
+
+.eraser-chip i {
+  display: block;
+  width: 31px;
+  height: 21px;
+  border: 3px solid #ae4e7f;
+  border-radius: 7px;
+  background: linear-gradient(90deg, #ff98c5 0 63%, #fff 63%);
+  transform: rotate(-33deg);
 }
 
 /* ==========================================================================
    Pixel Mosaic mode — a pegboard-style tile toy (owner concept, 2026-08-27).
    A white recessed board with square pockets, puffy glossy tiles and a chunky
    wood-toned frame, like the physical mosaic toy it copies. The palette below
-   the board is exactly 30 colors: 3 rows x 10 columns, light/mid/dark shades.
+   the board is exactly 36 colors: 3 rows x 12 columns, light/mid/dark shades
+   (it grew from 30 with the owner on 2026-08-28; cards are authored in the
+   palette's own indices, so the growth added columns and changed no card).
    ========================================================================== */
 
 .px-gallery-screen {
@@ -893,14 +1065,6 @@ button:disabled {
 .px-card.is-done .px-card-badge {
   opacity: 1;
   transform: scale(1) rotate(-8deg);
-}
-
-.px-entry-art {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  display: block;
-  mix-blend-mode: multiply;
 }
 
 .px-board-screen {
@@ -1132,4 +1296,33 @@ button:disabled {
 
 @media (max-height: 680px) and (orientation: landscape) {
   .px-thumb { width: 78px; }
+}
+
+/* ----------------------------------------------------------- touch hygiene ---
+ * Owner, 2026-09-15: "sometimes apps like writing turned into 'selection' and the
+ * UI turn blue ... also for some apps accidental zoom in occur a lot."
+ *
+ * One cause, two symptoms: a child drags and rests fingers constantly, and the
+ * browser reads that as text selection and as zoom.
+ *
+ * touch-action is `manipulation`, not `none`: it removes double-tap-to-zoom and
+ * leaves scrolling alone. The drawing surfaces below already set their own
+ * `touch-action: none`, which is more specific and still wins -- a colouring
+ * canvas wants every gesture.
+ *
+ * Pinch needs JavaScript: iOS Safari has ignored user-scalable=no since iOS 10,
+ * so this app's viewport meta never stopped it. See the guard in index.html.
+ */
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+  touch-action: manipulation;
+}
+
+input, textarea, [contenteditable="true"] {
+  -webkit-user-select: text;
+  user-select: text;
 }

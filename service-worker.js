@@ -1,12 +1,17 @@
-const CACHE_NAME = "little-color-garden-v16";
+const CACHE_NAME = "little-color-garden-v18";
 const PAGE_IDS = [
   "solar-system",
   "space-kid",
   "moon-flag",
   "mars-rover",
+  "star-astronaut",
+  "space-ufo",
+  "space-cat",
   "pink-princess",
   "magic-princess",
   "mermaid-princess",
+  "mermaid-dolphin",
+  "mermaid-flower",
   "bird-princess",
   "hibiscus",
   "ginger-lily",
@@ -28,6 +33,7 @@ const APP_FILES = [
   "./app.js",
   "./pixel-cards.js",
   "./pixel-mode.js",
+  "./blank-page.js",
   "./manifest.webmanifest",
   "./assets/icons/icon-192.png",
   "./assets/icons/icon-512.png",

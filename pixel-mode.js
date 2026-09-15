@@ -97,8 +97,7 @@
   });
 
   // --- DOM -------------------------------------------------------------
-  const mainGallery = document.querySelector("#galleryScreen");
-  const pageGallery = document.querySelector("#pageGallery");
+  const modeMenu = document.querySelector("#modeMenuScreen");
   const galleryScreen = document.querySelector("#pixelGalleryScreen");
   const boardScreen = document.querySelector("#pixelBoardScreen");
   const cardsRow = document.querySelector("#pixelCards");
@@ -770,12 +769,12 @@
     overlay.hidden = true;
   }
 
-  function showMainGallery() {
+  function showModeMenu() {
     hideAllPixelScreens();
     disarmClear();
-    mainGallery.hidden = false;
-    document.body.style.background = "#8a6bea";
-    speak("Pick a picture to color.");
+    modeMenu.hidden = false;
+    document.body.style.background = "#6f52d6";
+    speak("Pixel or Coloring? Pick one!");
   }
 
   function showPixelGallery() {
@@ -977,32 +976,29 @@
     });
   }
 
-  // The door into pixel mode from the app's main gallery: one distinctive card
-  // at the front of the shelf, drawn from the same card renderer.
-  function injectEntryCard() {
+  // The mode menu's Pixel card: its art is drawn by this mode's own card
+  // renderer, so the preview on the menu is the mode itself. This replaces the
+  // old entry card in the coloring gallery, which is gone now that the two
+  // activities have separate doors (owner brief, 2026-09-14).
+  function decorateModeMenu() {
+    const art = document.querySelector("#modePixelArt");
+    if (!art) return;
     const rainbow = DATA.cards.find((card) => card.id === "rainbow") || DATA.cards[0];
-    const button = document.createElement("button");
-    button.className = "page-card px-entry";
-    button.type = "button";
-    button.setAttribute("aria-label", "Pixel Mosaic");
-    button.style.setProperty("--card-color", "#fff3d6");
-    const canvas = document.createElement("canvas");
-    canvas.width = W * 12;
-    canvas.height = H * 12;
-    canvas.className = "px-entry-art";
-    renderStill(canvas.getContext("2d"), canvas, cardIndices.get(rainbow.id), 12);
-    button.appendChild(canvas);
-    button.addEventListener("click", () => {
-      // The music button lives in the gallery header, which this hides, so a bed
-      // left playing here has no off switch anywhere on screen. Opening a
-      // coloring page already stops it; this is the same door.
-      stopMusic();
-      mainGallery.hidden = true;
-      showPixelGallery();
-      pop(520, 0.06);
-    });
-    pageGallery.insertBefore(button, pageGallery.firstChild);
+    renderStill(art.getContext("2d"), art, cardIndices.get(rainbow.id), 12);
   }
+
+  // The menu's Pixel button opens the pixel gallery. app.js owns the menu, so
+  // the door is exposed the way this app exposes `speak` and `tinyPop` -- a
+  // top-level function on `window` the other script picks up if it is there.
+  window.openPixelGallery = () => {
+    // The music button lives on the coloring gallery header, which this hides,
+    // so a bed left playing here has no off switch anywhere on screen. Opening
+    // a coloring page already stops it; this is the same door.
+    stopMusic();
+    modeMenu.hidden = true;
+    showPixelGallery();
+    pop(520, 0.06);
+  };
 
   // --- palette -----------------------------------------------------------
   // The grid fills row by row, so the buttons are appended row by row: all
@@ -1064,7 +1060,7 @@
     }
   });
   homeButton.addEventListener("click", showPixelGallery);
-  galleryBackButton.addEventListener("click", showMainGallery);
+  galleryBackButton.addEventListener("click", showModeMenu);
   galleryVoiceButton.addEventListener("click", () => speak("Pick how much help you want at the top, then pick a picture to copy!"));
   voiceButton.addEventListener("click", () => {
     if (activeCard) speak(currentLevel().prompt(activeCard.name));
@@ -1080,7 +1076,7 @@
         return;
       }
       if (!boardScreen.hidden) showPixelGallery();
-      else if (!galleryScreen.hidden) showMainGallery();
+      else if (!galleryScreen.hidden) showModeMenu();
     }
     if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "z" && !boardScreen.hidden) {
       event.preventDefault();
@@ -1095,5 +1091,5 @@
   buildLevels();
   buildPixelGallery();
   buildPalette();
-  injectEntryCard();
+  decorateModeMenu();
 })();

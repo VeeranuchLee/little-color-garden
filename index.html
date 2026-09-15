@@ -16,11 +16,11 @@
   </head>
   <body>
     <main class="app-shell">
-      <section id="galleryScreen" class="screen gallery-screen" aria-label="Choose a coloring picture">
-        <div class="sky-blob sky-blob--one" aria-hidden="true"></div>
-        <div class="sky-blob sky-blob--two" aria-hidden="true"></div>
-        <div class="sky-blob sky-blob--three" aria-hidden="true"></div>
-
+      <!-- Top-level mode menu (owner brief, 2026-09-14): Pixel Mosaic and
+           coloring-book pages are different activity types and no longer share
+           one gallery. This is the app's first screen now, so the hub back
+           arrow moved here unchanged -- see the note on the arrow itself. -->
+      <section id="modeMenuScreen" class="screen mode-menu-screen" aria-label="Choose what to make">
         <header class="gallery-header">
           <!-- Owner, 2026-08-27: *"need to make sure ALL games has back icon to the hub"*
                -- a 4-year-old could not get out of the app. The header was
@@ -33,6 +33,52 @@
           <a class="round-button hub-button" href="https://veeranuchlee.github.io/children-apps/" aria-label="Back to Children Games">
             <span aria-hidden="true">&larr;</span>
           </a>
+
+          <div class="brand-mark" aria-hidden="true">
+            <span class="brand-star brand-star--one">✦</span>
+            <span class="brand-star brand-star--two">✦</span>
+            <div class="rainbow">
+              <i></i><i></i><i></i><i></i>
+            </div>
+            <div class="paint-smile"><span></span><span></span></div>
+          </div>
+
+          <button class="round-button sound-button" id="modeMenuVoice" type="button" aria-label="Hear what to do">
+            <span aria-hidden="true">🔊</span>
+          </button>
+        </header>
+
+        <h1 class="mode-title">What will you make?</h1>
+
+        <div class="mode-cards" role="group" aria-label="Pick a way to play">
+          <!-- Both previews are drawn from the app's own assets: the Pixel card
+               is rendered by pixel-mode.js through the board's card renderer
+               (fill in the canvas below), the Coloring card is one of the
+               existing coloring pages, shown as line art. -->
+          <button class="mode-card" id="modePixel" type="button" aria-label="Pixel. Copy pictures with little tiles.">
+            <span class="mode-art"><canvas id="modePixelArt" width="240" height="180" aria-hidden="true"></canvas></span>
+            <b class="mode-name">Pixel</b>
+            <span class="mode-tag">Copy pictures with little tiles</span>
+          </button>
+          <button class="mode-card" id="modeColoring" type="button" aria-label="Coloring. Color a picture, or draw your own.">
+            <span class="mode-art"><img src="./assets/pages/pink-princess.png" alt="" draggable="false" /></span>
+            <b class="mode-name">Coloring</b>
+            <span class="mode-tag">Color a picture, or draw your own</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- The Coloring gallery. No longer the first screen: its top-left arrow
+           goes back to the mode menu, and the hub arrow lives on that menu. -->
+      <section id="galleryScreen" class="screen gallery-screen" aria-label="Choose a coloring picture" hidden>
+        <div class="sky-blob sky-blob--one" aria-hidden="true"></div>
+        <div class="sky-blob sky-blob--two" aria-hidden="true"></div>
+        <div class="sky-blob sky-blob--three" aria-hidden="true"></div>
+
+        <header class="gallery-header">
+          <button class="round-button hub-button" id="galleryBackButton" type="button" aria-label="Back to the menu">
+            <span aria-hidden="true">&larr;</span>
+          </button>
 
           <div class="brand-mark" aria-hidden="true">
             <span class="brand-star brand-star--one">✦</span>
@@ -114,21 +160,69 @@
               <label>Turn <input id="stampRotation" type="range" min="-180" max="180" value="0"></label>
             </div>
           </div>
-          <!-- The colours are their own row, never sharing the tool row. Ten 48 px
-               swatches plus gaps is 552 px inside a 748 px row at 768 px wide, so the
-               strip fits whichever tool is selected and never scrolls. -->
-          <div id="colorPalette" class="color-palette" role="group" aria-label="Colors"></div>
+          <!-- Landscape's reference card lives here, in flow below the tool
+               controls: the canvas column has no room beside the paper (the
+               arithmetic is in styles.css), and a card pinned over the art or
+               the shelf hides something a child is using. This is a second
+               copy of the stage's figure -- portrait draws that one beside
+               the paper, and no single parent serves both orientations --
+               so app.js mirrors the image src and the peek button's state
+               onto it. Portrait never shows this one. -->
+          <figure class="reference-frame" id="studioReference" aria-label="Finished picture example" hidden>
+            <img id="studioReferenceImage" class="reference-image" alt="" draggable="false" />
+          </figure>
         </div>
+        <!-- The colours are their own band of the tool surface, never sharing
+             the tool row. It is a sibling of .studio-tools rather than a child
+             because the two orientations shape it differently: portrait stacks
+             it as the last band of the bottom surface, landscape stands it up
+             as a four-column shelf in its own right-hand column (the
+             arithmetic for both is in TWO-MODE-SPEC §3). -->
+        <div id="colorPalette" class="color-palette" role="group" aria-label="Colors"></div>
 
         <div id="celebration" class="celebration" aria-hidden="true"></div>
       </section>
 
+      <!-- Blank Page (owner brief, 2026-09-14): the first card of Coloring --
+           free drawing on a white page with exactly three things: brush,
+           eraser, clear. -->
+      <section id="blankScreen" class="screen coloring-screen blank-screen" aria-label="Blank page" hidden>
+        <header class="top-toolbar">
+          <button class="tool-button tool-button--home" id="blankHome" type="button" aria-label="Go back to the pictures">
+            <span aria-hidden="true">⌂</span>
+          </button>
+          <button class="tool-button tool-button--voice" id="blankVoice" type="button" aria-label="Hear what to do">
+            <span aria-hidden="true">🔊</span>
+          </button>
+          <button class="tool-button tool-button--clear" id="blankClear" type="button" aria-label="Clean the whole page">
+            <span aria-hidden="true">🧹</span>
+            <i class="arm-ring" aria-hidden="true"></i>
+          </button>
+        </header>
+
+        <div class="canvas-stage">
+          <div class="paper-frame">
+            <canvas id="blankCanvas" width="724" height="1086" aria-label="Blank page. Pick a color, then draw."></canvas>
+          </div>
+        </div>
+
+        <div class="studio-tools" aria-label="Drawing tools">
+          <p class="studio-message" id="blankMessage" aria-live="polite"></p>
+          <div class="primary-tools blank-tools" role="group" aria-label="Choose a tool">
+            <button class="primary-tool is-selected" id="blankBrush" type="button"><span aria-hidden="true">🖌️</span><b>Brush</b></button>
+            <button class="primary-tool" id="blankEraser" type="button"><span class="eraser-chip" aria-hidden="true"><i></i></span><b>Eraser</b></button>
+          </div>
+        </div>
+
+        <div id="blankPalette" class="color-palette" role="group" aria-label="Colors"></div>
+      </section>
+
       <!-- Pixel Mosaic mode (owner concept, 2026-08-27): a pegboard-style tile
            toy. Pick a pattern card, copy it on the big board. The palette is
-           exactly 30 colors in 3 rows x 10; cards use only those colors. -->
+           exactly 36 colors in 3 rows x 12; cards use only those colors. -->
       <section id="pixelGalleryScreen" class="screen px-gallery-screen" aria-label="Pixel mosaic pictures to copy" hidden>
         <header class="gallery-header">
-          <button class="round-button hub-button" id="pixelGalleryBack" type="button" aria-label="Back to coloring pictures">
+          <button class="round-button hub-button" id="pixelGalleryBack" type="button" aria-label="Back to the menu">
             <span aria-hidden="true">&larr;</span>
           </button>
           <div class="px-mark" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
@@ -188,5 +282,11 @@
     <script src="./app.js"></script>
     <script src="./pixel-cards.js"></script>
     <script src="./pixel-mode.js"></script>
-  </body>
+    <script src="./blank-page.js"></script>
+    <script>
+  /* Pinch-zoom guard: iOS ignores user-scalable=no, so this is what stops two small
+     hands zooming the page mid-drawing. Inert outside Safari. */
+  document.addEventListener("gesturestart", function (e) { e.preventDefault(); }, { passive: false });
+  </script>
+</body>
 </html>
