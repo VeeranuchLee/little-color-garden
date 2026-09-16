@@ -757,10 +757,12 @@ button:disabled {
 
 /* ==========================================================================
    Top-level mode menu (owner brief, 2026-09-14) — the app's first screen.
-   Two large cards, not a list, in the gallery's own family: purple sky,
+   Large cards, not a list, in the gallery's own family: purple sky,
    white rounded frames, the brand mark, the hub arrow in its usual corner.
    Each preview is the activity itself — a pixel card rendered by the board's
-   own card renderer, a coloring page shown as line art.
+   own card renderer, a coloring page and a mosaic sheet shown as line art.
+   Three cards today (CG-093); the hub is decided at five, and this row wraps
+   3 + 2 when cards 4 and 5 arrive.
    ========================================================================== */
 .mode-menu-screen {
   position: relative;
@@ -793,9 +795,9 @@ button:disabled {
   position: relative;
   z-index: 1;
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: clamp(18px, 3.4vw, 40px);
-  width: min(880px, 100%);
+  width: min(1020px, 100%);
   margin: 0 auto;
   padding-bottom: 18px;
 }
@@ -1325,4 +1327,60 @@ body {
 input, textarea, [contenteditable="true"] {
   -webkit-user-select: text;
   user-select: text;
+}
+
+/* ==========================================================================
+   Mosaic — card 3 of the Color Garden hub (owner decision, 2026-09-15):
+   "pictures divided into many distinct enclosed shapes, like stained glass.
+   No numbers." The board is the coloring screen itself opened on a page with
+   kind "mosaic" (app.js openPage), so this section is mostly the choosing: a
+   gallery of its own, and the few subtractions that turn the shared screen
+   into a mosaic board.
+   ========================================================================== */
+
+/* The choosing gallery: the coloring gallery's sky swapped for a pale
+   diamond-pane texture, the way the pixel gallery swapped it for a grid. */
+.mosaic-gallery-screen {
+  background-color: #6fa4dc;
+  background-image:
+    repeating-linear-gradient(45deg, rgba(255,255,255,.09) 0 34px, transparent 34px 68px),
+    repeating-linear-gradient(-45deg, rgba(255,255,255,.09) 0 34px, transparent 34px 68px),
+    linear-gradient(160deg, #c6e6ff 0%, #92c4ec 48%, #6fa4dc 100%);
+}
+
+/* Three sheets is the whole set, so they sit as one row of three — each card
+   larger than the coloring gallery's four-across, a larger thing to hit.
+   This rule sits after the phone block on purpose: it keeps the row of three
+   below 760px too, where the cards still clear the 48px target floor. */
+.page-gallery--mosaic { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
+/* The shared board on a mosaic page. No scene art ships for these sheets, so
+   the stage falls back to its own gradient — a calmer one than a photo
+   background, for pictures that are already busy with regions. */
+.coloring-screen.is-mosaic {
+  --game-bg: linear-gradient(160deg, #f3ecff 0%, #e1f2f7 46%, #e6f6ea 100%);
+}
+
+/* Filling is the only way color reaches a mosaic — "fill the shapes however
+   you like" — so Brush, Gradient and Stamp are absent rather than disabled:
+   a greyed-out brush is a question a four-year-old cannot answer. There is
+   no finished-picture reference for these sheets either, so the peek button
+   has nothing to show. Undo stays (one tap fills a whole region; taking it
+   back is how a child changes their mind) and sits beside Fill in the
+   two-chip row shape Blank Page already drew for exactly this case. */
+.coloring-screen.is-mosaic .primary-tool[data-tool="brush"],
+.coloring-screen.is-mosaic .primary-tool[data-tool="gradient"],
+.coloring-screen.is-mosaic .primary-tool[data-tool="stamp"],
+.coloring-screen.is-mosaic .tool-button--peek {
+  display: none;
+}
+
+.coloring-screen.is-mosaic .primary-tools {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  width: min(320px, 100%);
+  margin: 0 auto;
+}
+
+@media (orientation: landscape) {
+  .coloring-screen.is-mosaic .primary-tools { width: 100%; margin: 0; }
 }

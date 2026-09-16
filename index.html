@@ -19,7 +19,10 @@
       <!-- Top-level mode menu (owner brief, 2026-09-14): Pixel Mosaic and
            coloring-book pages are different activity types and no longer share
            one gallery. This is the app's first screen now, so the hub back
-           arrow moved here unchanged -- see the note on the arrow itself. -->
+           arrow moved here unchanged -- see the note on the arrow itself.
+           Card 3, Mosaic (CG-093, owner decision 2026-09-15), joins the row
+           the same way: its own door, its own sheets, and the coloring
+           screen's own tap-to-fill beyond them. -->
       <section id="modeMenuScreen" class="screen mode-menu-screen" aria-label="Choose what to make">
         <header class="gallery-header">
           <!-- Owner, 2026-08-27: *"need to make sure ALL games has back icon to the hub"*
@@ -51,10 +54,11 @@
         <h1 class="mode-title">What will you make?</h1>
 
         <div class="mode-cards" role="group" aria-label="Pick a way to play">
-          <!-- Both previews are drawn from the app's own assets: the Pixel card
+          <!-- Every preview is drawn from the app's own assets: the Pixel card
                is rendered by pixel-mode.js through the board's card renderer
                (fill in the canvas below), the Coloring card is one of the
-               existing coloring pages, shown as line art. -->
+               existing coloring pages and the Mosaic card is one of the mosaic
+               sheets, both shown as line art. -->
           <button class="mode-card" id="modePixel" type="button" aria-label="Pixel. Copy pictures with little tiles.">
             <span class="mode-art"><canvas id="modePixelArt" width="240" height="180" aria-hidden="true"></canvas></span>
             <b class="mode-name">Pixel</b>
@@ -64,6 +68,11 @@
             <span class="mode-art"><img src="./assets/pages/pink-princess.png" alt="" draggable="false" /></span>
             <b class="mode-name">Coloring</b>
             <span class="mode-tag">Color a picture, or draw your own</span>
+          </button>
+          <button class="mode-card" id="modeMosaic" type="button" aria-label="Mosaic. Tap the shapes to fill them with color.">
+            <span class="mode-art"><img src="./assets/mosaic/smiling-sunflower.png" alt="" draggable="false" /></span>
+            <b class="mode-name">Mosaic</b>
+            <span class="mode-tag">Tap the shapes to fill them with color</span>
           </button>
         </div>
       </section>
@@ -217,6 +226,39 @@
         <div id="blankPalette" class="color-palette" role="group" aria-label="Colors"></div>
       </section>
 
+      <!-- Mosaic gallery, card 3 of the hub (owner decision, 2026-09-15).
+           Choosing a sheet works exactly like Coloring's gallery; the board
+           beyond a tap here is the coloring screen opened on a mosaic page
+           (app.js openPage, kind "mosaic") -- the fill, palette, undo, clear
+           and saving are that machinery, not a copy of it. No numbers
+           anywhere: that line belongs to card 4, not this one. -->
+      <section id="mosaicGalleryScreen" class="screen gallery-screen mosaic-gallery-screen" aria-label="Choose a mosaic picture" hidden>
+        <div class="sky-blob sky-blob--one" aria-hidden="true"></div>
+        <div class="sky-blob sky-blob--two" aria-hidden="true"></div>
+        <div class="sky-blob sky-blob--three" aria-hidden="true"></div>
+
+        <header class="gallery-header">
+          <button class="round-button hub-button" id="mosaicGalleryBack" type="button" aria-label="Back to the menu">
+            <span aria-hidden="true">&larr;</span>
+          </button>
+
+          <div class="brand-mark" aria-hidden="true">
+            <span class="brand-star brand-star--one">✦</span>
+            <span class="brand-star brand-star--two">✦</span>
+            <div class="rainbow">
+              <i></i><i></i><i></i><i></i>
+            </div>
+            <div class="paint-smile"><span></span><span></span></div>
+          </div>
+
+          <button class="round-button sound-button" id="mosaicGalleryVoice" type="button" aria-label="Hear what to do">
+            <span aria-hidden="true">🔊</span>
+          </button>
+        </header>
+
+        <div id="mosaicGallery" class="page-gallery page-gallery--mosaic" role="group" aria-label="Mosaic pictures to color"></div>
+      </section>
+
       <!-- Pixel Mosaic mode (owner concept, 2026-08-27): a pegboard-style tile
            toy. Pick a pattern card, copy it on the big board. The palette is
            exactly 36 colors in 3 rows x 12; cards use only those colors. -->
@@ -283,6 +325,7 @@
     <script src="./pixel-cards.js"></script>
     <script src="./pixel-mode.js"></script>
     <script src="./blank-page.js"></script>
+    <script src="./mosaic-mode.js"></script>
     <script>
   /* Pinch-zoom guard: iOS ignores user-scalable=no, so this is what stops two small
      hands zooming the page mid-drawing. Inert outside Safari. */

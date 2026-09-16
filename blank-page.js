@@ -159,7 +159,7 @@
     if (clearArmTimer) window.clearTimeout(clearArmTimer);
     clearArmTimer = window.setTimeout(disarmClear, 6000);
     pop(360);
-    speak("Tap the broom again to clean the whole page.");
+    speak("blank.clear-arm");
   }
 
   function disarmClear() {
@@ -174,7 +174,7 @@
   function handleClearTap() {
     if (!strokes.length) {
       disarmClear();
-      speak("The page is already clean.");
+      speak("blank.already-clean");
       return;
     }
     if (clearArmed) {
@@ -184,7 +184,7 @@
       saveStrokes();
       pop(320, 0.07);
       window.setTimeout(() => pop(240, 0.09), 90);
-      speak("All clean! Draw anything you like.");
+      speak("blank.clear-done");
     } else {
       armClear();
     }
@@ -261,7 +261,7 @@
     strokes = loadStrokes();
     rebuildPaintLayer();
     disarmClear();
-    speak("A blank page! Pick a color, then draw anything you like.");
+    speak("blank.open");
   }
 
   function closeBlankPage() {
@@ -276,7 +276,7 @@
 
   document.querySelector("#blankHome").addEventListener("click", closeBlankPage);
   document.querySelector("#blankVoice").addEventListener("click", () =>
-    speak("This is your own page. Pick a color, then draw anything you like!")
+    speak("blank.directions")
   );
 
   canvas.addEventListener("pointerdown", beginStroke);

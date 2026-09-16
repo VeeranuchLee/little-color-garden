@@ -145,17 +145,186 @@ async function toggleGalleryMusic() {
   }
 }
 
-function speak(message) {
-  if (!("speechSynthesis" in window)) return;
-  window.speechSynthesis.cancel();
-  const utterance = new SpeechSynthesisUtterance(message);
-  utterance.rate = 0.9;
-  utterance.pitch = 1.2;
-  utterance.volume = 1;
-  const voices = window.speechSynthesis.getVoices();
-  const friendlyVoice = voices.find((voice) => /^en/i.test(voice.lang) && /samantha|karen|moira|female|serena|ava/i.test(voice.name));
-  if (friendlyVoice) utterance.voice = friendlyVoice;
-  window.speechSynthesis.speak(utterance);
+// Every line this app can ever speak, keyed by the id its rendered clip is
+// named by (assets/audio/voice/<id>.m4a). voice/lines.json is the canonical
+// manifest -- the renderer's input, and
+// what the render is costed from -- and this registry is its in-app copy;
+// tools/check-voice-lines.py fails the commit if the two ever differ. No line
+// is built at runtime any more: a call site names an id, speak() resolves it,
+// and the manifest is the only place text lives. The object is strict JSON on
+// purpose so the checker can parse it straight out of this source.
+const VOICE_LINES = {
+  "app.already-clean": "The picture is already clean.",
+  "app.clear-arm": "Tap the broom again to clean the whole picture.",
+  "app.clear-done": "All clean! Tap the yellow arrow if you want it back.",
+  "app.directions-mosaic": "Pick a color, then tap a shape to fill it.",
+  "app.directions-page": "Pick a color, then draw with your finger. Tap the little picture button to see the finished picture next to yours.",
+  "app.finish-praise": "Wow! Your picture is beautiful!",
+  "app.load-error": "Oops. This picture needs a little help loading.",
+  "app.mode-menu": "Pixel, Coloring, or Mosaic? Pick one!",
+  "app.mode-menu-repeat": "Pixel, Coloring, or Mosaic? Pick one to play.",
+  "app.pick-picture": "Pick a picture to color.",
+  "app.reference-on": "Here is one way it can look. You can color it your own way!",
+  "app.undo-restore": "Here it is again!",
+  "blank.already-clean": "The page is already clean.",
+  "blank.clear-arm": "Tap the broom again to clean the whole page.",
+  "blank.clear-done": "All clean! Draw anything you like.",
+  "blank.directions": "This is your own page. Pick a color, then draw anything you like!",
+  "blank.open": "A blank page! Pick a color, then draw anything you like.",
+  "mosaic.directions": "Pick a mosaic picture to color. Tap one to start filling its shapes.",
+  "mosaic.gallery": "Pick a mosaic picture to color.",
+  "page.bird-princess": "Let's color the bird princess! Pick a color, then draw with your finger.",
+  "page.blue-pea": "Let's color the blue pea flowers! Pick a color, then draw with your finger.",
+  "page.ginger-lily": "Let's color the white flowers! Pick a color, then draw with your finger.",
+  "page.happy-rocket": "Let's color the happy rocket! Pick a color, then tap a shape to fill it.",
+  "page.hibiscus": "Let's color the hibiscus flowers! Pick a color, then draw with your finger.",
+  "page.magic-princess": "Let's color the magic princess! Pick a color, then draw with your finger.",
+  "page.mars-rover": "Let's color the friendly space robot! Pick a color, then draw with your finger.",
+  "page.mermaid-dolphin": "Let's color the mermaid and the dolphin! Pick a color, then draw with your finger.",
+  "page.mermaid-flower": "Let's color the mermaid with a flower! Pick a color, then draw with your finger.",
+  "page.mermaid-princess": "Let's color the ocean princess! Pick a color, then draw with your finger.",
+  "page.moon-flag": "Let's color the moon explorer! Pick a color, then draw with your finger.",
+  "page.pink-princess": "Let's color the heart princess! Pick a color, then draw with your finger.",
+  "page.sea-turtle": "Let's color the sea turtle! Pick a color, then tap a shape to fill it.",
+  "page.smiling-sunflower": "Let's color the smiling sunflower! Pick a color, then tap a shape to fill it.",
+  "page.solar-system": "Let's color the happy planets! Pick a color, then draw with your finger.",
+  "page.space-cat": "Let's color the space cat! Pick a color, then draw with your finger.",
+  "page.space-kid": "Let's color the little astronaut! Pick a color, then draw with your finger.",
+  "page.space-ufo": "Let's color the friendly spaceship! Pick a color, then draw with your finger.",
+  "page.star-astronaut": "Let's color the star astronaut! Pick a color, then draw with your finger.",
+  "page.ylang-ylang": "Let's color the yellow flowers! Pick a color, then draw with your finger.",
+  "pixel.already-clean": "The board is already clean.",
+  "pixel.clear-arm": "Tap the broom again to clean the whole board.",
+  "pixel.clear-done": "All clean!",
+  "pixel.color.black": "black",
+  "pixel.color.blue": "blue",
+  "pixel.color.brown": "brown",
+  "pixel.color.dark-blue": "dark blue",
+  "pixel.color.dark-brown": "dark brown",
+  "pixel.color.dark-green": "dark green",
+  "pixel.color.dark-lime": "dark lime",
+  "pixel.color.dark-orange": "dark orange",
+  "pixel.color.dark-peach": "dark peach",
+  "pixel.color.dark-pink": "dark pink",
+  "pixel.color.dark-purple": "dark purple",
+  "pixel.color.dark-red": "dark red",
+  "pixel.color.dark-teal": "dark teal",
+  "pixel.color.gold": "gold",
+  "pixel.color.green": "green",
+  "pixel.color.grey": "grey",
+  "pixel.color.light-blue": "light blue",
+  "pixel.color.light-green": "light green",
+  "pixel.color.light-grey": "light grey",
+  "pixel.color.light-lime": "light lime",
+  "pixel.color.light-orange": "light orange",
+  "pixel.color.light-peach": "light peach",
+  "pixel.color.light-pink": "light pink",
+  "pixel.color.light-purple": "light purple",
+  "pixel.color.light-red": "light red",
+  "pixel.color.light-teal": "light teal",
+  "pixel.color.light-yellow": "light yellow",
+  "pixel.color.lime": "lime",
+  "pixel.color.orange": "orange",
+  "pixel.color.peach": "peach",
+  "pixel.color.pink": "pink",
+  "pixel.color.purple": "purple",
+  "pixel.color.red": "red",
+  "pixel.color.turquoise": "turquoise",
+  "pixel.color.white": "white",
+  "pixel.color.yellow": "yellow",
+  "pixel.eraser": "Eraser",
+  "pixel.finish-praise": "Wow! Your mosaic is beautiful!",
+  "pixel.free-board": "Make your own picture! Tap a color, then fill the little squares.",
+  "pixel.free-board-directions": "Tap a color, then fill the squares. Make anything you like!",
+  "pixel.gallery-directions": "Pick how much help you want at the top, then pick a picture to copy!",
+  "pixel.keep-going": "Look at the little card and keep going!",
+  "pixel.level.easy": "Easy. The shaded squares show the colors, and only they take a tile.",
+  "pixel.level.hard": "Hard! No shape. Look at the little card and copy it.",
+  "pixel.level.medium": "Medium. The shaded squares show the colors. Every square can take a tile.",
+  "pixel.matched.apple": "You made the apple! It matches the card!",
+  "pixel.matched.car": "You made the car! It matches the card!",
+  "pixel.matched.cat": "You made the cat! It matches the card!",
+  "pixel.matched.daisy": "You made the daisy! It matches the card!",
+  "pixel.matched.fish": "You made the fish! It matches the card!",
+  "pixel.matched.heart": "You made the heart! It matches the card!",
+  "pixel.matched.rainbow": "You made the rainbow! It matches the card!",
+  "pixel.matched.rocket": "You made the rocket! It matches the card!",
+  "pixel.matched.smile": "You made the smile! It matches the card!",
+  "pixel.matched.strawberry": "You made the strawberry! It matches the card!",
+  "pixel.matched.watermelon": "You made the watermelon! It matches the card!",
+  "pixel.mode-menu": "Pixel or Coloring? Pick one!",
+  "pixel.pick-card": "Pick a picture to copy.",
+  "pixel.prompt.apple.easy": "Copy the apple! The shaded squares show which color goes where. The rest of the board is closed.",
+  "pixel.prompt.apple.hard": "Copy the apple! Nothing is shown. Look at the little card and copy it.",
+  "pixel.prompt.apple.medium": "Copy the apple! The shaded squares show which color goes where.",
+  "pixel.prompt.car.easy": "Copy the car! The shaded squares show which color goes where. The rest of the board is closed.",
+  "pixel.prompt.car.hard": "Copy the car! Nothing is shown. Look at the little card and copy it.",
+  "pixel.prompt.car.medium": "Copy the car! The shaded squares show which color goes where.",
+  "pixel.prompt.cat.easy": "Copy the cat! The shaded squares show which color goes where. The rest of the board is closed.",
+  "pixel.prompt.cat.hard": "Copy the cat! Nothing is shown. Look at the little card and copy it.",
+  "pixel.prompt.cat.medium": "Copy the cat! The shaded squares show which color goes where.",
+  "pixel.prompt.daisy.easy": "Copy the daisy! The shaded squares show which color goes where. The rest of the board is closed.",
+  "pixel.prompt.daisy.hard": "Copy the daisy! Nothing is shown. Look at the little card and copy it.",
+  "pixel.prompt.daisy.medium": "Copy the daisy! The shaded squares show which color goes where.",
+  "pixel.prompt.fish.easy": "Copy the fish! The shaded squares show which color goes where. The rest of the board is closed.",
+  "pixel.prompt.fish.hard": "Copy the fish! Nothing is shown. Look at the little card and copy it.",
+  "pixel.prompt.fish.medium": "Copy the fish! The shaded squares show which color goes where.",
+  "pixel.prompt.heart.easy": "Copy the heart! The shaded squares show which color goes where. The rest of the board is closed.",
+  "pixel.prompt.heart.hard": "Copy the heart! Nothing is shown. Look at the little card and copy it.",
+  "pixel.prompt.heart.medium": "Copy the heart! The shaded squares show which color goes where.",
+  "pixel.prompt.rainbow.easy": "Copy the rainbow! The shaded squares show which color goes where. The rest of the board is closed.",
+  "pixel.prompt.rainbow.hard": "Copy the rainbow! Nothing is shown. Look at the little card and copy it.",
+  "pixel.prompt.rainbow.medium": "Copy the rainbow! The shaded squares show which color goes where.",
+  "pixel.prompt.rocket.easy": "Copy the rocket! The shaded squares show which color goes where. The rest of the board is closed.",
+  "pixel.prompt.rocket.hard": "Copy the rocket! Nothing is shown. Look at the little card and copy it.",
+  "pixel.prompt.rocket.medium": "Copy the rocket! The shaded squares show which color goes where.",
+  "pixel.prompt.smile.easy": "Copy the smile! The shaded squares show which color goes where. The rest of the board is closed.",
+  "pixel.prompt.smile.hard": "Copy the smile! Nothing is shown. Look at the little card and copy it.",
+  "pixel.prompt.smile.medium": "Copy the smile! The shaded squares show which color goes where.",
+  "pixel.prompt.strawberry.easy": "Copy the strawberry! The shaded squares show which color goes where. The rest of the board is closed.",
+  "pixel.prompt.strawberry.hard": "Copy the strawberry! Nothing is shown. Look at the little card and copy it.",
+  "pixel.prompt.strawberry.medium": "Copy the strawberry! The shaded squares show which color goes where.",
+  "pixel.prompt.watermelon.easy": "Copy the watermelon! The shaded squares show which color goes where. The rest of the board is closed.",
+  "pixel.prompt.watermelon.hard": "Copy the watermelon! Nothing is shown. Look at the little card and copy it.",
+  "pixel.prompt.watermelon.medium": "Copy the watermelon! The shaded squares show which color goes where."
+};
+
+// speak() is a resolver, not a sentence builder: it takes a voice-line id and
+// never a string of prose. Every id it can be given names a record in
+// voice/lines.json and a rendered clip on disk, assets/audio/voice/<id>.m4a --
+// tools/check-voice-lines.py enforces both directions, because a missing
+// record would ship silence and an unused one wastes render credits.
+//
+// The clip is the cast narrator (AUDIO-DIRECTION.md decision 1: every shipped
+// spoken line is AI-generated rendered audio; the device's own voice was only
+// ever scaffolding and is gone). A clip that cannot load or play is a line
+// simply not heard -- no OS-voice fallback, under any name, and the play()
+// rejection is swallowed rather than retried.
+//
+// One Audio element is reused, and pausing it is the whole cancel story: the
+// outgoing line stops the moment a new one is asked for, so a child tapping
+// quickly hears the newest line, never a queue. The element is created on the
+// first speak() and play() is called synchronously inside the tap every call
+// site already sits in -- iOS unlocks media only inside a user gesture, and a
+// first play deferred behind a timer or a promise chain is the silent-iPad
+// bug this repo has shipped in the math app.
+let voiceClip = null;
+
+function speak(id) {
+  if (VOICE_LINES[id] === undefined) {
+    // Unreachable while check-voice-lines.py passes; loud for a dev when not.
+    console.warn(`speak(): unknown voice line "${id}"`);
+    return;
+  }
+  try {
+    if (!voiceClip) voiceClip = new Audio();
+    voiceClip.pause();
+    voiceClip.src = `./assets/audio/voice/${id}.m4a`;
+    const played = voiceClip.play();
+    if (played && played.catch) played.catch(() => {});
+  } catch (_) {
+    // Sound is a bonus; coloring remains fully usable without audio permission.
+  }
 }
 
 function tinyPop(frequency = 520, duration = 0.055) {
@@ -286,54 +455,102 @@ function swatchTone(color) {
   return 440 + column * 26 + row * 55;
 }
 
+// Mosaic (card 3 of the hub, CG-093) enters through this same door: its pages
+// carry kind "mosaic" and folder "mosaic", and each genuine difference keeps
+// one guarded branch below — the art folder, the absent scene background and
+// references, the fill-only tool row. A coloring page takes the exact path it
+// always did, because every branch defaults to that path.
 function openPage(page) {
   stopGalleryMusic();
+  const mosaic = page.kind === "mosaic";
   activePage = page;
   galleryScreen.hidden = true;
   coloringScreen.hidden = false;
   canvasLoader.hidden = false;
-  coloringScreen.style.setProperty("--game-bg", `url("./assets/backgrounds/${page.background}")`);
+  coloringScreen.classList.toggle("is-mosaic", mosaic);
+  if (page.background) {
+    coloringScreen.style.setProperty("--game-bg", `url("./assets/backgrounds/${page.background}")`);
+  } else {
+    // Mosaic ships no scene background; drop any inline --game-bg a previous
+    // coloring page left so the screen's own mosaic gradient applies.
+    coloringScreen.style.removeProperty("--game-bg");
+  }
   document.body.style.background = page.card;
   disarmClear();
   clearedBackup = null;
-  referenceVisible = loadReferencePref();
+  // No finished-picture references exist for the mosaic sheets, so there is
+  // nothing to peek at: the button is hidden (styles.css) and the state stays off.
+  referenceVisible = mosaic ? false : loadReferencePref();
   applyReferenceState();
-  referenceImage.src = `./assets/references/${page.id}.jpg`;
-  studioReferenceImage.src = referenceImage.src;
+  if (!mosaic) {
+    referenceImage.src = `./assets/references/${page.id}.jpg`;
+    studioReferenceImage.src = referenceImage.src;
+  }
   strokes = loadStrokes(page.id);
   lineImage = new Image();
   lineImage.onload = () => {
-    paintCanvas.width = lineImage.naturalWidth;
-    paintCanvas.height = lineImage.naturalHeight;
+    if (mosaic) {
+      // Mosaic art is ~745x964, wider than the page box's 724x1086, and the
+      // paper frame's aspect is what the stage arithmetic was validated on —
+      // so the art is letterboxed into the standard page box rather than
+      // reshaping the paper. canvasPoint stays exact: the bitmap still fills
+      // the canvas element edge to edge.
+      paintCanvas.width = 724;
+      paintCanvas.height = 1086;
+    } else {
+      paintCanvas.width = lineImage.naturalWidth;
+      paintCanvas.height = lineImage.naturalHeight;
+    }
     paintLayer.width = paintCanvas.width;
     paintLayer.height = paintCanvas.height;
     const lineCanvas = document.createElement("canvas");
     lineCanvas.width = paintCanvas.width;
     lineCanvas.height = paintCanvas.height;
     const lineContext = lineCanvas.getContext("2d", { willReadFrequently: true });
-    lineContext.drawImage(lineImage, 0, 0, paintCanvas.width, paintCanvas.height);
+    if (mosaic) {
+      const scale = Math.min(paintCanvas.width / lineImage.naturalWidth, paintCanvas.height / lineImage.naturalHeight);
+      const drawWidth = lineImage.naturalWidth * scale;
+      const drawHeight = lineImage.naturalHeight * scale;
+      lineContext.drawImage(lineImage, (paintCanvas.width - drawWidth) / 2, (paintCanvas.height - drawHeight) / 2, drawWidth, drawHeight);
+    } else {
+      lineContext.drawImage(lineImage, 0, 0, paintCanvas.width, paintCanvas.height);
+    }
     linePixels = lineContext.getImageData(0, 0, paintCanvas.width, paintCanvas.height).data;
     rebuildPaintLayer();
     composeCanvas();
     canvasLoader.hidden = true;
     undoButton.disabled = strokes.length === 0;
-    speak(`Let's color ${page.voice}! Pick a color, then draw with your finger.`);
+    if (mosaic) selectTool("fill");
+    // The greeting is the page's own manifest record: a mosaic sheet says
+    // "tap a shape", a coloring page says "draw with your finger", and the
+    // record for this page id already holds the right one -- resolved in
+    // voice/lines.json, never built here.
+    speak(`page.${page.id}`);
   };
   lineImage.onerror = () => {
     canvasLoader.hidden = true;
-    speak("Oops. This picture needs a little help loading.");
+    speak("app.load-error");
   };
-  lineImage.src = `./assets/pages/${page.file}`;
+  lineImage.src = `./assets/${page.folder || "pages"}/${page.file}`;
 }
 
 function goHome() {
   saveStrokes();
   disarmClear();
   clearedBackup = null;
+  const mosaic = Boolean(activePage && activePage.kind === "mosaic");
   activePage = null;
   lineImage = null;
   strokes = [];
   coloringScreen.hidden = true;
+  coloringScreen.classList.remove("is-mosaic");
+  // A mosaic page returns to the mosaic gallery; mosaic-mode.js publishes that
+  // door the way pixel-mode.js publishes its own, and the coloring gallery is
+  // the fallback if it has not loaded.
+  if (mosaic && typeof window.showMosaicGallery === "function") {
+    window.showMosaicGallery();
+    return;
+  }
   showColoringGallery();
 }
 
@@ -346,7 +563,7 @@ function showColoringGallery() {
   modeMenuScreen.hidden = true;
   galleryScreen.hidden = false;
   document.body.style.background = "#8a6bea";
-  speak("Pick a picture to color.");
+  speak("app.pick-picture");
 }
 
 function showModeMenu() {
@@ -355,7 +572,7 @@ function showModeMenu() {
   galleryScreen.hidden = true;
   modeMenuScreen.hidden = false;
   document.body.style.background = "#6f52d6";
-  speak("Pixel or Coloring? Pick one!");
+  speak("app.mode-menu");
 }
 
 function canvasPoint(event) {
@@ -566,7 +783,7 @@ function undoLastStroke() {
     undoButton.disabled = strokes.length === 0;
     saveStrokes();
     tinyPop(560, 0.09);
-    speak("Here it is again!");
+    speak("app.undo-restore");
     return;
   }
   if (!strokes.length) return;
@@ -587,7 +804,7 @@ function clearPicture() {
   undoButton.disabled = !(clearedBackup && clearedBackup.length);
   saveStrokes();
   celebrateClearSound();
-  speak("All clean! Tap the yellow arrow if you want it back.");
+  speak("app.clear-done");
 }
 
 function celebrateClearSound() {
@@ -601,7 +818,7 @@ function armClear() {
   if (clearArmTimer) window.clearTimeout(clearArmTimer);
   clearArmTimer = window.setTimeout(disarmClear, 6000);
   tinyPop(360);
-  speak("Tap the broom again to clean the whole picture.");
+  speak("app.clear-arm");
 }
 
 function disarmClear() {
@@ -616,7 +833,7 @@ function disarmClear() {
 function handleClearTap() {
   if (!strokes.length) {
     disarmClear();
-    speak("The picture is already clean.");
+    speak("app.already-clean");
     return;
   }
   if (clearArmed) {
@@ -644,7 +861,7 @@ function celebrate() {
     celebration.appendChild(piece);
   }
   [523, 659, 784].forEach((frequency, index) => window.setTimeout(() => tinyPop(frequency, 0.18), index * 130));
-  speak("Wow! Your picture is beautiful!");
+  speak("app.finish-praise");
   window.setTimeout(() => celebration.replaceChildren(), 3900);
 }
 
@@ -668,7 +885,7 @@ function setReferenceVisible(visible, announce = false) {
   if (!announce) return;
   if (visible) {
     tinyPop(620, 0.06);
-    speak("Here is one way it can look. You can color it your own way!");
+    speak("app.reference-on");
   } else {
     tinyPop(420, 0.06);
   }
@@ -719,7 +936,15 @@ function loadStrokes(pageId) {
 }
 
 galleryMusicButton.addEventListener("click", toggleGalleryMusic);
-document.querySelector("#voiceButton").addEventListener("click", () => speak("Pick a color, then draw with your finger. Tap the little picture button to see the finished picture next to yours."));
+document.querySelector("#voiceButton").addEventListener("click", () => {
+  // The shared board's own directions; a mosaic page has no brush and no
+  // finished picture to peek at, so its sentence is its own.
+  if (activePage && activePage.kind === "mosaic") {
+    speak("app.directions-mosaic");
+    return;
+  }
+  speak("app.directions-page");
+});
 document.querySelector("#homeButton").addEventListener("click", goHome);
 document.querySelector("#finishButton").addEventListener("click", celebrate);
 undoButton.addEventListener("click", undoLastStroke);
@@ -752,7 +977,12 @@ document.querySelector("#modePixel").addEventListener("click", () => {
   // card's art; it publishes the door once it has loaded.
   if (typeof window.openPixelGallery === "function") window.openPixelGallery();
 });
-document.querySelector("#modeMenuVoice").addEventListener("click", () => speak("Pixel or Coloring? Pick one to play."));
+document.querySelector("#modeMosaic").addEventListener("click", () => {
+  // mosaic-mode.js owns the mosaic gallery the same way; the board beyond it
+  // is this file's own coloring screen opened on a mosaic page.
+  if (typeof window.openMosaicGallery === "function") window.openMosaicGallery();
+});
+document.querySelector("#modeMenuVoice").addEventListener("click", () => speak("app.mode-menu-repeat"));
 
 function selectTool(tool) {
   currentTool = tool;

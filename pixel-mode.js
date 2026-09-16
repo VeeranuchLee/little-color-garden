@@ -26,27 +26,25 @@
   // area) no color there?" Only the *help* changes across the three — the
   // child still chooses every color themselves, which is the whole point of
   // copying a card, so nothing here grades a tap as right or wrong.
+  //
+  // The spoken side of a level lives in voice/lines.json, resolved rather
+  // than built: pixel.level.<id> for the tap confirmation, and
+  // pixel.prompt.<card id>.<level id> for the copy prompt a card opens with.
   const LEVELS = [
     {
       id: "easy",
       dots: 1,
-      label: "Easy level. The shaded squares show which color goes where, and only they can take a tile.",
-      say: "Easy. The shaded squares show the colors, and only they take a tile.",
-      prompt: (name) => `Copy ${name}! The shaded squares show which color goes where. The rest of the board is closed.`
+      label: "Easy level. The shaded squares show which color goes where, and only they can take a tile."
     },
     {
       id: "medium",
       dots: 2,
-      label: "Medium level. The shaded squares show which color goes where, and every square can take a tile.",
-      say: "Medium. The shaded squares show the colors. Every square can take a tile.",
-      prompt: (name) => `Copy ${name}! The shaded squares show which color goes where.`
+      label: "Medium level. The shaded squares show which color goes where, and every square can take a tile."
     },
     {
       id: "hard",
       dots: 3,
-      label: "Hard level. No shape is shown. Copy the little card.",
-      say: "Hard! No shape. Look at the little card and copy it.",
-      prompt: (name) => `Copy ${name}! Nothing is shown. Look at the little card and copy it.`
+      label: "Hard level. No shape is shown. Copy the little card."
     }
   ];
   const LEVEL_KEY = "little-color-garden:pixel:level";
@@ -535,10 +533,6 @@
     return "medium";
   }
 
-  function currentLevel() {
-    return LEVELS.find((item) => item.id === levelId) || LEVELS[1];
-  }
-
   // --- painting --------------------------------------------------------
   function cellFromPoint(event) {
     const rect = boardCanvas.getBoundingClientRect();
@@ -673,7 +667,7 @@
     if (clearArmTimer) window.clearTimeout(clearArmTimer);
     clearArmTimer = window.setTimeout(disarmClear, 6000);
     pop(360);
-    speak("Tap the broom again to clean the whole board.");
+    speak("pixel.clear-arm");
   }
 
   function disarmClear() {
@@ -688,7 +682,7 @@
   function handleClearTap() {
     if (!grid.some((value) => value !== EMPTY)) {
       disarmClear();
-      speak("The board is already clean.");
+      speak("pixel.already-clean");
       return;
     }
     if (clearArmed) {
@@ -704,7 +698,7 @@
       requestRender();
       pop(320, 0.07);
       window.setTimeout(() => pop(240, 0.09), 90);
-      speak("All clean!");
+      speak("pixel.clear-done");
       checkMatch();
     } else {
       armClear();
@@ -736,14 +730,16 @@
       matched = true;
       markDone(activeCard.id);
       refreshBadges();
-      celebrate(`You made ${activeCard.name}! It matches the card!`);
+      celebrate(`pixel.matched.${activeCard.id}`);
     } else {
       matched = false;
     }
   }
 
   // --- celebration -----------------------------------------------------
-  function celebrate(message) {
+  // `lineId` is a voice-line id (celebrate() is speak() plus confetti), so
+  // every caller names a manifest record; the sentence is never built here.
+  function celebrate(lineId) {
     celebration.replaceChildren();
     const colors = PALETTE.filter((_, index) => index % 3 === 1).map((color) => color.value);
     for (let index = 0; index < 72; index += 1) {
@@ -758,7 +754,7 @@
       celebration.appendChild(piece);
     }
     [523, 659, 784].forEach((frequency, index) => window.setTimeout(() => pop(frequency, 0.18), index * 130));
-    speak(message);
+    speak(lineId);
     window.setTimeout(() => celebration.replaceChildren(), 3900);
   }
 
@@ -774,7 +770,7 @@
     disarmClear();
     modeMenu.hidden = false;
     document.body.style.background = "#6f52d6";
-    speak("Pixel or Coloring? Pick one!");
+    speak("pixel.mode-menu");
   }
 
   function showPixelGallery() {
@@ -784,7 +780,7 @@
     galleryScreen.hidden = false;
     document.body.style.background = "#f2a0b8";
     refreshBadges();
-    speak("Pick a picture to copy.");
+    speak("pixel.pick-card");
   }
 
   function openBoard(card) {
@@ -805,9 +801,9 @@
     if (card) {
       renderStill(thumbCanvas.getContext("2d"), thumbCanvas, cardIndices.get(card.id), 8);
       renderStill(overlayCanvas.getContext("2d"), overlayCanvas, cardIndices.get(card.id), 24);
-      speak(currentLevel().prompt(card.name));
+      speak(`pixel.prompt.${card.id}.${levelId}`);
     } else {
-      speak("Make your own picture! Tap a color, then fill the little squares.");
+      speak("pixel.free-board");
     }
     renderBoard();
     // A saved board that already matches its card is quietly recognised — the
@@ -963,7 +959,7 @@
         }
         levelsRow.querySelectorAll(".px-level").forEach((item) => item.classList.toggle("is-selected", item === button));
         pop(430 + level.dots * 110, 0.07);
-        speak(level.say);
+        speak(`pixel.level.${level.id}`);
       });
       levelsRow.appendChild(button);
     });
@@ -1020,7 +1016,7 @@
           paletteRow.querySelectorAll(".px-swatch").forEach((item) => item.classList.toggle("is-selected", item === button));
           eraserButton.classList.remove("is-selected");
           pop(swatchTone(index));
-          speak(color.name);
+          speak(`pixel.color.${color.name.replace(/ /g, "-")}`);
         });
         paletteRow.appendChild(button);
       });
@@ -1042,7 +1038,7 @@
     paletteRow.querySelectorAll(".px-swatch").forEach((item) => item.classList.remove("is-selected"));
     eraserButton.classList.add("is-selected");
     pop(340);
-    speak("Eraser");
+    speak("pixel.eraser");
   });
 
   undoButton.addEventListener("click", undoStroke);
@@ -1051,20 +1047,20 @@
     if (activeCard && boardMatchesCard()) {
       markDone(activeCard.id);
       refreshBadges();
-      celebrate(`You made ${activeCard.name}! It matches the card!`);
+      celebrate(`pixel.matched.${activeCard.id}`);
     } else if (activeCard) {
-      speak("Look at the little card and keep going!");
+      speak("pixel.keep-going");
       pop(360, 0.08);
     } else {
-      celebrate("Wow! Your mosaic is beautiful!");
+      celebrate("pixel.finish-praise");
     }
   });
   homeButton.addEventListener("click", showPixelGallery);
   galleryBackButton.addEventListener("click", showModeMenu);
-  galleryVoiceButton.addEventListener("click", () => speak("Pick how much help you want at the top, then pick a picture to copy!"));
+  galleryVoiceButton.addEventListener("click", () => speak("pixel.gallery-directions"));
   voiceButton.addEventListener("click", () => {
-    if (activeCard) speak(currentLevel().prompt(activeCard.name));
-    else speak("Tap a color, then fill the squares. Make anything you like!");
+    if (activeCard) speak(`pixel.prompt.${activeCard.id}.${levelId}`);
+    else speak("pixel.free-board-directions");
   });
   thumbButton.addEventListener("click", openOverlay);
   overlay.addEventListener("click", closeOverlay);
