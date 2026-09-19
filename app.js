@@ -108,6 +108,60 @@ let frameRequested = false;
 let currentTool = "brush";
 let currentStamp = "★";
 let linePixels = null;
+let lineDrawRect = null;
+/* MOSAIC FILL SAFETY (owner report 2026-09-19: "after fill color in, the color is out
+   of the area often"). The fill itself never crosses a line -- proven by
+   tools/check-mosaic-fill.py over every sheet under this app's own predicate. The
+   overflow children actually hit is (a) a tap aimed at an edge cell landing OUTSIDE
+   the card border, which used to flood the entire margin ring around the card in one
+   shot, cut off straight at the canvas edges; and (b) interstitial white pockets
+   (between star points, flame segments) that are technically regions of their own.
+   The exterior mask closes (a): everything reachable from the canvas corners without
+   crossing a line-pixel is marked and refuses ink. POCKET_MAX closes (b): a region
+   at or under it is a pocket, and tapping it paints nothing.
+   1815 is measured, not guessed: across all nine sheets the largest pocket is 1,685 px
+   (sea-turtle) and the smallest region above it is 1,943 px (also sea-turtle) -- both
+   sit ~7% clear of the constant, and tools/check-mosaic-fill.py fails if any region
+   ever lands within 5% of it, forcing a re-measure instead of a silent misclassify. */
+let exteriorMask = null;
+const POCKET_MAX = 1815;
+
+function computeLineDrawRect(image, canvas, mosaic) {
+  if (!mosaic) {
+    return { x: 0, y: 0, width: canvas.width, height: canvas.height };
+  }
+  const scale = Math.min(canvas.width / image.naturalWidth, canvas.height / image.naturalHeight);
+  const width = image.naturalWidth * scale;
+  const height = image.naturalHeight * scale;
+  return {
+    x: (canvas.width - width) / 2,
+    y: (canvas.height - height) / 2,
+    width,
+    height
+  };
+}
+
+function buildExteriorMask() {
+  const width = paintLayer.width;
+  const height = paintLayer.height;
+  const mask = new Uint8Array(width * height);
+  const isLine = (index) => {
+    const offset = index * 4;
+    return linePixels[offset + 3] > 90 && linePixels[offset] + linePixels[offset + 1] + linePixels[offset + 2] < 430;
+  };
+  const stack = [0, width - 1, width * (height - 1), width * height - 1];
+  while (stack.length) {
+    const index = stack.pop();
+    if (index < 0 || index >= width * height || mask[index] || isLine(index)) continue;
+    mask[index] = 1;
+    const x = index % width;
+    if (x) stack.push(index - 1);
+    if (x < width - 1) stack.push(index + 1);
+    if (index >= width) stack.push(index - width);
+    if (index < width * (height - 1)) stack.push(index + width);
+  }
+  return mask;
+}
 
 function showMessage(message) {
   studioMessage.textContent = message;
@@ -173,6 +227,26 @@ const VOICE_LINES = {
   "blank.open": "A blank page! Pick a color, then draw anything you like.",
   "mosaic.directions": "Pick a mosaic picture to color. Tap one to start filling its shapes.",
   "mosaic.gallery": "Pick a mosaic picture to color.",
+  "page.abstract-bands": "Let's color the rainbow bands! Pick a color, then tap a shape to fill it.",
+  "page.abstract-centerstone": "Let's color the magic gem! Pick a color, then tap a shape to fill it.",
+  "page.abstract-crazy-paving": "Let's color the puzzle stones! Pick a color, then tap a shape to fill it.",
+  "page.abstract-pebbles": "Let's color the pebbles! Pick a color, then tap a shape to fill it.",
+  "page.abstract-rings": "Let's color the rainbow rings! Pick a color, then tap a shape to fill it.",
+  "page.abstract-shards": "Let's color the crystal pieces! Pick a color, then tap a shape to fill it.",
+  "page.space-planet": "Let's color the planet! Pick a color, then tap a shape to fill it.",
+  "page.space-rocket": "Let's color the rocket! Pick a color, then tap a shape to fill it.",
+  "page.space-astronaut": "Let's color the astronaut! Pick a color, then tap a shape to fill it.",
+  "page.princess-crown": "Let's color the princess crown! Pick a color, then tap a shape to fill it.",
+  "page.princess-mermaid": "Let's color the mermaid! Pick a color, then tap a shape to fill it.",
+  "page.princess-seashells": "Let's color the seashells! Pick a color, then tap a shape to fill it.",
+  "page.sweet-ice-cream": "Let's color the ice cream! Pick a color, then tap a shape to fill it.",
+  "page.sweet-cake": "Let's color the cake! Pick a color, then tap a shape to fill it.",
+  "page.sweet-cupcake": "Let's color the cupcake! Pick a color, then tap a shape to fill it.",
+  "page.abstract-fine-100": "Let's color Little Pieces! Pick a color, then tap a shape to fill it.",
+  "page.abstract-fine-130": "Let's color More Pieces! Pick a color, then tap a shape to fill it.",
+  "page.abstract-fine-160": "Let's color Tiny Pieces! Pick a color, then tap a shape to fill it.",
+  "page.abstract-fine-180": "Let's color Super Tiny Pieces! Pick a color, then tap a shape to fill it.",
+  "page.abstract-fine-200": "Let's color Mosaic Challenge! Pick a color, then tap a shape to fill it.",
   "page.bird-princess": "Let's color the bird princess! Pick a color, then draw with your finger.",
   "page.blue-pea": "Let's color the blue pea flowers! Pick a color, then draw with your finger.",
   "page.ginger-lily": "Let's color the white flowers! Pick a color, then draw with your finger.",
@@ -503,19 +577,22 @@ function openPage(page) {
     }
     paintLayer.width = paintCanvas.width;
     paintLayer.height = paintCanvas.height;
+    // One page-load transform owns every line-art consumer. For mosaics this is
+    // the calibrated, centred letterbox; for regular pages it is the identity
+    // rectangle because their canvas already has the art's natural dimensions.
+    lineDrawRect = computeLineDrawRect(lineImage, paintCanvas, mosaic);
     const lineCanvas = document.createElement("canvas");
     lineCanvas.width = paintCanvas.width;
     lineCanvas.height = paintCanvas.height;
     const lineContext = lineCanvas.getContext("2d", { willReadFrequently: true });
-    if (mosaic) {
-      const scale = Math.min(paintCanvas.width / lineImage.naturalWidth, paintCanvas.height / lineImage.naturalHeight);
-      const drawWidth = lineImage.naturalWidth * scale;
-      const drawHeight = lineImage.naturalHeight * scale;
-      lineContext.drawImage(lineImage, (paintCanvas.width - drawWidth) / 2, (paintCanvas.height - drawHeight) / 2, drawWidth, drawHeight);
-    } else {
-      lineContext.drawImage(lineImage, 0, 0, paintCanvas.width, paintCanvas.height);
-    }
+    lineContext.drawImage(lineImage, lineDrawRect.x, lineDrawRect.y, lineDrawRect.width, lineDrawRect.height);
     linePixels = lineContext.getImageData(0, 0, paintCanvas.width, paintCanvas.height).data;
+    /* Mosaic only: a regular coloring page fills its whole canvas and its background
+       is fillable by design; the mask exists for the letterboxed mosaic card, whose
+       margin ring is where an edge-aimed tap used to flood. Computed once per load,
+       from the same predicate the fill uses -- the harness checks the two never drift
+       apart in effect. */
+    exteriorMask = mosaic ? buildExteriorMask() : null;
     rebuildPaintLayer();
     composeCanvas();
     canvasLoader.hidden = true;
@@ -541,6 +618,8 @@ function goHome() {
   const mosaic = Boolean(activePage && activePage.kind === "mosaic");
   activePage = null;
   lineImage = null;
+  lineDrawRect = null;
+  exteriorMask = null;
   strokes = [];
   coloringScreen.hidden = true;
   coloringScreen.classList.remove("is-mosaic");
@@ -593,8 +672,10 @@ function beginStroke(event) {
   const point = canvasPoint(event);
   if (currentTool === "fill") {
     const action = { type: "fill", color: currentColor, point };
-    strokes.push(action);
-    applyAction(action);
+    /* Record only what painted. A tap on the mosaic's exterior or on a pocket fills
+       nothing, so it must not live in the undo stack either -- Undo should never
+       step through no-ops a child never saw. */
+    if (applyAction(action) > 0) strokes.push(action);
     finishInstantAction();
     return;
   }
@@ -690,8 +771,7 @@ function rebuildPaintLayer() {
 
 function applyAction(stroke) {
     if (stroke.type === "fill") {
-      floodFill(stroke.point, stroke.color);
-      return;
+      return floodFill(stroke.point, stroke.color);
     }
     if (stroke.type === "gradient") {
       const gradient = paintContext.createLinearGradient(stroke.start.x, stroke.start.y, stroke.end.x, stroke.end.y);
@@ -724,44 +804,56 @@ function applyAction(stroke) {
     });
 }
 
+/* Returns how many pixels were painted. Three ways to paint none: nothing loaded, the
+   tap landed in the mosaic's non-fillable exterior (mask), or the region is a pocket
+   (at or under POCKET_MAX) -- in every case the canvas is left untouched, so the
+   caller can leave the tap out of the undo stack. Pixels are only written after the
+   whole region is known; nothing is painted to decide it. */
 function floodFill(point, color) {
-  if (!linePixels) return;
+  if (!linePixels) return 0;
   const width = paintLayer.width;
   const height = paintLayer.height;
   const startX = Math.max(0, Math.min(width - 1, Math.round(point.x)));
   const startY = Math.max(0, Math.min(height - 1, Math.round(point.y)));
-  const output = paintContext.getImageData(0, 0, width, height);
   const rgba = color.match(/[a-f\d]{2}/gi).map((part) => parseInt(part, 16));
   const visited = new Uint8Array(width * height);
+  const indices = [];
   const stack = [startY * width + startX];
   const isBoundary = (index) => {
+    if (exteriorMask && exteriorMask[index]) return true;
     const offset = index * 4;
     return linePixels[offset + 3] > 90 && linePixels[offset] + linePixels[offset + 1] + linePixels[offset + 2] < 430;
   };
   while (stack.length) {
     const index = stack.pop();
-    if (visited[index] || isBoundary(index)) continue;
+    if (index < 0 || index >= visited.length || visited[index] || isBoundary(index)) continue;
     visited[index] = 1;
-    const offset = index * 4;
-    output.data[offset] = rgba[0]; output.data[offset + 1] = rgba[1]; output.data[offset + 2] = rgba[2]; output.data[offset + 3] = 255;
+    indices.push(index);
     const x = index % width;
     if (x) stack.push(index - 1);
     if (x < width - 1) stack.push(index + 1);
     if (index >= width) stack.push(index - width);
     if (index < width * (height - 1)) stack.push(index + width);
   }
+  if (!indices.length || indices.length <= POCKET_MAX) return 0;
+  const output = paintContext.getImageData(0, 0, width, height);
+  for (const index of indices) {
+    const offset = index * 4;
+    output.data[offset] = rgba[0]; output.data[offset + 1] = rgba[1]; output.data[offset + 2] = rgba[2]; output.data[offset + 3] = 255;
+  }
   paintContext.putImageData(output, 0, 0);
+  return indices.length;
 }
 
 function composeCanvas() {
-  if (!lineImage) return;
+  if (!lineImage || !lineDrawRect) return;
   visibleContext.save();
   visibleContext.globalCompositeOperation = "source-over";
   visibleContext.fillStyle = "#fff";
   visibleContext.fillRect(0, 0, paintCanvas.width, paintCanvas.height);
   visibleContext.drawImage(paintLayer, 0, 0);
   visibleContext.globalCompositeOperation = "multiply";
-  visibleContext.drawImage(lineImage, 0, 0, paintCanvas.width, paintCanvas.height);
+  visibleContext.drawImage(lineImage, lineDrawRect.x, lineDrawRect.y, lineDrawRect.width, lineDrawRect.height);
   visibleContext.restore();
 }
 

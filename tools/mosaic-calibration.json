@@ -1,0 +1,239 @@
+{
+  "$purpose": "Corpus/raster CALIBRATION for the mosaic fill's POCKET_MAX. Not a UX constant and not timeless: valid for exactly this corpus (sha256 below), the 724x1086 canvas, the min-scale centered bilinear pipeline, and the alpha>90 / R+G+B<430 boundary predicate. Refresh ONLY via: python3 coloring-app/tools/check-mosaic-fill.py --refresh-calibration, after the full harness passes on new art.",
+  "canvas": {
+    "width": 724,
+    "height": 1086
+  },
+  "pipeline": "art scaled by min(724/w, 1086/h), centered, bilinear (mirrors app.js loadPage)",
+  "boundary_predicate": {
+    "min_alpha": 90,
+    "max_channel_sum": 430
+  },
+  "pocket_max": 1815,
+  "pocket_max_provenance": {
+    "measured_basis": {
+      "largest_pocket_px": 1685,
+      "largest_pocket_sheet": "sea-turtle.png",
+      "smallest_region_above_px": 1943,
+      "smallest_region_above_sheet": "sea-turtle.png"
+    },
+    "clearance_band": {
+      "min_ratio": 0.05,
+      "meaning": "no region may sit within this ratio of pocket_max"
+    }
+  },
+  "corpus": [
+    {
+      "file": "abstract-bands.png",
+      "sha256": "963515507d981fd800b99f62337203f07adc93af39010766797dcab083241585",
+      "mask_px": 155090,
+      "cells": 27,
+      "pockets": 0,
+      "largest_pocket_px": 0,
+      "smallest_cell_px": 5275
+    },
+    {
+      "file": "abstract-centerstone.png",
+      "sha256": "1c3507edbb962a340260ba21c45eb098a9fcac97c2854fb126a8fc4019471486",
+      "mask_px": 141977,
+      "cells": 44,
+      "pockets": 1,
+      "largest_pocket_px": 1,
+      "smallest_cell_px": 2078
+    },
+    {
+      "file": "abstract-crazy-paving.png",
+      "sha256": "cf39ee7f99a5c7780df9e138af9552984a07e063c713d6c0df140b4bf54affa8",
+      "mask_px": 131585,
+      "cells": 68,
+      "pockets": 1,
+      "largest_pocket_px": 1,
+      "smallest_cell_px": 2626
+    },
+    {
+      "file": "abstract-fine-100.png",
+      "sha256": "d5d64d459e0365d93035cc0efd2699ae0941051a8258c5bc098e826c0cba790c",
+      "mask_px": 176774,
+      "cells": 100,
+      "pockets": 0,
+      "largest_pocket_px": 0,
+      "smallest_cell_px": 3284
+    },
+    {
+      "file": "abstract-fine-130.png",
+      "sha256": "73d6ae81e3da1ac32466e61557e8df9b40f8c10520a1582acdd1d464368650ad",
+      "mask_px": 176774,
+      "cells": 130,
+      "pockets": 0,
+      "largest_pocket_px": 0,
+      "smallest_cell_px": 2903
+    },
+    {
+      "file": "abstract-fine-160.png",
+      "sha256": "a03bbd9182d8dedb425308b8d878baf791df1c2600d5e7e867add54c0e723ebc",
+      "mask_px": 176774,
+      "cells": 160,
+      "pockets": 0,
+      "largest_pocket_px": 0,
+      "smallest_cell_px": 2574
+    },
+    {
+      "file": "abstract-fine-180.png",
+      "sha256": "436e8dd0f9ec436481d8776abb486112eaffb0d911c7428616c92739a3ff6a89",
+      "mask_px": 176774,
+      "cells": 180,
+      "pockets": 0,
+      "largest_pocket_px": 0,
+      "smallest_cell_px": 2450
+    },
+    {
+      "file": "abstract-fine-200.png",
+      "sha256": "a7755152b115e305cd44e0263b6d4f7aa898798f8ec1ae8db9d3fc953fd7a240",
+      "mask_px": 176774,
+      "cells": 200,
+      "pockets": 0,
+      "largest_pocket_px": 0,
+      "smallest_cell_px": 2026
+    },
+    {
+      "file": "abstract-pebbles.png",
+      "sha256": "523815d9e01af4a9db2e57f2c98591d0ba96343f5c3a149017db17eda8045e8d",
+      "mask_px": 130748,
+      "cells": 27,
+      "pockets": 0,
+      "largest_pocket_px": 0,
+      "smallest_cell_px": 9541
+    },
+    {
+      "file": "abstract-rings.png",
+      "sha256": "e508ad098da1ba241b3eab63e85b9b033655bd371e944b62bd49bbcd7358ccb5",
+      "mask_px": 138381,
+      "cells": 38,
+      "pockets": 0,
+      "largest_pocket_px": 0,
+      "smallest_cell_px": 5255
+    },
+    {
+      "file": "abstract-shards.png",
+      "sha256": "d8677f08e1b4c176cd69b2e81f469decee155e6997727d6658cdfffb8af9057c",
+      "mask_px": 132193,
+      "cells": 69,
+      "pockets": 2,
+      "largest_pocket_px": 1,
+      "smallest_cell_px": 3327
+    },
+    {
+      "file": "happy-rocket.png",
+      "sha256": "29097309f7f362550dc640937f33c3161ab601e7232bf559e4241d9507a84327",
+      "mask_px": 185104,
+      "cells": 32,
+      "pockets": 5,
+      "largest_pocket_px": 1446,
+      "smallest_cell_px": 4092
+    },
+    {
+      "file": "princess-crown.png",
+      "sha256": "100f5cb046c99fcf3be36c2e063ce9303a0843d9d01f6d0c91180672abee30a5",
+      "mask_px": 135410,
+      "cells": 43,
+      "pockets": 1,
+      "largest_pocket_px": 2,
+      "smallest_cell_px": 2430
+    },
+    {
+      "file": "princess-mermaid.png",
+      "sha256": "e558671b1ec6f5903bb703ed992077724cf33ab91d680b81f6809b4800b92ec6",
+      "mask_px": 131524,
+      "cells": 53,
+      "pockets": 9,
+      "largest_pocket_px": 4,
+      "smallest_cell_px": 2396
+    },
+    {
+      "file": "princess-seashells.png",
+      "sha256": "264bbd03e8ef768c30138d026578a565d82a6a4068d47a61341049d1a35f88c7",
+      "mask_px": 131269,
+      "cells": 65,
+      "pockets": 1,
+      "largest_pocket_px": 2,
+      "smallest_cell_px": 2360
+    },
+    {
+      "file": "sea-turtle.png",
+      "sha256": "5b6464d563e24a9d531116d3e328ce04cc592bcd18764e68f47473f448d4195b",
+      "mask_px": 206827,
+      "cells": 52,
+      "pockets": 24,
+      "largest_pocket_px": 1685,
+      "smallest_cell_px": 1943
+    },
+    {
+      "file": "smiling-sunflower.png",
+      "sha256": "a536e978bcf87a148d46a2ee313c7854c6da053aadd7cbcf8c1e2a5a0868d2ac",
+      "mask_px": 146046,
+      "cells": 32,
+      "pockets": 1,
+      "largest_pocket_px": 1293,
+      "smallest_cell_px": 2375
+    },
+    {
+      "file": "space-astronaut.png",
+      "sha256": "3f96396bd89b17c992b1a370ad367f67bac8f42861e13d2882d301a4218cae18",
+      "mask_px": 132212,
+      "cells": 42,
+      "pockets": 2,
+      "largest_pocket_px": 2,
+      "smallest_cell_px": 2502
+    },
+    {
+      "file": "space-planet.png",
+      "sha256": "7637f79c470d3f08a7da977b419fc97b7057d2f4f31f3057dc5ea4a8fb512f35",
+      "mask_px": 142256,
+      "cells": 30,
+      "pockets": 1,
+      "largest_pocket_px": 2,
+      "smallest_cell_px": 3204
+    },
+    {
+      "file": "space-rocket.png",
+      "sha256": "3e00022afac91ecf0966d43b8b5f08953c322cf0b009223395f05f54b00ebf91",
+      "mask_px": 139637,
+      "cells": 36,
+      "pockets": 1,
+      "largest_pocket_px": 1,
+      "smallest_cell_px": 2436
+    },
+    {
+      "file": "sweet-cake.png",
+      "sha256": "d77958c58334f9cba09f609dda7c5a9e7e324b7e0b943963e4cc88fa24db6790",
+      "mask_px": 132203,
+      "cells": 33,
+      "pockets": 0,
+      "largest_pocket_px": 0,
+      "smallest_cell_px": 2321
+    },
+    {
+      "file": "sweet-cupcake.png",
+      "sha256": "2f721e1e5893bf86154a4ec79b8f2f01bcf66512a0c2b7c22fa7a411adf8bed5",
+      "mask_px": 133705,
+      "cells": 33,
+      "pockets": 1,
+      "largest_pocket_px": 1,
+      "smallest_cell_px": 2375
+    },
+    {
+      "file": "sweet-ice-cream.png",
+      "sha256": "32ce2994ab1356d747bf513ee973a82293d79e8942e0faf3442cee5319b48b5d",
+      "mask_px": 138474,
+      "cells": 30,
+      "pockets": 1,
+      "largest_pocket_px": 1,
+      "smallest_cell_px": 3201
+    }
+  ],
+  "generated": {
+    "date": "2026-09-19",
+    "by": "tools/check-mosaic-fill.py --refresh-calibration",
+    "commit": "fb9aeb6541cd25dd19c91849f910ba48283f0a45"
+  }
+}

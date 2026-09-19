@@ -20,6 +20,10 @@ body {
   margin: 0;
   overflow: hidden;
   overscroll-behavior: none;
+  /* Both elements, not just body: a tap resolves touch-action against every ancestor,
+     and iPadOS Safari still double-tap-zooms on surfaces the chain leaves `auto`
+     (observed live on v19 with body-only coverage). */
+  touch-action: manipulation;
   background: #8a6bea;
 }
 
@@ -1312,8 +1316,9 @@ button:disabled {
  * `touch-action: none`, which is more specific and still wins -- a colouring
  * canvas wants every gesture.
  *
- * Pinch needs JavaScript: iOS Safari has ignored user-scalable=no since iOS 10,
- * so this app's viewport meta never stopped it. See the guard in index.html.
+ * Pinch is deliberately NOT blocked by JavaScript. Blocking gesturestart made a
+ * double-tap zoom unrecoverable (get in, no way out) -- the 2026-09-07 dollhouse
+ * zoom trap. Pinch is the exit; see INTERACTION-DIRECTION.md.
  */
 html { -webkit-text-size-adjust: 100%; }
 

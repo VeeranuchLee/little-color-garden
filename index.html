@@ -8,7 +8,7 @@
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <meta name="apple-mobile-web-app-title" content="Color Garden" />
+    <meta name="apple-mobile-web-app-title" content="Little Color Garden" />
     <title>Little Color Garden</title>
     <link rel="manifest" href="./manifest.webmanifest" />
     <link rel="apple-touch-icon" href="./assets/icons/apple-touch-icon.png" />
@@ -64,12 +64,12 @@
             <b class="mode-name">Pixel</b>
             <span class="mode-tag">Copy pictures with little tiles</span>
           </button>
-          <button class="mode-card" id="modeColoring" type="button" aria-label="Coloring. Color a picture, or draw your own.">
+          <button class="mode-card" id="modeColoring" type="button" aria-label="Colouring. Colour a picture, or draw your own.">
             <span class="mode-art"><img src="./assets/pages/pink-princess.png" alt="" draggable="false" /></span>
             <b class="mode-name">Coloring</b>
-            <span class="mode-tag">Color a picture, or draw your own</span>
+            <span class="mode-tag">Colour a picture, or draw your own</span>
           </button>
-          <button class="mode-card" id="modeMosaic" type="button" aria-label="Mosaic. Tap the shapes to fill them with color.">
+          <button class="mode-card" id="modeMosaic" type="button" aria-label="Mosaic. Tap the shapes to fill them with colour.">
             <span class="mode-art"><img src="./assets/mosaic/smiling-sunflower.png" alt="" draggable="false" /></span>
             <b class="mode-name">Mosaic</b>
             <span class="mode-tag">Tap the shapes to fill them with color</span>
@@ -326,10 +326,9 @@
     <script src="./pixel-mode.js"></script>
     <script src="./blank-page.js"></script>
     <script src="./mosaic-mode.js"></script>
-    <script>
-  /* Pinch-zoom guard: iOS ignores user-scalable=no, so this is what stops two small
-     hands zooming the page mid-drawing. Inert outside Safari. */
-  document.addEventListener("gesturestart", function (e) { e.preventDefault(); }, { passive: false });
-  </script>
+    <!-- Do NOT re-add a document-level "gesturestart" preventDefault here. It blocks
+         every pinch, so a double-tap zoom (which iPadOS Safari still allows even with
+         touch-action: manipulation -- observed live on v19) becomes a trap with no way
+         out but reloading. The rule and its history: INTERACTION-DIRECTION.md. -->
 </body>
 </html>
