@@ -12,10 +12,10 @@
   "pocket_max": 1815,
   "pocket_max_provenance": {
     "measured_basis": {
-      "largest_pocket_px": 1685,
-      "largest_pocket_sheet": "sea-turtle.png",
-      "smallest_region_above_px": 1943,
-      "smallest_region_above_sheet": "sea-turtle.png"
+      "largest_pocket_px": 1723,
+      "largest_pocket_sheet": "sweet-ice-cream.png",
+      "smallest_region_above_px": 1906,
+      "smallest_region_above_sheet": "princess-crown.png"
     },
     "clearance_band": {
       "min_ratio": 0.05,
@@ -133,30 +133,30 @@
     },
     {
       "file": "princess-crown.png",
-      "sha256": "100f5cb046c99fcf3be36c2e063ce9303a0843d9d01f6d0c91180672abee30a5",
+      "sha256": "eac777f075c18654ca9318505231cec044392149d86279b3bce0e82a6adcf0dc",
       "mask_px": 135410,
-      "cells": 43,
+      "cells": 61,
       "pockets": 1,
       "largest_pocket_px": 2,
-      "smallest_cell_px": 2430
+      "smallest_cell_px": 1906
     },
     {
       "file": "princess-mermaid.png",
-      "sha256": "e558671b1ec6f5903bb703ed992077724cf33ab91d680b81f6809b4800b92ec6",
+      "sha256": "dcaa1cdd32968410561ce6bff67c11b5f69e905c436395d9e47cc6997ecd039f",
       "mask_px": 131524,
-      "cells": 53,
-      "pockets": 9,
-      "largest_pocket_px": 4,
-      "smallest_cell_px": 2396
+      "cells": 60,
+      "pockets": 24,
+      "largest_pocket_px": 1691,
+      "smallest_cell_px": 2013
     },
     {
       "file": "princess-seashells.png",
-      "sha256": "264bbd03e8ef768c30138d026578a565d82a6a4068d47a61341049d1a35f88c7",
+      "sha256": "f867789b7d3dc01c6c84e207fcf279c7a33539ea73fa4179481aae918bda8b10",
       "mask_px": 131269,
-      "cells": 65,
-      "pockets": 1,
-      "largest_pocket_px": 2,
-      "smallest_cell_px": 2360
+      "cells": 74,
+      "pockets": 4,
+      "largest_pocket_px": 1608,
+      "smallest_cell_px": 2232
     },
     {
       "file": "sea-turtle.png",
@@ -178,62 +178,62 @@
     },
     {
       "file": "space-astronaut.png",
-      "sha256": "3f96396bd89b17c992b1a370ad367f67bac8f42861e13d2882d301a4218cae18",
+      "sha256": "827f250a05378b6e899c848dc410d23670f9f6a0384f9a37838dbcb97fc0c203",
       "mask_px": 132212,
-      "cells": 42,
-      "pockets": 2,
-      "largest_pocket_px": 2,
-      "smallest_cell_px": 2502
+      "cells": 51,
+      "pockets": 14,
+      "largest_pocket_px": 1601,
+      "smallest_cell_px": 1921
     },
     {
       "file": "space-planet.png",
-      "sha256": "7637f79c470d3f08a7da977b419fc97b7057d2f4f31f3057dc5ea4a8fb512f35",
+      "sha256": "9c81c925a53a5414270be550e5ca492047f76d8b68207df48443bf0a387e9460",
       "mask_px": 142256,
-      "cells": 30,
-      "pockets": 1,
-      "largest_pocket_px": 2,
-      "smallest_cell_px": 3204
+      "cells": 32,
+      "pockets": 4,
+      "largest_pocket_px": 1654,
+      "smallest_cell_px": 1961
     },
     {
       "file": "space-rocket.png",
-      "sha256": "3e00022afac91ecf0966d43b8b5f08953c322cf0b009223395f05f54b00ebf91",
+      "sha256": "4dccf82ab2945a28a1eaf949ebbf069e32021a311a1ce020c6aff7688e3d66b9",
       "mask_px": 139637,
-      "cells": 36,
-      "pockets": 1,
-      "largest_pocket_px": 1,
+      "cells": 37,
+      "pockets": 10,
+      "largest_pocket_px": 1083,
       "smallest_cell_px": 2436
     },
     {
       "file": "sweet-cake.png",
-      "sha256": "d77958c58334f9cba09f609dda7c5a9e7e324b7e0b943963e4cc88fa24db6790",
+      "sha256": "ab4901a198fa4e2ad181a5759c3c5689ccb54d41d4392a2089bcd96ba25607c1",
       "mask_px": 132203,
-      "cells": 33,
-      "pockets": 0,
-      "largest_pocket_px": 0,
-      "smallest_cell_px": 2321
+      "cells": 41,
+      "pockets": 4,
+      "largest_pocket_px": 1527,
+      "smallest_cell_px": 2146
     },
     {
       "file": "sweet-cupcake.png",
-      "sha256": "2f721e1e5893bf86154a4ec79b8f2f01bcf66512a0c2b7c22fa7a411adf8bed5",
+      "sha256": "b72272ae1af305fb07e2461c5e56d11e58de1d90580a1d90780cd1c2aefcb9fd",
       "mask_px": 133705,
-      "cells": 33,
-      "pockets": 1,
-      "largest_pocket_px": 1,
-      "smallest_cell_px": 2375
+      "cells": 38,
+      "pockets": 11,
+      "largest_pocket_px": 996,
+      "smallest_cell_px": 2319
     },
     {
       "file": "sweet-ice-cream.png",
-      "sha256": "32ce2994ab1356d747bf513ee973a82293d79e8942e0faf3442cee5319b48b5d",
+      "sha256": "29ecbaf05481d5a6981f32fed301e9b5397f7eb4b2a4e63a9eff8d4a8bb7cdbe",
       "mask_px": 138474,
-      "cells": 30,
-      "pockets": 1,
-      "largest_pocket_px": 1,
-      "smallest_cell_px": 3201
+      "cells": 32,
+      "pockets": 7,
+      "largest_pocket_px": 1723,
+      "smallest_cell_px": 2597
     }
   ],
   "generated": {
-    "date": "2026-09-19",
+    "date": "2026-09-20",
     "by": "tools/check-mosaic-fill.py --refresh-calibration",
-    "commit": "fb9aeb6541cd25dd19c91849f910ba48283f0a45"
+    "commit": "215f1dcc0b924c6cce43c08c80aa4f582fe275d3"
   }
 }
