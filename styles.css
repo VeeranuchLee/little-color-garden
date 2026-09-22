@@ -1320,7 +1320,7 @@ button:disabled {
  * double-tap zoom unrecoverable (get in, no way out) -- the 2026-09-07 dollhouse
  * zoom trap. Pinch is the exit; see INTERACTION-DIRECTION.md.
  */
-html { -webkit-text-size-adjust: 100%; }
+html { -webkit-text-size-adjust: 100%; touch-action: manipulation; }
 
 body {
   -webkit-user-select: none;

@@ -1,5 +1,5 @@
 {
-  "$purpose": "Corpus/raster CALIBRATION for the mosaic fill's POCKET_MAX. Not a UX constant and not timeless: valid for exactly this corpus (sha256 below), the 724x1086 canvas, the min-scale centered bilinear pipeline, and the alpha>90 / R+G+B<430 boundary predicate. Refresh ONLY via: python3 coloring-app/tools/check-mosaic-fill.py --refresh-calibration, after the full harness passes on new art.",
+  "$purpose": "Corpus/raster CALIBRATION for the coloring fill's POCKET_MAX and TAPPABLE_RADIUS. Not UX constants and not timeless: valid for exactly these corpora (sha256 below), the 724x1086 mosaic canvas with the min-scale centered bilinear pipeline, the pages' natural sizes, and the alpha>90 / R+G+B<430 boundary predicate. Refresh ONLY via: python3 coloring-app/tools/check-mosaic-fill.py --refresh-calibration, after the full harness passes on new art.",
   "canvas": {
     "width": 724,
     "height": 1086
@@ -22,6 +22,32 @@
       "meaning": "no region may sit within this ratio of pocket_max"
     }
   },
+  "tappable_radius": 3,
+  "tappable_radius_provenance": {
+    "measured_basis": {
+      "largest_thin_refused_radius": 2,
+      "smallest_compact_fill_radius": 3,
+      "owner_named_cells_2026_09_21": {
+        "smiling-sunflower-tongue": {
+          "px": 1293,
+          "radius": 13
+        },
+        "happy-rocket-segments": {
+          "px": 1304,
+          "radius": 13
+        },
+        "space-planet-details": {
+          "px": 1165,
+          "radius": 14
+        },
+        "sea-turtle-shell-scales": {
+          "px": 229,
+          "radius": 4
+        }
+      }
+    },
+    "meaning": "a region at or under pocket_max still fills when its inscribed radius reaches this value; every measured thin sliver is below it"
+  },
   "corpus": [
     {
       "file": "abstract-bands.png",
@@ -29,6 +55,9 @@
       "mask_px": 155090,
       "cells": 27,
       "pockets": 0,
+      "compact_fills": 0,
+      "largest_refused_radius": 0,
+      "smallest_compact_radius": null,
       "largest_pocket_px": 0,
       "smallest_cell_px": 5275
     },
@@ -38,6 +67,9 @@
       "mask_px": 141977,
       "cells": 44,
       "pockets": 1,
+      "compact_fills": 0,
+      "largest_refused_radius": 1,
+      "smallest_compact_radius": null,
       "largest_pocket_px": 1,
       "smallest_cell_px": 2078
     },
@@ -47,6 +79,9 @@
       "mask_px": 131585,
       "cells": 68,
       "pockets": 1,
+      "compact_fills": 0,
+      "largest_refused_radius": 1,
+      "smallest_compact_radius": null,
       "largest_pocket_px": 1,
       "smallest_cell_px": 2626
     },
@@ -56,6 +91,9 @@
       "mask_px": 176774,
       "cells": 100,
       "pockets": 0,
+      "compact_fills": 0,
+      "largest_refused_radius": 0,
+      "smallest_compact_radius": null,
       "largest_pocket_px": 0,
       "smallest_cell_px": 3284
     },
@@ -65,6 +103,9 @@
       "mask_px": 176774,
       "cells": 130,
       "pockets": 0,
+      "compact_fills": 0,
+      "largest_refused_radius": 0,
+      "smallest_compact_radius": null,
       "largest_pocket_px": 0,
       "smallest_cell_px": 2903
     },
@@ -74,6 +115,9 @@
       "mask_px": 176774,
       "cells": 160,
       "pockets": 0,
+      "compact_fills": 0,
+      "largest_refused_radius": 0,
+      "smallest_compact_radius": null,
       "largest_pocket_px": 0,
       "smallest_cell_px": 2574
     },
@@ -83,6 +127,9 @@
       "mask_px": 176774,
       "cells": 180,
       "pockets": 0,
+      "compact_fills": 0,
+      "largest_refused_radius": 0,
+      "smallest_compact_radius": null,
       "largest_pocket_px": 0,
       "smallest_cell_px": 2450
     },
@@ -92,6 +139,9 @@
       "mask_px": 176774,
       "cells": 200,
       "pockets": 0,
+      "compact_fills": 0,
+      "largest_refused_radius": 0,
+      "smallest_compact_radius": null,
       "largest_pocket_px": 0,
       "smallest_cell_px": 2026
     },
@@ -101,6 +151,9 @@
       "mask_px": 130748,
       "cells": 27,
       "pockets": 0,
+      "compact_fills": 0,
+      "largest_refused_radius": 0,
+      "smallest_compact_radius": null,
       "largest_pocket_px": 0,
       "smallest_cell_px": 9541
     },
@@ -110,6 +163,9 @@
       "mask_px": 138381,
       "cells": 38,
       "pockets": 0,
+      "compact_fills": 0,
+      "largest_refused_radius": 0,
+      "smallest_compact_radius": null,
       "largest_pocket_px": 0,
       "smallest_cell_px": 5255
     },
@@ -119,6 +175,9 @@
       "mask_px": 132193,
       "cells": 69,
       "pockets": 2,
+      "compact_fills": 0,
+      "largest_refused_radius": 1,
+      "smallest_compact_radius": null,
       "largest_pocket_px": 1,
       "smallest_cell_px": 3327
     },
@@ -127,7 +186,10 @@
       "sha256": "29097309f7f362550dc640937f33c3161ab601e7232bf559e4241d9507a84327",
       "mask_px": 185104,
       "cells": 32,
-      "pockets": 5,
+      "pockets": 1,
+      "compact_fills": 4,
+      "largest_refused_radius": 1,
+      "smallest_compact_radius": 4,
       "largest_pocket_px": 1446,
       "smallest_cell_px": 4092
     },
@@ -137,6 +199,9 @@
       "mask_px": 135410,
       "cells": 61,
       "pockets": 1,
+      "compact_fills": 0,
+      "largest_refused_radius": 1,
+      "smallest_compact_radius": null,
       "largest_pocket_px": 2,
       "smallest_cell_px": 1906
     },
@@ -145,7 +210,10 @@
       "sha256": "dcaa1cdd32968410561ce6bff67c11b5f69e905c436395d9e47cc6997ecd039f",
       "mask_px": 131524,
       "cells": 60,
-      "pockets": 24,
+      "pockets": 11,
+      "compact_fills": 13,
+      "largest_refused_radius": 2,
+      "smallest_compact_radius": 3,
       "largest_pocket_px": 1691,
       "smallest_cell_px": 2013
     },
@@ -154,7 +222,10 @@
       "sha256": "f867789b7d3dc01c6c84e207fcf279c7a33539ea73fa4179481aae918bda8b10",
       "mask_px": 131269,
       "cells": 74,
-      "pockets": 4,
+      "pockets": 1,
+      "compact_fills": 3,
+      "largest_refused_radius": 1,
+      "smallest_compact_radius": 3,
       "largest_pocket_px": 1608,
       "smallest_cell_px": 2232
     },
@@ -163,7 +234,10 @@
       "sha256": "5b6464d563e24a9d531116d3e328ce04cc592bcd18764e68f47473f448d4195b",
       "mask_px": 206827,
       "cells": 52,
-      "pockets": 24,
+      "pockets": 6,
+      "compact_fills": 18,
+      "largest_refused_radius": 2,
+      "smallest_compact_radius": 3,
       "largest_pocket_px": 1685,
       "smallest_cell_px": 1943
     },
@@ -172,7 +246,10 @@
       "sha256": "a536e978bcf87a148d46a2ee313c7854c6da053aadd7cbcf8c1e2a5a0868d2ac",
       "mask_px": 146046,
       "cells": 32,
-      "pockets": 1,
+      "pockets": 0,
+      "compact_fills": 1,
+      "largest_refused_radius": 0,
+      "smallest_compact_radius": 13,
       "largest_pocket_px": 1293,
       "smallest_cell_px": 2375
     },
@@ -181,7 +258,10 @@
       "sha256": "827f250a05378b6e899c848dc410d23670f9f6a0384f9a37838dbcb97fc0c203",
       "mask_px": 132212,
       "cells": 51,
-      "pockets": 14,
+      "pockets": 2,
+      "compact_fills": 12,
+      "largest_refused_radius": 1,
+      "smallest_compact_radius": 4,
       "largest_pocket_px": 1601,
       "smallest_cell_px": 1921
     },
@@ -190,7 +270,10 @@
       "sha256": "9c81c925a53a5414270be550e5ca492047f76d8b68207df48443bf0a387e9460",
       "mask_px": 142256,
       "cells": 32,
-      "pockets": 4,
+      "pockets": 1,
+      "compact_fills": 3,
+      "largest_refused_radius": 1,
+      "smallest_compact_radius": 10,
       "largest_pocket_px": 1654,
       "smallest_cell_px": 1961
     },
@@ -199,7 +282,10 @@
       "sha256": "4dccf82ab2945a28a1eaf949ebbf069e32021a311a1ce020c6aff7688e3d66b9",
       "mask_px": 139637,
       "cells": 37,
-      "pockets": 10,
+      "pockets": 3,
+      "compact_fills": 7,
+      "largest_refused_radius": 2,
+      "smallest_compact_radius": 3,
       "largest_pocket_px": 1083,
       "smallest_cell_px": 2436
     },
@@ -208,7 +294,10 @@
       "sha256": "ab4901a198fa4e2ad181a5759c3c5689ccb54d41d4392a2089bcd96ba25607c1",
       "mask_px": 132203,
       "cells": 41,
-      "pockets": 4,
+      "pockets": 0,
+      "compact_fills": 4,
+      "largest_refused_radius": 0,
+      "smallest_compact_radius": 3,
       "largest_pocket_px": 1527,
       "smallest_cell_px": 2146
     },
@@ -217,7 +306,10 @@
       "sha256": "b72272ae1af305fb07e2461c5e56d11e58de1d90580a1d90780cd1c2aefcb9fd",
       "mask_px": 133705,
       "cells": 38,
-      "pockets": 11,
+      "pockets": 4,
+      "compact_fills": 7,
+      "largest_refused_radius": 2,
+      "smallest_compact_radius": 3,
       "largest_pocket_px": 996,
       "smallest_cell_px": 2319
     },
@@ -226,14 +318,223 @@
       "sha256": "29ecbaf05481d5a6981f32fed301e9b5397f7eb4b2a4e63a9eff8d4a8bb7cdbe",
       "mask_px": 138474,
       "cells": 32,
-      "pockets": 7,
+      "pockets": 2,
+      "compact_fills": 5,
+      "largest_refused_radius": 2,
+      "smallest_compact_radius": 7,
       "largest_pocket_px": 1723,
       "smallest_cell_px": 2597
     }
   ],
+  "pages_corpus": [
+    {
+      "file": "bird-princess.png",
+      "sha256": "f8e2c20f094f70fff421adca614f0073366d54b73c4a2dd0b85addcb914f606f",
+      "width": 724,
+      "height": 1086,
+      "regions": 36,
+      "fills": 0,
+      "compact_fills": 15,
+      "refused": 21,
+      "largest_refused_radius": 2,
+      "smallest_compact_radius": 3
+    },
+    {
+      "file": "blue-pea.png",
+      "sha256": "e702793a6d2db43539147d3470aea441957b896f48ce5d499b5bf5673056ec91",
+      "width": 745,
+      "height": 1055,
+      "regions": 57,
+      "fills": 11,
+      "compact_fills": 5,
+      "refused": 41,
+      "largest_refused_radius": 2,
+      "smallest_compact_radius": 3
+    },
+    {
+      "file": "ginger-lily.png",
+      "sha256": "f34aa862d62f0b681a94fb1059e682adaaa1e4fde326e0f02d8b623d0afaf0e2",
+      "width": 745,
+      "height": 1055,
+      "regions": 9,
+      "fills": 0,
+      "compact_fills": 0,
+      "refused": 9,
+      "largest_refused_radius": 2,
+      "smallest_compact_radius": null
+    },
+    {
+      "file": "hibiscus.png",
+      "sha256": "3f990ce886ce2e8aed2c0753dd572a78e894a0b18cc51481c9f3044f09739bfe",
+      "width": 745,
+      "height": 1055,
+      "regions": 8,
+      "fills": 0,
+      "compact_fills": 2,
+      "refused": 6,
+      "largest_refused_radius": 1,
+      "smallest_compact_radius": 3
+    },
+    {
+      "file": "magic-princess.png",
+      "sha256": "f66ef4595185b307c04b44291dd0dccf14ce2ea624722a376426c42b9dc03065",
+      "width": 724,
+      "height": 1086,
+      "regions": 27,
+      "fills": 0,
+      "compact_fills": 3,
+      "refused": 24,
+      "largest_refused_radius": 2,
+      "smallest_compact_radius": 3
+    },
+    {
+      "file": "mars-rover.png",
+      "sha256": "c40b7ac8f1f08c13679507e236927165095e081c705fd2980eade73a38550a27",
+      "width": 724,
+      "height": 1086,
+      "regions": 422,
+      "fills": 13,
+      "compact_fills": 118,
+      "refused": 291,
+      "largest_refused_radius": 2,
+      "smallest_compact_radius": 3
+    },
+    {
+      "file": "mermaid-dolphin.png",
+      "sha256": "314c9466ce0930169edc9fdaab078a15a46f8bcbea94c51634a37bea967187d9",
+      "width": 745,
+      "height": 894,
+      "regions": 298,
+      "fills": 50,
+      "compact_fills": 126,
+      "refused": 122,
+      "largest_refused_radius": 2,
+      "smallest_compact_radius": 3
+    },
+    {
+      "file": "mermaid-flower.png",
+      "sha256": "cd6fe8c16523181a4816d4b2e3a5b27e60e2759a7fb6fe1fe76e5668e17ce56f",
+      "width": 745,
+      "height": 894,
+      "regions": 267,
+      "fills": 32,
+      "compact_fills": 123,
+      "refused": 112,
+      "largest_refused_radius": 2,
+      "smallest_compact_radius": 3
+    },
+    {
+      "file": "mermaid-princess.png",
+      "sha256": "bfc91145e8c6a62963854a8ca7f208b1ecdfd297a9507c7c5748e79a6a8e7f13",
+      "width": 724,
+      "height": 1086,
+      "regions": 64,
+      "fills": 2,
+      "compact_fills": 20,
+      "refused": 42,
+      "largest_refused_radius": 2,
+      "smallest_compact_radius": 3
+    },
+    {
+      "file": "moon-flag.png",
+      "sha256": "42fd21aa59d936a6498e3a98050e041b809177d8e818ee79709f700a8953ce64",
+      "width": 724,
+      "height": 1086,
+      "regions": 115,
+      "fills": 14,
+      "compact_fills": 40,
+      "refused": 61,
+      "largest_refused_radius": 2,
+      "smallest_compact_radius": 3
+    },
+    {
+      "file": "pink-princess.png",
+      "sha256": "adf52092567167ec184f7791770b53c7c5975cf32cfabf3be944ea7661835e27",
+      "width": 724,
+      "height": 1086,
+      "regions": 15,
+      "fills": 0,
+      "compact_fills": 0,
+      "refused": 15,
+      "largest_refused_radius": 2,
+      "smallest_compact_radius": null
+    },
+    {
+      "file": "solar-system.png",
+      "sha256": "f66f71977357eea18cb5e551a953dc7a834795f5a5713b1bc8af5eb03d5c4b70",
+      "width": 724,
+      "height": 1086,
+      "regions": 179,
+      "fills": 12,
+      "compact_fills": 77,
+      "refused": 90,
+      "largest_refused_radius": 2,
+      "smallest_compact_radius": 3
+    },
+    {
+      "file": "space-cat.png",
+      "sha256": "0cf96fa313fd1d619cd8dd0daba68362d504f2474011eede76391ef48dc1c9bb",
+      "width": 745,
+      "height": 931,
+      "regions": 246,
+      "fills": 31,
+      "compact_fills": 177,
+      "refused": 38,
+      "largest_refused_radius": 2,
+      "smallest_compact_radius": 3
+    },
+    {
+      "file": "space-kid.png",
+      "sha256": "ac7bb14931b6365719806933f687a02f388ffa843259641a485d865bfe1f4bfe",
+      "width": 724,
+      "height": 1086,
+      "regions": 94,
+      "fills": 18,
+      "compact_fills": 39,
+      "refused": 37,
+      "largest_refused_radius": 2,
+      "smallest_compact_radius": 3
+    },
+    {
+      "file": "space-ufo.png",
+      "sha256": "2f90226d2f40b720b1701886ae44f932f169cfe965df5400261d7080edada3e8",
+      "width": 745,
+      "height": 931,
+      "regions": 173,
+      "fills": 34,
+      "compact_fills": 108,
+      "refused": 31,
+      "largest_refused_radius": 2,
+      "smallest_compact_radius": 3
+    },
+    {
+      "file": "star-astronaut.png",
+      "sha256": "ac1c696c66a0302ea18a66a8affa51778a1f5c13f6f1f426b1b6a976c2260d37",
+      "width": 745,
+      "height": 931,
+      "regions": 242,
+      "fills": 37,
+      "compact_fills": 145,
+      "refused": 60,
+      "largest_refused_radius": 2,
+      "smallest_compact_radius": 3
+    },
+    {
+      "file": "ylang-ylang.png",
+      "sha256": "68d99c2bf79eacd4a0b6411a4216e062b9bc0d240f1fae4f89714edcc7059633",
+      "width": 745,
+      "height": 1055,
+      "regions": 12,
+      "fills": 0,
+      "compact_fills": 0,
+      "refused": 12,
+      "largest_refused_radius": 2,
+      "smallest_compact_radius": null
+    }
+  ],
   "generated": {
-    "date": "2026-09-20",
+    "date": "2026-09-22",
     "by": "tools/check-mosaic-fill.py --refresh-calibration",
-    "commit": "215f1dcc0b924c6cce43c08c80aa4f582fe275d3"
+    "commit": "f523c5ec9bbb7e87d8f7580c8049087a2380c284"
   }
 }

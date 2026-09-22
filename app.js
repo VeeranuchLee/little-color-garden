@@ -122,9 +122,26 @@ let lineDrawRect = null;
    1815 is measured, not guessed: across all nine sheets the largest pocket is 1,685 px
    (sea-turtle) and the smallest region above it is 1,943 px (also sea-turtle) -- both
    sit ~7% clear of the constant, and tools/check-mosaic-fill.py fails if any region
-   ever lands within 5% of it, forcing a re-measure instead of a silent misclassify. */
+   ever lands within 5% of it, forcing a re-measure instead of a silent misclassify.
+
+   TAPPABLE POCKETS (owner report 2026-09-21: the smiling sunflower's tongue "cannot
+   be colored"). Area alone cannot tell an intended small cell from an anti-aliasing
+   sliver: the sunflower's mouth cell is 1,293 px (a pocket) sitting beside a 2,375 px
+   cell that fills, and the same cutoff refuses the rocket's segment details, the
+   planet's banded details, the turtle's shell scales and the astronaut's face cells
+   -- every one compact, every one a thing a child plainly aims at. Whole Coloring
+   Pages were worse: detailed pages (bird-princess and five more) had NOT ONE
+   fillable enclosed region, because their cells sit under a constant calibrated for
+   the mosaic canvas. The discriminator that separates them at any resolution is
+   shape: a region whose inscribed square is at least TAPPABLE_RADIUS*2+1 px wide
+   reads as a solid, colorable cell; the measured junk (anti-aliasing slivers between
+   strokes) never inscribes more than a 5x5 square (radius 2), while the smallest
+   colorable-looking dot inscribes 7x7 (radius 3). Measured across all 23 mosaic
+   sheets and all 17 coloring pages, 2026-09-22, by tools/measure-fill-regions.py;
+   check-mosaic-fill.py re-proves both constants over both corpora. */
 let exteriorMask = null;
 const POCKET_MAX = 1815;
+const TAPPABLE_RADIUS = 3;
 
 function computeLineDrawRect(image, canvas, mosaic) {
   if (!mosaic) {
@@ -806,9 +823,60 @@ function applyAction(stroke) {
 
 /* Returns how many pixels were painted. Three ways to paint none: nothing loaded, the
    tap landed in the mosaic's non-fillable exterior (mask), or the region is a pocket
-   (at or under POCKET_MAX) -- in every case the canvas is left untouched, so the
-   caller can leave the tap out of the undo stack. Pixels are only written after the
-   whole region is known; nothing is painted to decide it. */
+   too thin to read as a cell -- an area at or under POCKET_MAX whose inscribed square
+   is smaller than TAPPABLE_RADIUS. A compact pocket (the sunflower's tongue, a rocket
+   segment) paints, because a child aiming at it can see it is a cell. In every
+   refuse case the canvas is left untouched, so the caller can leave the tap out of
+   the undo stack. Pixels are only written after the whole region is known; nothing
+   is painted to decide it. */
+function inscribedRadius(indices, width) {
+  /* Chebyshev distance from region pixels to the nearest non-region pixel, by
+     8-neighbour BFS seeded from just outside the region. Pockets are small
+     (<= POCKET_MAX), so this walk costs microseconds per refused tap. */
+  const region = new Set(indices);
+  const dist = new Map();
+  const frontier = [];
+  for (const index of indices) {
+    const x = index % width;
+    const y = (index - x) / width;
+    for (let dx = -1; dx <= 1; dx++) {
+      for (let dy = -1; dy <= 1; dy++) {
+        if (!dx && !dy) continue;
+        const nx = x + dx;
+        const ny = y + dy;
+        if (nx < 0 || ny < 0 || nx >= width) continue;
+        const neighbour = ny * width + nx;
+        if (!region.has(neighbour) && !dist.has(neighbour)) {
+          dist.set(neighbour, 0);
+          frontier.push(neighbour);
+        }
+      }
+    }
+  }
+  let best = 0;
+  for (let cursor = 0; cursor < frontier.length; cursor++) {
+    const index = frontier[cursor];
+    const depth = dist.get(index) + 1;
+    const x = index % width;
+    const y = (index - x) / width;
+    for (let dx = -1; dx <= 1; dx++) {
+      for (let dy = -1; dy <= 1; dy++) {
+        if (!dx && !dy) continue;
+        const nx = x + dx;
+        const ny = y + dy;
+        if (nx < 0 || ny < 0 || nx >= width) continue;
+        const neighbour = ny * width + nx;
+        if (region.has(neighbour) && !dist.has(neighbour)) {
+          dist.set(neighbour, depth);
+          if (depth > best) best = depth;
+          frontier.push(neighbour);
+        }
+      }
+    }
+  }
+  return best;
+}
+
 function floodFill(point, color) {
   if (!linePixels) return 0;
   const width = paintLayer.width;
@@ -835,7 +903,8 @@ function floodFill(point, color) {
     if (index >= width) stack.push(index - width);
     if (index < width * (height - 1)) stack.push(index + width);
   }
-  if (!indices.length || indices.length <= POCKET_MAX) return 0;
+  if (!indices.length) return 0;
+  if (indices.length <= POCKET_MAX && inscribedRadius(indices, width) < TAPPABLE_RADIUS) return 0;
   const output = paintContext.getImageData(0, 0, width, height);
   for (const index of indices) {
     const offset = index * 4;

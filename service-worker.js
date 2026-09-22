@@ -1,4 +1,7 @@
-const CACHE_NAME = "little-color-garden-v23";
+// v24 2026-09-22: tappable pockets -- the fill now answers compact small regions
+//      (the sunflower's tongue, rocket segments, turtle shell scales) and the
+//      Coloring Pages' enclosed details; see tools/check-mosaic-fill.py.
+const CACHE_NAME = "little-color-garden-v24";
 const PAGE_IDS = [
   "solar-system",
   "space-kid",
