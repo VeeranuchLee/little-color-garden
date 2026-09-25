@@ -232,8 +232,8 @@ const VOICE_LINES = {
   "app.directions-page": "Pick a color, then draw with your finger. Tap the little picture button to see the finished picture next to yours.",
   "app.finish-praise": "Wow! Your picture is beautiful!",
   "app.load-error": "Oops. This picture needs a little help loading.",
-  "app.mode-menu": "Pixel, Coloring, or Mosaic? Pick one!",
-  "app.mode-menu-repeat": "Pixel, Coloring, or Mosaic? Pick one to play.",
+  "app.mode-menu": "Pixel Art, Coloring Book, Mosaic, Color by Number, or Stamping? Pick one!",
+  "app.mode-menu-repeat": "Pixel Art, Coloring Book, Mosaic, Color by Number, or Stamping? Pick one to play.",
   "app.pick-picture": "Pick a picture to color.",
   "app.reference-on": "Here is one way it can look. You can color it your own way!",
   "app.undo-restore": "Here it is again!",
@@ -914,6 +914,29 @@ function floodFill(point, color) {
   return indices.length;
 }
 
+// Color by Number shares this app's region walk and tap-target predicate.
+window.colorGardenFloodRegion = function (pixels, width, height, point) {
+  const startX = Math.max(0, Math.min(width - 1, Math.round(point.x)));
+  const startY = Math.max(0, Math.min(height - 1, Math.round(point.y)));
+  const visited = new Uint8Array(width * height), indices = [], stack = [startY * width + startX];
+  const isBoundary = (index) => {
+    const offset = index * 4;
+    return pixels[offset + 3] > 90 && pixels[offset] + pixels[offset + 1] + pixels[offset + 2] < 430;
+  };
+  while (stack.length) {
+    const index = stack.pop();
+    if (index < 0 || index >= visited.length || visited[index] || isBoundary(index)) continue;
+    visited[index] = 1; indices.push(index);
+    const x = index % width;
+    if (x) stack.push(index - 1);
+    if (x < width - 1) stack.push(index + 1);
+    if (index >= width) stack.push(index - width);
+    if (index < width * (height - 1)) stack.push(index + width);
+  }
+  if (!indices.length || (indices.length <= POCKET_MAX && inscribedRadius(indices, width) < TAPPABLE_RADIUS)) return [];
+  return indices;
+};
+
 function composeCanvas() {
   if (!lineImage || !lineDrawRect) return;
   visibleContext.save();
@@ -1143,6 +1166,8 @@ document.querySelector("#modeMosaic").addEventListener("click", () => {
   // is this file's own coloring screen opened on a mosaic page.
   if (typeof window.openMosaicGallery === "function") window.openMosaicGallery();
 });
+document.querySelector("#modeCbn").addEventListener("click", () => window.openCbnGallery && window.openCbnGallery());
+document.querySelector("#modeStamp").addEventListener("click", () => window.openStampGallery && window.openStampGallery());
 document.querySelector("#modeMenuVoice").addEventListener("click", () => speak("app.mode-menu-repeat"));
 
 function selectTool(tool) {

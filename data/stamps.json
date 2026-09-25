@@ -1,0 +1,195 @@
+{
+  "stamps": [
+    {
+      "id": "stamp-apple",
+      "title": "Apple",
+      "file": "assets/stamps/stamp-apple.webp",
+      "width": 332,
+      "height": 384
+    },
+    {
+      "id": "stamp-bee",
+      "title": "Bee",
+      "file": "assets/stamps/stamp-bee.webp",
+      "width": 384,
+      "height": 371
+    },
+    {
+      "id": "stamp-bird",
+      "title": "Bird",
+      "file": "assets/stamps/stamp-bird.webp",
+      "width": 367,
+      "height": 384
+    },
+    {
+      "id": "stamp-bunny",
+      "title": "Bunny",
+      "file": "assets/stamps/stamp-bunny.webp",
+      "width": 240,
+      "height": 384
+    },
+    {
+      "id": "stamp-butterfly",
+      "title": "Butterfly",
+      "file": "assets/stamps/stamp-butterfly.webp",
+      "width": 384,
+      "height": 329
+    },
+    {
+      "id": "stamp-cat",
+      "title": "Cat",
+      "file": "assets/stamps/stamp-cat.webp",
+      "width": 304,
+      "height": 384
+    },
+    {
+      "id": "stamp-cloud",
+      "title": "Cloud",
+      "file": "assets/stamps/stamp-cloud.webp",
+      "width": 384,
+      "height": 267
+    },
+    {
+      "id": "stamp-daisy",
+      "title": "Daisy",
+      "file": "assets/stamps/stamp-daisy.webp",
+      "width": 297,
+      "height": 384
+    },
+    {
+      "id": "stamp-dog",
+      "title": "Dog",
+      "file": "assets/stamps/stamp-dog.webp",
+      "width": 256,
+      "height": 384
+    },
+    {
+      "id": "stamp-fish",
+      "title": "Fish",
+      "file": "assets/stamps/stamp-fish.webp",
+      "width": 384,
+      "height": 321
+    },
+    {
+      "id": "stamp-heart",
+      "title": "Heart",
+      "file": "assets/stamps/stamp-heart.webp",
+      "width": 384,
+      "height": 320
+    },
+    {
+      "id": "stamp-ladybug",
+      "title": "Ladybug",
+      "file": "assets/stamps/stamp-ladybug.webp",
+      "width": 384,
+      "height": 349
+    },
+    {
+      "id": "stamp-moon",
+      "title": "Moon",
+      "file": "assets/stamps/stamp-moon.webp",
+      "width": 349,
+      "height": 384
+    },
+    {
+      "id": "stamp-mushroom",
+      "title": "Mushroom",
+      "file": "assets/stamps/stamp-mushroom.webp",
+      "width": 368,
+      "height": 384
+    },
+    {
+      "id": "stamp-rainbow",
+      "title": "Rainbow",
+      "file": "assets/stamps/stamp-rainbow.webp",
+      "width": 384,
+      "height": 237
+    },
+    {
+      "id": "stamp-rose",
+      "title": "Rose",
+      "file": "assets/stamps/stamp-rose.webp",
+      "width": 244,
+      "height": 384
+    },
+    {
+      "id": "stamp-snail",
+      "title": "Snail",
+      "file": "assets/stamps/stamp-snail.webp",
+      "width": 384,
+      "height": 350
+    },
+    {
+      "id": "stamp-star",
+      "title": "Star",
+      "file": "assets/stamps/stamp-star.webp",
+      "width": 384,
+      "height": 363
+    },
+    {
+      "id": "stamp-strawberry",
+      "title": "Strawberry",
+      "file": "assets/stamps/stamp-strawberry.webp",
+      "width": 301,
+      "height": 384
+    },
+    {
+      "id": "stamp-sun",
+      "title": "Sun",
+      "file": "assets/stamps/stamp-sun.webp",
+      "width": 384,
+      "height": 376
+    },
+    {
+      "id": "stamp-sunflower",
+      "title": "Sunflower",
+      "file": "assets/stamps/stamp-sunflower.webp",
+      "width": 282,
+      "height": 384
+    },
+    {
+      "id": "stamp-tree",
+      "title": "Tree",
+      "file": "assets/stamps/stamp-tree.webp",
+      "width": 332,
+      "height": 384
+    },
+    {
+      "id": "stamp-tulip",
+      "title": "Tulip",
+      "file": "assets/stamps/stamp-tulip.webp",
+      "width": 227,
+      "height": 384
+    },
+    {
+      "id": "stamp-turtle",
+      "title": "Turtle",
+      "file": "assets/stamps/stamp-turtle.webp",
+      "width": 384,
+      "height": 268
+    }
+  ],
+  "scenes": [
+    {
+      "id": "scene-garden",
+      "title": "Garden",
+      "file": "assets/scenes/scene-garden.webp",
+      "width": 1200,
+      "height": 800
+    },
+    {
+      "id": "scene-sea",
+      "title": "Sea",
+      "file": "assets/scenes/scene-sea.webp",
+      "width": 1200,
+      "height": 800
+    },
+    {
+      "id": "scene-sky",
+      "title": "Sky",
+      "file": "assets/scenes/scene-sky.webp",
+      "width": 1200,
+      "height": 800
+    }
+  ]
+}

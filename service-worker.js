@@ -1,7 +1,7 @@
 // v24 2026-09-22: tappable pockets -- the fill now answers compact small regions
 //      (the sunflower's tongue, rocket segments, turtle shell scales) and the
 //      Coloring Pages' enclosed details; see tools/check-mosaic-fill.py.
-const CACHE_NAME = "little-color-garden-v24";
+const CACHE_NAME = "little-color-garden-v25";
 const PAGE_IDS = [
   "solar-system",
   "space-kid",
@@ -193,14 +193,33 @@ const VOICE_FILES = [
   "./assets/audio/voice/pixel.prompt.watermelon.medium.m4a",
 ];
 
+const OPTIONAL_CBN_FILES = [
+  "butterfly", "cupcake", "fish", "house", "owl", "rocket", "sailboat", "snail"
+].flatMap((name) => [
+  `./assets/cbn/cbn-${name}.png`,
+  `./assets/cbn/cbn-${name}-finished.webp`
+]);
+
 const APP_FILES = [
   "./",
   "./index.html",
   "./styles.css",
+  "./tap-zoom-guard.js",
   "./app.js",
   "./pixel-cards.js",
   "./pixel-mode.js",
   "./blank-page.js",
+  "./mosaic-mode.js",
+  "./cbn-mode.js",
+  "./stamp-mode.js",
+  "./data/cbn.json",
+  "./data/stamps.json",
+  ...[
+    "apple", "bee", "bird", "bunny", "butterfly", "cat", "cloud", "daisy",
+    "dog", "fish", "heart", "ladybug", "moon", "mushroom", "rainbow", "rose",
+    "snail", "star", "strawberry", "sun", "sunflower", "tree", "tulip", "turtle"
+  ].map((name) => `./assets/stamps/stamp-${name}.webp`),
+  ...["garden", "sea", "sky"].map((name) => `./assets/scenes/scene-${name}.webp`),
   "./manifest.webmanifest",
   "./assets/icons/icon-192.png",
   "./assets/icons/icon-512.png",
@@ -213,7 +232,8 @@ const APP_FILES = [
 self.addEventListener("install", (event) => {
   event.waitUntil(caches.open(CACHE_NAME).then((cache) =>
     cache.addAll(APP_FILES).then(() =>
-      Promise.all(VOICE_FILES.map((url) => cache.add(url).catch(() => undefined))))));
+      Promise.all([...VOICE_FILES, ...OPTIONAL_CBN_FILES].map((url) =>
+        cache.add(url).catch(() => undefined))))));
   self.skipWaiting();
 });
 

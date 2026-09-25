@@ -454,7 +454,7 @@ button:disabled {
   max-height: 100%;
   background: #fff;
   cursor: crosshair;
-  touch-action: none;
+  touch-action: pinch-zoom; /* 2026-09-25: one finger draws, two fingers still zoom out (zoom-trap fix C) */
 }
 
 .canvas-loader {
@@ -806,11 +806,340 @@ button:disabled {
   padding-bottom: 18px;
 }
 
+/* Five cards fit as one row only when each card can remain a generous target. */
+.mode-cards {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: clamp(10px, 1.8vw, 22px);
+  max-width: 1180px;
+}
+
+.mode-card { min-width: 0; }
+.mode-art--stamp img { object-fit: contain; mix-blend-mode: normal; }
+
+.activity-gallery,
+.activity-workspace {
+  padding: 16px;
+  background: linear-gradient(145deg, #f3ecff, #dff7ff);
+}
+
+.activity-gallery { overflow: auto; }
+
+.activity-header {
+  min-height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.activity-header h1 {
+  margin: 0 auto;
+  font-size: clamp(24px, 4vw, 42px);
+}
+
+.activity-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 300px));
+  justify-content: center;
+  gap: 20px;
+  padding: 20px;
+}
+
+.activity-card {
+  min-height: 260px;
+  overflow: hidden;
+  border: 4px solid #fff;
+  border-radius: 28px;
+  background: #fff;
+  box-shadow: 0 8px 0 #b8a8da;
+  color: #3c315b;
+  font: 800 22px system-ui;
+}
+
+.activity-card img {
+  display: block;
+  width: 100%;
+  height: 220px;
+  object-fit: contain;
+}
+
+.blank-tile {
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 14px;
+  height: 220px;
+  margin: 16px;
+  border: 4px solid #d8c9f5;
+  border-radius: 20px;
+  background:
+    radial-gradient(circle at 18% 18%, #fff6ba 0 5px, transparent 6px),
+    radial-gradient(circle at 82% 24%, #dff7ff 0 7px, transparent 8px),
+    linear-gradient(145deg, #fff 20%, #fffafc 70%, #f5f0ff);
+  box-shadow: inset 0 0 0 6px #fff, inset 0 0 24px #e8dcff88;
+}
+
+.blank-tile-icon {
+  font-size: 42px;
+  filter: drop-shadow(0 3px 0 #d8c9f5);
+}
+
+.activity-workspace {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: 10px;
+  height: 100dvh;
+  overflow: hidden;
+}
+
+.activity-board {
+  min-width: 0;
+  min-height: 0;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  gap: 10px;
+}
+
+.activity-stage {
+  min-width: 0;
+  min-height: 0;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+
+.activity-stage canvas {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+  border: 6px solid #fff;
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 5px 14px #67548955;
+}
+
+#stampCanvas { touch-action: pinch-zoom; /* 2026-09-25: one finger draws, two fingers still zoom out (zoom-trap fix C) */ }
+
+.cbn-palette,
+.stamp-tray,
+.stamp-sizes {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.cbn-palette {
+  min-height: 72px;
+  flex-wrap: wrap;
+}
+
+.cbn-palette button {
+  width: 64px;
+  height: 64px;
+  flex: 0 0 64px;
+  border: 4px solid #fff;
+  border-radius: 50%;
+  background: var(--swatch);
+  box-shadow: 0 4px 0 #786999;
+  color: #fff;
+  font: 900 25px system-ui;
+  text-shadow: 0 2px 3px #0008;
+}
+
+.cbn-palette button.is-selected,
+.stamp-tray button.is-selected,
+.stamp-sizes button.is-selected {
+  outline: 5px solid #ffd83d;
+  outline-offset: 2px;
+}
+
+.cbn-palette button.hint-glow { animation: hintGlow .75s infinite alternate; }
+.number-pulse { animation: numberPulse .3s; }
+
+.activity-message {
+  flex: 0 1 auto;
+  padding: 8px 16px;
+  border-radius: 18px;
+  background: #fff;
+  color: #6f45c8;
+  box-shadow: 0 4px 10px #67548944;
+  font: 900 clamp(18px, 2.5vw, 24px) system-ui;
+  pointer-events: none;
+}
+
+.activity-message:empty { display: none; }
+
+.stamp-controls {
+  display: grid;
+  gap: 10px;
+  min-width: 0;
+  min-height: 0;
+}
+
+.stamp-tray {
+  min-height: 72px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+}
+
+.stamp-tray button {
+  width: 68px;
+  height: 68px;
+  flex: 0 0 68px;
+  border: 3px solid #fff;
+  border-radius: 15px;
+  background: #fff;
+}
+
+.stamp-tray img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.stamp-sizes {
+  flex-wrap: wrap;
+  padding-bottom: max(6px, env(safe-area-inset-bottom));
+}
+
+.stamp-sizes button {
+  min-width: 96px;
+  min-height: 48px;
+  border: 0;
+  border-radius: 18px;
+  background: #fff;
+  color: #4a3d67;
+  font: 800 17px system-ui;
+}
+
+#stampClear.is-armed {
+  outline: 5px solid #ffd83d;
+  animation: armWiggle .5s ease-in-out infinite alternate;
+}
+
+.stamp-header h1 { flex: 1; text-align: center; }
+.stamp-header-actions { display: flex; gap: 8px; }
+
+#stampUndo {
+  background: #7650d8;
+  color: #fff;
+  box-shadow: 0 4px 0 #4d319d;
+  font-size: 30px;
+}
+
+#stampUndo:disabled { opacity: .48; color: #fff; }
+
+#stampGallery {
+  grid-template-columns: repeat(2, minmax(260px, 430px));
+  align-content: center;
+}
+
+#stampGallery .activity-card { min-height: 300px; }
+#stampGallery .activity-card img,
+#stampGallery .blank-tile { height: 250px; }
+
+@keyframes hintGlow {
+  to { transform: scale(1.12); box-shadow: 0 0 20px 8px #ffdf43; }
+}
+
+@keyframes numberPulse {
+  50% { transform: scale(1.015); }
+}
+
+@media (max-width: 1100px) {
+  .mode-cards { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .mode-card:nth-last-child(-n + 2) { transform: translateX(50%); }
+  .mode-card:nth-last-child(-n + 2):hover { transform: translateX(50%) translateY(-6px); }
+}
+
+@media (orientation: landscape) {
+  .mode-menu-screen { padding-top: 10px; padding-bottom: 10px; }
+  .mode-menu-screen .gallery-header { min-height: 82px; padding-top: 0; }
+  .mode-menu-screen .brand-mark { transform: scale(.75); }
+  .mode-title { margin-bottom: 10px; font-size: 32px; }
+  .mode-card { gap: 4px; padding: 8px; }
+  .mode-art { aspect-ratio: 16 / 9; }
+  .mode-tag { display: none; }
+
+  .activity-board {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-rows: minmax(0, 1fr);
+    gap: 6px;
+  }
+
+  /* The board's row is not height-bounded in landscape, so max-height: 100% alone let a
+     736px canvas run below a 768px iPad screen. Cap it to the space under the header. */
+  .activity-stage canvas {
+    max-height: calc(100dvh - 130px);
+  }
+
+  .cbn-palette {
+    width: 146px;
+    align-content: center;
+  }
+
+  .stamp-controls {
+    width: 82px;
+    grid-template-rows: minmax(0, 1fr) auto;
+  }
+
+  .stamp-tray {
+    display: grid;
+    grid-template-columns: 68px;
+    align-content: start;
+    justify-content: center;
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding: 4px;
+  }
+  .stamp-sizes {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+  }
+  .stamp-sizes button { min-width: 0; width: 100%; }
+}
+
+@media (max-width: 900px) {
+  .activity-workspace { padding: 8px; }
+  .activity-header { min-height: 52px; }
+  .cbn-palette button { width: 54px; height: 54px; flex-basis: 54px; }
+}
+
+@media (orientation: portrait) {
+  .stamp-board {
+    grid-template-rows: auto auto;
+    align-content: start;
+  }
+  .stamp-board .activity-stage {
+    place-items: start center;
+  }
+  .stamp-board .activity-stage canvas {
+    width: 100%;
+    max-height: none;
+  }
+  .stamp-controls { max-height: none; }
+  .stamp-tray {
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 4px 2px;
+  }
+  #stampGallery { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
 .mode-card {
   display: grid;
   gap: clamp(6px, 1.2vw, 12px);
   justify-items: center;
-  padding: clamp(14px, 2.4vw, 26px);
+  padding: clamp(10px, 1.6vw, 22px);
   border: 5px solid rgba(255,255,255,.96);
   border-radius: clamp(24px, 3.4vw, 38px);
   background: #fff;
@@ -842,9 +1171,12 @@ button:disabled {
 .mode-art img { mix-blend-mode: multiply; }
 
 .mode-name {
+  width: 100%;
   color: #4c3e72;
-  font-size: clamp(26px, 4vw, 42px);
+  font-size: clamp(20px, 2.6vw, 36px);
   line-height: 1.1;
+  overflow-wrap: anywhere;
+  text-align: center;
 }
 
 .mode-tag {
@@ -854,8 +1186,11 @@ button:disabled {
   text-align: center;
 }
 
-@media (max-width: 760px) {
-  .mode-cards { grid-template-columns: minmax(0, 420px); justify-content: center; }
+@media (max-width: 560px) {
+  .mode-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .mode-card:nth-last-child(-n + 2) { transform: none; }
+  .mode-card:nth-last-child(-n + 2):hover { transform: translateY(-6px); }
+  .mode-card:last-child { grid-column: 1 / -1; width: min(100%, 280px); justify-self: center; }
 }
 
 /* ==========================================================================
@@ -1140,7 +1475,7 @@ button:disabled {
   display: block;
   width: 100%;
   height: 100%;
-  touch-action: none;
+  touch-action: pinch-zoom; /* 2026-09-25: one finger draws, two fingers still zoom out (zoom-trap fix C) */
   cursor: crosshair;
 }
 

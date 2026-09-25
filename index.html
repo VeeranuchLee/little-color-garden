@@ -74,6 +74,14 @@
             <b class="mode-name">Mosaic</b>
             <span class="mode-tag">Tap the shapes to fill them with color</span>
           </button>
+          <button class="mode-card" id="modeCbn" type="button" aria-label="Color by Number. Match each number to its color.">
+            <span class="mode-art"><img src="./assets/cbn/cbn-butterfly-finished.webp" alt="" draggable="false" /></span>
+            <b class="mode-name">Color by Number</b><span class="mode-tag">Match numbers and colors</span>
+          </button>
+          <button class="mode-card" id="modeStamp" type="button" aria-label="Stamping. Make a picture with stamps.">
+            <span class="mode-art mode-art--stamp"><img src="./assets/stamps/stamp-ladybug.webp" alt="" draggable="false" /></span>
+            <b class="mode-name">Stamping</b><span class="mode-tag">Make a picture with stamps</span>
+          </button>
         </div>
       </section>
 
@@ -259,6 +267,62 @@
         <div id="mosaicGallery" class="page-gallery page-gallery--mosaic" role="group" aria-label="Mosaic pictures to color"></div>
       </section>
 
+      <section id="cbnGalleryScreen" class="screen activity-gallery" hidden>
+        <header class="activity-header">
+          <button id="cbnGalleryBack" class="round-button" type="button" aria-label="Back to the menu">←</button>
+          <h1>Color by Number</h1>
+        </header>
+        <div id="cbnGallery" class="activity-cards"></div>
+      </section>
+
+      <section id="cbnScreen" class="screen activity-workspace cbn-workspace" hidden>
+        <header class="activity-header">
+          <button id="cbnBack" class="round-button" type="button" aria-label="Back to Color by Number pictures">←</button>
+          <h1 id="cbnTitle">Color by Number</h1>
+          <div id="cbnCelebration" class="activity-message" aria-live="polite"></div>
+          <button id="cbnSave" class="round-button" type="button" aria-label="Save Color by Number picture">💾</button>
+        </header>
+        <div class="activity-board">
+          <div class="activity-stage">
+            <canvas id="cbnCanvas" aria-label="Numbered coloring picture"></canvas>
+          </div>
+          <div id="cbnPalette" class="cbn-palette" role="group" aria-label="Number colors"></div>
+        </div>
+      </section>
+
+      <section id="stampGalleryScreen" class="screen activity-gallery" hidden>
+        <header class="activity-header">
+          <button id="stampGalleryBack" class="round-button" type="button" aria-label="Back to the menu">←</button>
+          <h1>Stamping</h1>
+        </header>
+        <div id="stampGallery" class="activity-cards"></div>
+      </section>
+
+      <section id="stampScreen" class="screen activity-workspace stamp-workspace" hidden>
+        <header class="activity-header stamp-header">
+          <button id="stampBack" class="round-button" type="button" aria-label="Back to Stamping scenes">←</button>
+          <h1 id="stampTitle">Stamping</h1>
+          <div class="stamp-header-actions">
+            <button id="stampUndo" class="round-button" type="button" aria-label="Undo last stamp action">↶</button>
+            <button id="stampClear" class="round-button" type="button" aria-label="Clear all stamps">🧹</button>
+            <button id="stampSave" class="round-button" type="button" aria-label="Save stamped picture">💾</button>
+          </div>
+        </header>
+        <div class="activity-board stamp-board">
+          <div class="activity-stage">
+            <canvas id="stampCanvas" aria-label="Stamping canvas"></canvas>
+          </div>
+          <div class="stamp-controls">
+            <div id="stampTray" class="stamp-tray" role="group" aria-label="Choose a stamp"></div>
+            <div class="stamp-sizes" role="group" aria-label="Stamp size">
+              <button data-size="0.12" type="button" aria-label="Small stamp">Small</button>
+              <button class="is-selected" data-size="0.18" type="button" aria-label="Medium stamp">Medium</button>
+              <button data-size="0.26" type="button" aria-label="Large stamp">Large</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <!-- Pixel Mosaic mode (owner concept, 2026-08-27): a pegboard-style tile
            toy. Pick a pattern card, copy it on the big board. The palette is
            exactly 36 colors in 3 rows x 12; cards use only those colors. -->
@@ -321,11 +385,14 @@
       </section>
     </main>
 
+    <script src="./tap-zoom-guard.js"></script>
     <script src="./app.js"></script>
     <script src="./pixel-cards.js"></script>
     <script src="./pixel-mode.js"></script>
     <script src="./blank-page.js"></script>
     <script src="./mosaic-mode.js"></script>
+    <script src="./cbn-mode.js"></script>
+    <script src="./stamp-mode.js"></script>
     <!-- Do NOT re-add a document-level "gesturestart" preventDefault here. It blocks
          every pinch, so a double-tap zoom (which iPadOS Safari still allows even with
          touch-action: manipulation -- observed live on v19) becomes a trap with no way

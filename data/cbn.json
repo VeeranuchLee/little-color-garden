@@ -1,0 +1,2509 @@
+{
+  "pictures": [
+    {
+      "id": "cbn-butterfly",
+      "title": "Butterfly",
+      "voice": "butterfly",
+      "lineArt": "assets/cbn/cbn-butterfly.png",
+      "preview": "assets/cbn/cbn-butterfly-finished.webp",
+      "width": 724,
+      "height": 724,
+      "palette": [
+        {
+          "number": 1,
+          "name": "red",
+          "hex": "#E53935"
+        },
+        {
+          "number": 2,
+          "name": "orange",
+          "hex": "#FB8C00"
+        },
+        {
+          "number": 3,
+          "name": "yellow",
+          "hex": "#FDD835"
+        },
+        {
+          "number": 4,
+          "name": "green",
+          "hex": "#43A047"
+        },
+        {
+          "number": 5,
+          "name": "blue",
+          "hex": "#1E88E5"
+        },
+        {
+          "number": 6,
+          "name": "purple",
+          "hex": "#8E24AA"
+        },
+        {
+          "number": 7,
+          "name": "pink",
+          "hex": "#EC407A"
+        },
+        {
+          "number": 8,
+          "name": "brown",
+          "hex": "#8D6E63"
+        }
+      ],
+      "regions": [
+        {
+          "id": "region-1",
+          "number": 1,
+          "labelPoint": {
+            "x": 171,
+            "y": 39
+          },
+          "area": 12204,
+          "inscribedRadius": 19
+        },
+        {
+          "id": "region-2",
+          "number": 2,
+          "labelPoint": {
+            "x": 185,
+            "y": 198
+          },
+          "area": 14178,
+          "inscribedRadius": 23
+        },
+        {
+          "id": "region-3",
+          "number": 3,
+          "labelPoint": {
+            "x": 214,
+            "y": 142
+          },
+          "area": 3947,
+          "inscribedRadius": 21
+        },
+        {
+          "id": "region-4",
+          "number": 1,
+          "labelPoint": {
+            "x": 598,
+            "y": 127
+          },
+          "area": 12051,
+          "inscribedRadius": 16
+        },
+        {
+          "id": "region-5",
+          "number": 2,
+          "labelPoint": {
+            "x": 539,
+            "y": 271
+          },
+          "area": 14223,
+          "inscribedRadius": 25
+        },
+        {
+          "id": "region-6",
+          "number": 8,
+          "labelPoint": {
+            "x": 385,
+            "y": 196
+          },
+          "area": 7384,
+          "inscribedRadius": 16
+        },
+        {
+          "id": "region-7",
+          "number": 3,
+          "labelPoint": {
+            "x": 565,
+            "y": 204
+          },
+          "area": 3883,
+          "inscribedRadius": 21
+        },
+        {
+          "id": "region-8",
+          "number": 5,
+          "labelPoint": {
+            "x": 255,
+            "y": 236
+          },
+          "area": 6345,
+          "inscribedRadius": 24
+        },
+        {
+          "id": "region-9",
+          "number": 5,
+          "labelPoint": {
+            "x": 450,
+            "y": 284
+          },
+          "area": 6028,
+          "inscribedRadius": 24
+        },
+        {
+          "id": "region-10",
+          "number": 7,
+          "labelPoint": {
+            "x": 196,
+            "y": 375
+          },
+          "area": 9734,
+          "inscribedRadius": 20
+        },
+        {
+          "id": "region-11",
+          "number": 8,
+          "labelPoint": {
+            "x": 342,
+            "y": 302
+          },
+          "area": 1903,
+          "inscribedRadius": 15
+        },
+        {
+          "id": "region-12",
+          "number": 6,
+          "labelPoint": {
+            "x": 203,
+            "y": 318
+          },
+          "area": 2859,
+          "inscribedRadius": 20
+        },
+        {
+          "id": "region-13",
+          "number": 5,
+          "labelPoint": {
+            "x": 267,
+            "y": 345
+          },
+          "area": 2554,
+          "inscribedRadius": 13
+        },
+        {
+          "id": "region-14",
+          "number": 8,
+          "labelPoint": {
+            "x": 330,
+            "y": 339
+          },
+          "area": 1683,
+          "inscribedRadius": 13
+        },
+        {
+          "id": "region-15",
+          "number": 7,
+          "labelPoint": {
+            "x": 421,
+            "y": 336
+          },
+          "area": 7833,
+          "inscribedRadius": 17
+        },
+        {
+          "id": "region-16",
+          "number": 5,
+          "labelPoint": {
+            "x": 382,
+            "y": 360
+          },
+          "area": 2470,
+          "inscribedRadius": 13
+        },
+        {
+          "id": "region-17",
+          "number": 6,
+          "labelPoint": {
+            "x": 467,
+            "y": 367
+          },
+          "area": 2589,
+          "inscribedRadius": 19
+        },
+        {
+          "id": "region-18",
+          "number": 8,
+          "labelPoint": {
+            "x": 285,
+            "y": 394
+          },
+          "area": 1175,
+          "inscribedRadius": 12
+        },
+        {
+          "id": "region-19",
+          "number": 3,
+          "labelPoint": {
+            "x": 351,
+            "y": 455
+          },
+          "area": 8661,
+          "inscribedRadius": 23
+        },
+        {
+          "id": "region-20",
+          "number": 7,
+          "labelPoint": {
+            "x": 178,
+            "y": 435
+          },
+          "area": 7359,
+          "inscribedRadius": 27
+        },
+        {
+          "id": "region-21",
+          "number": 7,
+          "labelPoint": {
+            "x": 529,
+            "y": 458
+          },
+          "area": 8296,
+          "inscribedRadius": 30
+        },
+        {
+          "id": "region-22",
+          "number": 7,
+          "labelPoint": {
+            "x": 223,
+            "y": 504
+          },
+          "area": 9315,
+          "inscribedRadius": 32
+        },
+        {
+          "id": "region-23",
+          "number": 7,
+          "labelPoint": {
+            "x": 452,
+            "y": 515
+          },
+          "area": 9109,
+          "inscribedRadius": 32
+        },
+        {
+          "id": "region-24",
+          "number": 7,
+          "labelPoint": {
+            "x": 336,
+            "y": 531
+          },
+          "area": 8581,
+          "inscribedRadius": 37
+        },
+        {
+          "id": "region-25",
+          "number": 4,
+          "labelPoint": {
+            "x": 226,
+            "y": 644
+          },
+          "area": 13249,
+          "inscribedRadius": 22
+        },
+        {
+          "id": "region-26",
+          "number": 4,
+          "labelPoint": {
+            "x": 463,
+            "y": 645
+          },
+          "area": 12642,
+          "inscribedRadius": 20
+        }
+      ],
+      "decor": [
+        {
+          "id": "decor-1",
+          "color": "#8D6E63",
+          "seedPoint": {
+            "x": 344,
+            "y": 66
+          },
+          "area": 575
+        },
+        {
+          "id": "decor-2",
+          "color": "#8D6E63",
+          "seedPoint": {
+            "x": 467,
+            "y": 103
+          },
+          "area": 592
+        },
+        {
+          "id": "decor-3",
+          "color": "#FFFFFF",
+          "seedPoint": {
+            "x": 361,
+            "y": 210
+          },
+          "area": 346
+        },
+        {
+          "id": "decor-4",
+          "color": "#FFFFFF",
+          "seedPoint": {
+            "x": 348,
+            "y": 216
+          },
+          "area": 35
+        },
+        {
+          "id": "decor-5",
+          "color": "#FFFFFF",
+          "seedPoint": {
+            "x": 415,
+            "y": 225
+          },
+          "area": 293
+        },
+        {
+          "id": "decor-6",
+          "color": "#FFFFFF",
+          "seedPoint": {
+            "x": 402,
+            "y": 227
+          },
+          "area": 30
+        },
+        {
+          "id": "decor-7",
+          "color": "#E53935",
+          "seedPoint": {
+            "x": 202,
+            "y": 265
+          },
+          "area": 2
+        },
+        {
+          "id": "decor-8",
+          "color": "#FB8C00",
+          "seedPoint": {
+            "x": 245,
+            "y": 277
+          },
+          "area": 3
+        },
+        {
+          "id": "decor-9",
+          "color": "#1E88E5",
+          "seedPoint": {
+            "x": 305,
+            "y": 302
+          },
+          "area": 1
+        },
+        {
+          "id": "decor-10",
+          "color": "#8D6E63",
+          "seedPoint": {
+            "x": 305,
+            "y": 366
+          },
+          "area": 1383
+        },
+        {
+          "id": "decor-11",
+          "color": "#FFFFFF",
+          "seedPoint": {
+            "x": 368,
+            "y": 390
+          },
+          "area": 490
+        },
+        {
+          "id": "decor-12",
+          "color": "#8D6E63",
+          "seedPoint": {
+            "x": 349,
+            "y": 375
+          },
+          "area": 421
+        },
+        {
+          "id": "decor-13",
+          "color": "#FFFFFF",
+          "seedPoint": {
+            "x": 337,
+            "y": 391
+          },
+          "area": 365
+        },
+        {
+          "id": "decor-14",
+          "color": "#EC407A",
+          "seedPoint": {
+            "x": 253,
+            "y": 402
+          },
+          "area": 1095
+        },
+        {
+          "id": "decor-15",
+          "color": "#8D6E63",
+          "seedPoint": {
+            "x": 321,
+            "y": 388
+          },
+          "area": 388
+        },
+        {
+          "id": "decor-16",
+          "color": "#FFFFFF",
+          "seedPoint": {
+            "x": 313,
+            "y": 401
+          },
+          "area": 16
+        },
+        {
+          "id": "decor-17",
+          "color": "#EC407A",
+          "seedPoint": {
+            "x": 434,
+            "y": 429
+          },
+          "area": 70
+        },
+        {
+          "id": "decor-18",
+          "color": "#000000",
+          "seedPoint": {
+            "x": 356,
+            "y": 696
+          },
+          "area": 1
+        }
+      ]
+    },
+    {
+      "id": "cbn-cupcake",
+      "title": "Cupcake",
+      "voice": "cupcake",
+      "lineArt": "assets/cbn/cbn-cupcake.png",
+      "preview": "assets/cbn/cbn-cupcake-finished.webp",
+      "width": 724,
+      "height": 724,
+      "palette": [
+        {
+          "number": 1,
+          "name": "red",
+          "hex": "#E53935"
+        },
+        {
+          "number": 2,
+          "name": "orange",
+          "hex": "#FB8C00"
+        },
+        {
+          "number": 3,
+          "name": "yellow",
+          "hex": "#FDD835"
+        },
+        {
+          "number": 4,
+          "name": "green",
+          "hex": "#43A047"
+        },
+        {
+          "number": 5,
+          "name": "blue",
+          "hex": "#1E88E5"
+        },
+        {
+          "number": 6,
+          "name": "purple",
+          "hex": "#8E24AA"
+        },
+        {
+          "number": 7,
+          "name": "pink",
+          "hex": "#EC407A"
+        },
+        {
+          "number": 8,
+          "name": "brown",
+          "hex": "#8D6E63"
+        }
+      ],
+      "regions": [
+        {
+          "id": "region-1",
+          "number": 3,
+          "labelPoint": {
+            "x": 536,
+            "y": 83
+          },
+          "area": 3920,
+          "inscribedRadius": 23
+        },
+        {
+          "id": "region-2",
+          "number": 3,
+          "labelPoint": {
+            "x": 187,
+            "y": 84
+          },
+          "area": 3926,
+          "inscribedRadius": 23
+        },
+        {
+          "id": "region-3",
+          "number": 1,
+          "labelPoint": {
+            "x": 351,
+            "y": 189
+          },
+          "area": 9829,
+          "inscribedRadius": 37
+        },
+        {
+          "id": "region-4",
+          "number": 5,
+          "labelPoint": {
+            "x": 189,
+            "y": 155
+          },
+          "area": 1597,
+          "inscribedRadius": 13
+        },
+        {
+          "id": "region-5",
+          "number": 2,
+          "labelPoint": {
+            "x": 516,
+            "y": 151
+          },
+          "area": 1655,
+          "inscribedRadius": 14
+        },
+        {
+          "id": "region-6",
+          "number": 5,
+          "labelPoint": {
+            "x": 209,
+            "y": 241
+          },
+          "area": 2009,
+          "inscribedRadius": 14
+        },
+        {
+          "id": "region-7",
+          "number": 7,
+          "labelPoint": {
+            "x": 369,
+            "y": 284
+          },
+          "area": 22335,
+          "inscribedRadius": 41
+        },
+        {
+          "id": "region-8",
+          "number": 2,
+          "labelPoint": {
+            "x": 517,
+            "y": 234
+          },
+          "area": 1865,
+          "inscribedRadius": 13
+        },
+        {
+          "id": "region-9",
+          "number": 3,
+          "labelPoint": {
+            "x": 276,
+            "y": 269
+          },
+          "area": 1065,
+          "inscribedRadius": 13
+        },
+        {
+          "id": "region-10",
+          "number": 5,
+          "labelPoint": {
+            "x": 434,
+            "y": 278
+          },
+          "area": 1077,
+          "inscribedRadius": 13
+        },
+        {
+          "id": "region-11",
+          "number": 7,
+          "labelPoint": {
+            "x": 424,
+            "y": 385
+          },
+          "area": 47104,
+          "inscribedRadius": 45
+        },
+        {
+          "id": "region-12",
+          "number": 5,
+          "labelPoint": {
+            "x": 233,
+            "y": 358
+          },
+          "area": 1099,
+          "inscribedRadius": 13
+        },
+        {
+          "id": "region-13",
+          "number": 4,
+          "labelPoint": {
+            "x": 355,
+            "y": 379
+          },
+          "area": 1103,
+          "inscribedRadius": 14
+        },
+        {
+          "id": "region-14",
+          "number": 2,
+          "labelPoint": {
+            "x": 494,
+            "y": 388
+          },
+          "area": 1084,
+          "inscribedRadius": 13
+        },
+        {
+          "id": "region-15",
+          "number": 8,
+          "labelPoint": {
+            "x": 276,
+            "y": 473
+          },
+          "area": 18437,
+          "inscribedRadius": 22
+        },
+        {
+          "id": "region-16",
+          "number": 5,
+          "labelPoint": {
+            "x": 177,
+            "y": 517
+          },
+          "area": 8064,
+          "inscribedRadius": 19
+        },
+        {
+          "id": "region-17",
+          "number": 6,
+          "labelPoint": {
+            "x": 543,
+            "y": 526
+          },
+          "area": 8261,
+          "inscribedRadius": 19
+        },
+        {
+          "id": "region-18",
+          "number": 3,
+          "labelPoint": {
+            "x": 238,
+            "y": 532
+          },
+          "area": 9261,
+          "inscribedRadius": 24
+        },
+        {
+          "id": "region-19",
+          "number": 7,
+          "labelPoint": {
+            "x": 487,
+            "y": 527
+          },
+          "area": 9161,
+          "inscribedRadius": 22
+        },
+        {
+          "id": "region-20",
+          "number": 7,
+          "labelPoint": {
+            "x": 300,
+            "y": 538
+          },
+          "area": 9664,
+          "inscribedRadius": 26
+        },
+        {
+          "id": "region-21",
+          "number": 2,
+          "labelPoint": {
+            "x": 424,
+            "y": 537
+          },
+          "area": 9480,
+          "inscribedRadius": 25
+        },
+        {
+          "id": "region-22",
+          "number": 4,
+          "labelPoint": {
+            "x": 361,
+            "y": 551
+          },
+          "area": 9265,
+          "inscribedRadius": 26
+        }
+      ],
+      "decor": [
+        {
+          "id": "decor-1",
+          "color": "#43A047",
+          "seedPoint": {
+            "x": 427,
+            "y": 58
+          },
+          "area": 1609
+        },
+        {
+          "id": "decor-2",
+          "color": "#FFFFFF",
+          "seedPoint": {
+            "x": 200,
+            "y": 128
+          },
+          "area": 2
+        },
+        {
+          "id": "decor-3",
+          "color": "#FFFFFF",
+          "seedPoint": {
+            "x": 522,
+            "y": 128
+          },
+          "area": 3
+        },
+        {
+          "id": "decor-4",
+          "color": "#FDD835",
+          "seedPoint": {
+            "x": 217,
+            "y": 179
+          },
+          "area": 1863
+        },
+        {
+          "id": "decor-5",
+          "color": "#FDD835",
+          "seedPoint": {
+            "x": 524,
+            "y": 190
+          },
+          "area": 1912
+        },
+        {
+          "id": "decor-6",
+          "color": "#FDD835",
+          "seedPoint": {
+            "x": 524,
+            "y": 265
+          },
+          "area": 450
+        }
+      ]
+    },
+    {
+      "id": "cbn-fish",
+      "title": "Fish",
+      "voice": "fish",
+      "lineArt": "assets/cbn/cbn-fish.png",
+      "preview": "assets/cbn/cbn-fish-finished.webp",
+      "width": 724,
+      "height": 724,
+      "palette": [
+        {
+          "number": 1,
+          "name": "red",
+          "hex": "#E53935"
+        },
+        {
+          "number": 2,
+          "name": "orange",
+          "hex": "#FB8C00"
+        },
+        {
+          "number": 3,
+          "name": "yellow",
+          "hex": "#FDD835"
+        },
+        {
+          "number": 4,
+          "name": "green",
+          "hex": "#43A047"
+        },
+        {
+          "number": 5,
+          "name": "blue",
+          "hex": "#1E88E5"
+        },
+        {
+          "number": 6,
+          "name": "purple",
+          "hex": "#8E24AA"
+        },
+        {
+          "number": 7,
+          "name": "pink",
+          "hex": "#EC407A"
+        }
+      ],
+      "regions": [
+        {
+          "id": "region-1",
+          "number": 5,
+          "labelPoint": {
+            "x": 146,
+            "y": 105
+          },
+          "area": 5696,
+          "inscribedRadius": 30
+        },
+        {
+          "id": "region-2",
+          "number": 5,
+          "labelPoint": {
+            "x": 408,
+            "y": 127
+          },
+          "area": 12997,
+          "inscribedRadius": 22
+        },
+        {
+          "id": "region-3",
+          "number": 5,
+          "labelPoint": {
+            "x": 72,
+            "y": 181
+          },
+          "area": 3117,
+          "inscribedRadius": 22
+        },
+        {
+          "id": "region-4",
+          "number": 2,
+          "labelPoint": {
+            "x": 318,
+            "y": 339
+          },
+          "area": 17169,
+          "inscribedRadius": 41
+        },
+        {
+          "id": "region-5",
+          "number": 1,
+          "labelPoint": {
+            "x": 412,
+            "y": 333
+          },
+          "area": 26368,
+          "inscribedRadius": 38
+        },
+        {
+          "id": "region-6",
+          "number": 3,
+          "labelPoint": {
+            "x": 202,
+            "y": 452
+          },
+          "area": 40442,
+          "inscribedRadius": 47
+        },
+        {
+          "id": "region-7",
+          "number": 7,
+          "labelPoint": {
+            "x": 660,
+            "y": 251
+          },
+          "area": 32617,
+          "inscribedRadius": 24
+        },
+        {
+          "id": "region-8",
+          "number": 4,
+          "labelPoint": {
+            "x": 508,
+            "y": 401
+          },
+          "area": 17758,
+          "inscribedRadius": 38
+        },
+        {
+          "id": "region-9",
+          "number": 5,
+          "labelPoint": {
+            "x": 64,
+            "y": 267
+          },
+          "area": 1750,
+          "inscribedRadius": 17
+        },
+        {
+          "id": "region-10",
+          "number": 5,
+          "labelPoint": {
+            "x": 43,
+            "y": 348
+          },
+          "area": 983,
+          "inscribedRadius": 13
+        },
+        {
+          "id": "region-11",
+          "number": 6,
+          "labelPoint": {
+            "x": 377,
+            "y": 439
+          },
+          "area": 9506,
+          "inscribedRadius": 17
+        },
+        {
+          "id": "region-12",
+          "number": 2,
+          "labelPoint": {
+            "x": 288,
+            "y": 531
+          },
+          "area": 7994,
+          "inscribedRadius": 32
+        },
+        {
+          "id": "region-13",
+          "number": 5,
+          "labelPoint": {
+            "x": 390,
+            "y": 635
+          },
+          "area": 8994,
+          "inscribedRadius": 21
+        }
+      ],
+      "decor": [
+        {
+          "id": "decor-1",
+          "color": "#FFFFFF",
+          "seedPoint": {
+            "x": 199,
+            "y": 351
+          },
+          "area": 2073
+        },
+        {
+          "id": "decor-2",
+          "color": "#000000",
+          "seedPoint": {
+            "x": 432,
+            "y": 545
+          },
+          "area": 1
+        }
+      ]
+    },
+    {
+      "id": "cbn-house",
+      "title": "House",
+      "voice": "house",
+      "lineArt": "assets/cbn/cbn-house.png",
+      "preview": "assets/cbn/cbn-house-finished.webp",
+      "width": 724,
+      "height": 724,
+      "palette": [
+        {
+          "number": 1,
+          "name": "red",
+          "hex": "#E53935"
+        },
+        {
+          "number": 2,
+          "name": "orange",
+          "hex": "#FB8C00"
+        },
+        {
+          "number": 3,
+          "name": "yellow",
+          "hex": "#FDD835"
+        },
+        {
+          "number": 4,
+          "name": "green",
+          "hex": "#43A047"
+        },
+        {
+          "number": 5,
+          "name": "blue",
+          "hex": "#1E88E5"
+        },
+        {
+          "number": 8,
+          "name": "brown",
+          "hex": "#8D6E63"
+        }
+      ],
+      "regions": [
+        {
+          "id": "region-1",
+          "number": 3,
+          "labelPoint": {
+            "x": 556,
+            "y": 142
+          },
+          "area": 14687,
+          "inscribedRadius": 48
+        },
+        {
+          "id": "region-2",
+          "number": 4,
+          "labelPoint": {
+            "x": 158,
+            "y": 247
+          },
+          "area": 64107,
+          "inscribedRadius": 80
+        },
+        {
+          "id": "region-3",
+          "number": 1,
+          "labelPoint": {
+            "x": 429,
+            "y": 359
+          },
+          "area": 43127,
+          "inscribedRadius": 66
+        },
+        {
+          "id": "region-4",
+          "number": 8,
+          "labelPoint": {
+            "x": 588,
+            "y": 327
+          },
+          "area": 1960,
+          "inscribedRadius": 16
+        },
+        {
+          "id": "region-5",
+          "number": 8,
+          "labelPoint": {
+            "x": 164,
+            "y": 565
+          },
+          "area": 17003,
+          "inscribedRadius": 32
+        },
+        {
+          "id": "region-6",
+          "number": 3,
+          "labelPoint": {
+            "x": 350,
+            "y": 579
+          },
+          "area": 34381,
+          "inscribedRadius": 26
+        },
+        {
+          "id": "region-7",
+          "number": 5,
+          "labelPoint": {
+            "x": 286,
+            "y": 484
+          },
+          "area": 1332,
+          "inscribedRadius": 18
+        },
+        {
+          "id": "region-8",
+          "number": 5,
+          "labelPoint": {
+            "x": 329,
+            "y": 484
+          },
+          "area": 1379,
+          "inscribedRadius": 18
+        },
+        {
+          "id": "region-9",
+          "number": 5,
+          "labelPoint": {
+            "x": 531,
+            "y": 484
+          },
+          "area": 1368,
+          "inscribedRadius": 18
+        },
+        {
+          "id": "region-10",
+          "number": 5,
+          "labelPoint": {
+            "x": 574,
+            "y": 484
+          },
+          "area": 1332,
+          "inscribedRadius": 18
+        },
+        {
+          "id": "region-11",
+          "number": 2,
+          "labelPoint": {
+            "x": 413,
+            "y": 609
+          },
+          "area": 13939,
+          "inscribedRadius": 32
+        },
+        {
+          "id": "region-12",
+          "number": 5,
+          "labelPoint": {
+            "x": 286,
+            "y": 528
+          },
+          "area": 1296,
+          "inscribedRadius": 18
+        },
+        {
+          "id": "region-13",
+          "number": 5,
+          "labelPoint": {
+            "x": 329,
+            "y": 528
+          },
+          "area": 1338,
+          "inscribedRadius": 18
+        },
+        {
+          "id": "region-14",
+          "number": 5,
+          "labelPoint": {
+            "x": 530,
+            "y": 528
+          },
+          "area": 1332,
+          "inscribedRadius": 18
+        },
+        {
+          "id": "region-15",
+          "number": 5,
+          "labelPoint": {
+            "x": 574,
+            "y": 528
+          },
+          "area": 1296,
+          "inscribedRadius": 18
+        },
+        {
+          "id": "region-16",
+          "number": 4,
+          "labelPoint": {
+            "x": 258,
+            "y": 645
+          },
+          "area": 48261,
+          "inscribedRadius": 47
+        }
+      ],
+      "decor": [
+        {
+          "id": "decor-1",
+          "color": "#FB8C00",
+          "seedPoint": {
+            "x": 556,
+            "y": 28
+          },
+          "area": 559
+        },
+        {
+          "id": "decor-2",
+          "color": "#FB8C00",
+          "seedPoint": {
+            "x": 638,
+            "y": 67
+          },
+          "area": 582
+        },
+        {
+          "id": "decor-3",
+          "color": "#FB8C00",
+          "seedPoint": {
+            "x": 468,
+            "y": 60
+          },
+          "area": 587
+        },
+        {
+          "id": "decor-4",
+          "color": "#FB8C00",
+          "seedPoint": {
+            "x": 438,
+            "y": 143
+          },
+          "area": 585
+        },
+        {
+          "id": "decor-5",
+          "color": "#FB8C00",
+          "seedPoint": {
+            "x": 651,
+            "y": 143
+          },
+          "area": 584
+        },
+        {
+          "id": "decor-6",
+          "color": "#FB8C00",
+          "seedPoint": {
+            "x": 467,
+            "y": 220
+          },
+          "area": 555
+        },
+        {
+          "id": "decor-7",
+          "color": "#FB8C00",
+          "seedPoint": {
+            "x": 638,
+            "y": 214
+          },
+          "area": 553
+        },
+        {
+          "id": "decor-8",
+          "color": "#FB8C00",
+          "seedPoint": {
+            "x": 556,
+            "y": 256
+          },
+          "area": 533
+        },
+        {
+          "id": "decor-9",
+          "color": "#8D6E63",
+          "seedPoint": {
+            "x": 555,
+            "y": 293
+          },
+          "area": 1702
+        },
+        {
+          "id": "decor-10",
+          "color": "#43A047",
+          "seedPoint": {
+            "x": 209,
+            "y": 439
+          },
+          "area": 482
+        },
+        {
+          "id": "decor-11",
+          "color": "#FFFFFF",
+          "seedPoint": {
+            "x": 216,
+            "y": 477
+          },
+          "area": 4087
+        },
+        {
+          "id": "decor-12",
+          "color": "#FDD835",
+          "seedPoint": {
+            "x": 457,
+            "y": 570
+          },
+          "area": 203
+        }
+      ]
+    },
+    {
+      "id": "cbn-owl",
+      "title": "Owl",
+      "voice": "owl",
+      "lineArt": "assets/cbn/cbn-owl.png",
+      "preview": "assets/cbn/cbn-owl-finished.webp",
+      "width": 724,
+      "height": 724,
+      "palette": [
+        {
+          "number": 1,
+          "name": "red",
+          "hex": "#E53935"
+        },
+        {
+          "number": 2,
+          "name": "orange",
+          "hex": "#FB8C00"
+        },
+        {
+          "number": 3,
+          "name": "yellow",
+          "hex": "#FDD835"
+        },
+        {
+          "number": 4,
+          "name": "green",
+          "hex": "#43A047"
+        },
+        {
+          "number": 5,
+          "name": "blue",
+          "hex": "#1E88E5"
+        },
+        {
+          "number": 6,
+          "name": "purple",
+          "hex": "#8E24AA"
+        },
+        {
+          "number": 7,
+          "name": "pink",
+          "hex": "#EC407A"
+        },
+        {
+          "number": 8,
+          "name": "brown",
+          "hex": "#8D6E63"
+        }
+      ],
+      "regions": [
+        {
+          "id": "region-1",
+          "number": 3,
+          "labelPoint": {
+            "x": 566,
+            "y": 127
+          },
+          "area": 12035,
+          "inscribedRadius": 27
+        },
+        {
+          "id": "region-2",
+          "number": 8,
+          "labelPoint": {
+            "x": 327,
+            "y": 121
+          },
+          "area": 22807,
+          "inscribedRadius": 29
+        },
+        {
+          "id": "region-3",
+          "number": 3,
+          "labelPoint": {
+            "x": 309,
+            "y": 208
+          },
+          "area": 22365,
+          "inscribedRadius": 18
+        },
+        {
+          "id": "region-4",
+          "number": 3,
+          "labelPoint": {
+            "x": 324,
+            "y": 256
+          },
+          "area": 1541,
+          "inscribedRadius": 15
+        },
+        {
+          "id": "region-5",
+          "number": 5,
+          "labelPoint": {
+            "x": 310,
+            "y": 341
+          },
+          "area": 9030,
+          "inscribedRadius": 23
+        },
+        {
+          "id": "region-6",
+          "number": 5,
+          "labelPoint": {
+            "x": 456,
+            "y": 317
+          },
+          "area": 2295,
+          "inscribedRadius": 14
+        },
+        {
+          "id": "region-7",
+          "number": 5,
+          "labelPoint": {
+            "x": 409,
+            "y": 387
+          },
+          "area": 7036,
+          "inscribedRadius": 29
+        },
+        {
+          "id": "region-8",
+          "number": 2,
+          "labelPoint": {
+            "x": 159,
+            "y": 394
+          },
+          "area": 11452,
+          "inscribedRadius": 36
+        },
+        {
+          "id": "region-9",
+          "number": 2,
+          "labelPoint": {
+            "x": 502,
+            "y": 398
+          },
+          "area": 9375,
+          "inscribedRadius": 26
+        },
+        {
+          "id": "region-10",
+          "number": 1,
+          "labelPoint": {
+            "x": 306,
+            "y": 437
+          },
+          "area": 25471,
+          "inscribedRadius": 65
+        },
+        {
+          "id": "region-11",
+          "number": 4,
+          "labelPoint": {
+            "x": 673,
+            "y": 448
+          },
+          "area": 6404,
+          "inscribedRadius": 15
+        },
+        {
+          "id": "region-12",
+          "number": 4,
+          "labelPoint": {
+            "x": 51,
+            "y": 469
+          },
+          "area": 4037,
+          "inscribedRadius": 13
+        },
+        {
+          "id": "region-13",
+          "number": 7,
+          "labelPoint": {
+            "x": 529,
+            "y": 544
+          },
+          "area": 14366,
+          "inscribedRadius": 23
+        },
+        {
+          "id": "region-14",
+          "number": 6,
+          "labelPoint": {
+            "x": 124,
+            "y": 496
+          },
+          "area": 10797,
+          "inscribedRadius": 19
+        },
+        {
+          "id": "region-15",
+          "number": 3,
+          "labelPoint": {
+            "x": 265,
+            "y": 536
+          },
+          "area": 1045,
+          "inscribedRadius": 12
+        },
+        {
+          "id": "region-16",
+          "number": 3,
+          "labelPoint": {
+            "x": 379,
+            "y": 535
+          },
+          "area": 1039,
+          "inscribedRadius": 12
+        },
+        {
+          "id": "region-17",
+          "number": 3,
+          "labelPoint": {
+            "x": 120,
+            "y": 546
+          },
+          "area": 2032,
+          "inscribedRadius": 18
+        },
+        {
+          "id": "region-18",
+          "number": 3,
+          "labelPoint": {
+            "x": 585,
+            "y": 548
+          },
+          "area": 2478,
+          "inscribedRadius": 20
+        },
+        {
+          "id": "region-19",
+          "number": 8,
+          "labelPoint": {
+            "x": 470,
+            "y": 563
+          },
+          "area": 9541,
+          "inscribedRadius": 20
+        },
+        {
+          "id": "region-20",
+          "number": 4,
+          "labelPoint": {
+            "x": 654,
+            "y": 632
+          },
+          "area": 4433,
+          "inscribedRadius": 15
+        },
+        {
+          "id": "region-21",
+          "number": 4,
+          "labelPoint": {
+            "x": 186,
+            "y": 620
+          },
+          "area": 1717,
+          "inscribedRadius": 14
+        },
+        {
+          "id": "region-22",
+          "number": 4,
+          "labelPoint": {
+            "x": 102,
+            "y": 632
+          },
+          "area": 4473,
+          "inscribedRadius": 14
+        }
+      ],
+      "decor": [
+        {
+          "id": "decor-1",
+          "color": "#FFFFFF",
+          "seedPoint": {
+            "x": 228,
+            "y": 214
+          },
+          "area": 2543
+        },
+        {
+          "id": "decor-2",
+          "color": "#FFFFFF",
+          "seedPoint": {
+            "x": 419,
+            "y": 212
+          },
+          "area": 2578
+        },
+        {
+          "id": "decor-3",
+          "color": "#8D6E63",
+          "seedPoint": {
+            "x": 217,
+            "y": 366
+          },
+          "area": 1026
+        },
+        {
+          "id": "decor-4",
+          "color": "#1E88E5",
+          "seedPoint": {
+            "x": 457,
+            "y": 432
+          },
+          "area": 2331
+        },
+        {
+          "id": "decor-5",
+          "color": "#8D6E63",
+          "seedPoint": {
+            "x": 446,
+            "y": 487
+          },
+          "area": 974
+        },
+        {
+          "id": "decor-6",
+          "color": "#8D6E63",
+          "seedPoint": {
+            "x": 207,
+            "y": 490
+          },
+          "area": 742
+        },
+        {
+          "id": "decor-7",
+          "color": "#FFFFFF",
+          "seedPoint": {
+            "x": 206,
+            "y": 520
+          },
+          "area": 320
+        },
+        {
+          "id": "decor-8",
+          "color": "#FDD835",
+          "seedPoint": {
+            "x": 292,
+            "y": 542
+          },
+          "area": 767
+        },
+        {
+          "id": "decor-9",
+          "color": "#FDD835",
+          "seedPoint": {
+            "x": 353,
+            "y": 543
+          },
+          "area": 771
+        },
+        {
+          "id": "decor-10",
+          "color": "#FDD835",
+          "seedPoint": {
+            "x": 239,
+            "y": 533
+          },
+          "area": 649
+        },
+        {
+          "id": "decor-11",
+          "color": "#FDD835",
+          "seedPoint": {
+            "x": 406,
+            "y": 537
+          },
+          "area": 675
+        },
+        {
+          "id": "decor-12",
+          "color": "#43A047",
+          "seedPoint": {
+            "x": 662,
+            "y": 562
+          },
+          "area": 1
+        },
+        {
+          "id": "decor-13",
+          "color": "#000000",
+          "seedPoint": {
+            "x": 183,
+            "y": 583
+          },
+          "area": 1
+        },
+        {
+          "id": "decor-14",
+          "color": "#000000",
+          "seedPoint": {
+            "x": 609,
+            "y": 612
+          },
+          "area": 1
+        }
+      ]
+    },
+    {
+      "id": "cbn-rocket",
+      "title": "Rocket",
+      "voice": "rocket",
+      "lineArt": "assets/cbn/cbn-rocket.png",
+      "preview": "assets/cbn/cbn-rocket-finished.webp",
+      "width": 724,
+      "height": 724,
+      "palette": [
+        {
+          "number": 1,
+          "name": "red",
+          "hex": "#E53935"
+        },
+        {
+          "number": 2,
+          "name": "orange",
+          "hex": "#FB8C00"
+        },
+        {
+          "number": 3,
+          "name": "yellow",
+          "hex": "#FDD835"
+        },
+        {
+          "number": 5,
+          "name": "blue",
+          "hex": "#1E88E5"
+        },
+        {
+          "number": 6,
+          "name": "purple",
+          "hex": "#8E24AA"
+        },
+        {
+          "number": 8,
+          "name": "brown",
+          "hex": "#8D6E63"
+        }
+      ],
+      "regions": [
+        {
+          "id": "region-1",
+          "number": 3,
+          "labelPoint": {
+            "x": 621,
+            "y": 117
+          },
+          "area": 8403,
+          "inscribedRadius": 34
+        },
+        {
+          "id": "region-2",
+          "number": 6,
+          "labelPoint": {
+            "x": 184,
+            "y": 128
+          },
+          "area": 32480,
+          "inscribedRadius": 61
+        },
+        {
+          "id": "region-3",
+          "number": 3,
+          "labelPoint": {
+            "x": 374,
+            "y": 112
+          },
+          "area": 15465,
+          "inscribedRadius": 20
+        },
+        {
+          "id": "region-4",
+          "number": 1,
+          "labelPoint": {
+            "x": 470,
+            "y": 141
+          },
+          "area": 6236,
+          "inscribedRadius": 29
+        },
+        {
+          "id": "region-5",
+          "number": 5,
+          "labelPoint": {
+            "x": 395,
+            "y": 316
+          },
+          "area": 31235,
+          "inscribedRadius": 28
+        },
+        {
+          "id": "region-6",
+          "number": 6,
+          "labelPoint": {
+            "x": 201,
+            "y": 278
+          },
+          "area": 8867,
+          "inscribedRadius": 23
+        },
+        {
+          "id": "region-7",
+          "number": 5,
+          "labelPoint": {
+            "x": 468,
+            "y": 257
+          },
+          "area": 3219,
+          "inscribedRadius": 23
+        },
+        {
+          "id": "region-8",
+          "number": 3,
+          "labelPoint": {
+            "x": 650,
+            "y": 349
+          },
+          "area": 5171,
+          "inscribedRadius": 26
+        },
+        {
+          "id": "region-9",
+          "number": 5,
+          "labelPoint": {
+            "x": 467,
+            "y": 374
+          },
+          "area": 3014,
+          "inscribedRadius": 22
+        },
+        {
+          "id": "region-10",
+          "number": 3,
+          "labelPoint": {
+            "x": 168,
+            "y": 437
+          },
+          "area": 9461,
+          "inscribedRadius": 35
+        },
+        {
+          "id": "region-11",
+          "number": 1,
+          "labelPoint": {
+            "x": 322,
+            "y": 469
+          },
+          "area": 9821,
+          "inscribedRadius": 30
+        },
+        {
+          "id": "region-12",
+          "number": 1,
+          "labelPoint": {
+            "x": 607,
+            "y": 471
+          },
+          "area": 9633,
+          "inscribedRadius": 30
+        },
+        {
+          "id": "region-13",
+          "number": 3,
+          "labelPoint": {
+            "x": 467,
+            "y": 472
+          },
+          "area": 11261,
+          "inscribedRadius": 27
+        },
+        {
+          "id": "region-14",
+          "number": 8,
+          "labelPoint": {
+            "x": 452,
+            "y": 520
+          },
+          "area": 3922,
+          "inscribedRadius": 15
+        },
+        {
+          "id": "region-15",
+          "number": 2,
+          "labelPoint": {
+            "x": 386,
+            "y": 577
+          },
+          "area": 5059,
+          "inscribedRadius": 23
+        },
+        {
+          "id": "region-16",
+          "number": 2,
+          "labelPoint": {
+            "x": 535,
+            "y": 576
+          },
+          "area": 5001,
+          "inscribedRadius": 23
+        },
+        {
+          "id": "region-17",
+          "number": 3,
+          "labelPoint": {
+            "x": 461,
+            "y": 587
+          },
+          "area": 9900,
+          "inscribedRadius": 38
+        }
+      ],
+      "decor": [
+        {
+          "id": "decor-1",
+          "color": "#FFFFFF",
+          "seedPoint": {
+            "x": 332,
+            "y": 126
+          },
+          "area": 539
+        },
+        {
+          "id": "decor-2",
+          "color": "#FDD835",
+          "seedPoint": {
+            "x": 464,
+            "y": 213
+          },
+          "area": 3161
+        },
+        {
+          "id": "decor-3",
+          "color": "#FFFFFF",
+          "seedPoint": {
+            "x": 66,
+            "y": 226
+          },
+          "area": 208
+        },
+        {
+          "id": "decor-4",
+          "color": "#FDD835",
+          "seedPoint": {
+            "x": 464,
+            "y": 331
+          },
+          "area": 2949
+        }
+      ]
+    },
+    {
+      "id": "cbn-sailboat",
+      "title": "Sailboat",
+      "voice": "sailboat",
+      "lineArt": "assets/cbn/cbn-sailboat.png",
+      "preview": "assets/cbn/cbn-sailboat-finished.webp",
+      "width": 724,
+      "height": 724,
+      "palette": [
+        {
+          "number": 1,
+          "name": "red",
+          "hex": "#E53935"
+        },
+        {
+          "number": 2,
+          "name": "orange",
+          "hex": "#FB8C00"
+        },
+        {
+          "number": 3,
+          "name": "yellow",
+          "hex": "#FDD835"
+        },
+        {
+          "number": 4,
+          "name": "green",
+          "hex": "#43A047"
+        },
+        {
+          "number": 5,
+          "name": "blue",
+          "hex": "#1E88E5"
+        },
+        {
+          "number": 8,
+          "name": "brown",
+          "hex": "#8D6E63"
+        }
+      ],
+      "regions": [
+        {
+          "id": "region-1",
+          "number": 3,
+          "labelPoint": {
+            "x": 155,
+            "y": 162
+          },
+          "area": 18279,
+          "inscribedRadius": 54
+        },
+        {
+          "id": "region-2",
+          "number": 1,
+          "labelPoint": {
+            "x": 344,
+            "y": 313
+          },
+          "area": 29228,
+          "inscribedRadius": 61
+        },
+        {
+          "id": "region-3",
+          "number": 5,
+          "labelPoint": {
+            "x": 522,
+            "y": 322
+          },
+          "area": 25628,
+          "inscribedRadius": 55
+        },
+        {
+          "id": "region-4",
+          "number": 2,
+          "labelPoint": {
+            "x": 374,
+            "y": 435
+          },
+          "area": 18035,
+          "inscribedRadius": 20
+        },
+        {
+          "id": "region-5",
+          "number": 8,
+          "labelPoint": {
+            "x": 268,
+            "y": 479
+          },
+          "area": 17273,
+          "inscribedRadius": 26
+        },
+        {
+          "id": "region-6",
+          "number": 5,
+          "labelPoint": {
+            "x": 123,
+            "y": 515
+          },
+          "area": 38329,
+          "inscribedRadius": 27
+        },
+        {
+          "id": "region-7",
+          "number": 4,
+          "labelPoint": {
+            "x": 118,
+            "y": 577
+          },
+          "area": 37546,
+          "inscribedRadius": 26
+        },
+        {
+          "id": "region-8",
+          "number": 5,
+          "labelPoint": {
+            "x": 126,
+            "y": 641
+          },
+          "area": 41032,
+          "inscribedRadius": 29
+        }
+      ],
+      "decor": [
+        {
+          "id": "decor-1",
+          "color": "#FDD835",
+          "seedPoint": {
+            "x": 156,
+            "y": 57
+          },
+          "area": 834
+        },
+        {
+          "id": "decor-2",
+          "color": "#8D6E63",
+          "seedPoint": {
+            "x": 434,
+            "y": 70
+          },
+          "area": 706
+        },
+        {
+          "id": "decor-3",
+          "color": "#FDD835",
+          "seedPoint": {
+            "x": 79,
+            "y": 82
+          },
+          "area": 866
+        },
+        {
+          "id": "decor-4",
+          "color": "#FDD835",
+          "seedPoint": {
+            "x": 235,
+            "y": 82
+          },
+          "area": 860
+        },
+        {
+          "id": "decor-5",
+          "color": "#8D6E63",
+          "seedPoint": {
+            "x": 436,
+            "y": 366
+          },
+          "area": 4450
+        },
+        {
+          "id": "decor-6",
+          "color": "#FFFFFF",
+          "seedPoint": {
+            "x": 416,
+            "y": 242
+          },
+          "area": 1923
+        },
+        {
+          "id": "decor-7",
+          "color": "#FDD835",
+          "seedPoint": {
+            "x": 52,
+            "y": 153
+          },
+          "area": 833
+        },
+        {
+          "id": "decor-8",
+          "color": "#FDD835",
+          "seedPoint": {
+            "x": 261,
+            "y": 153
+          },
+          "area": 836
+        },
+        {
+          "id": "decor-9",
+          "color": "#FDD835",
+          "seedPoint": {
+            "x": 72,
+            "y": 227
+          },
+          "area": 808
+        },
+        {
+          "id": "decor-10",
+          "color": "#FDD835",
+          "seedPoint": {
+            "x": 239,
+            "y": 228
+          },
+          "area": 774
+        },
+        {
+          "id": "decor-11",
+          "color": "#000000",
+          "seedPoint": {
+            "x": 46,
+            "y": 250
+          },
+          "area": 1
+        },
+        {
+          "id": "decor-12",
+          "color": "#FDD835",
+          "seedPoint": {
+            "x": 155,
+            "y": 263
+          },
+          "area": 803
+        }
+      ]
+    },
+    {
+      "id": "cbn-snail",
+      "title": "Snail",
+      "voice": "snail",
+      "lineArt": "assets/cbn/cbn-snail.png",
+      "preview": "assets/cbn/cbn-snail-finished.webp",
+      "width": 724,
+      "height": 724,
+      "palette": [
+        {
+          "number": 1,
+          "name": "red",
+          "hex": "#E53935"
+        },
+        {
+          "number": 2,
+          "name": "orange",
+          "hex": "#FB8C00"
+        },
+        {
+          "number": 4,
+          "name": "green",
+          "hex": "#43A047"
+        },
+        {
+          "number": 5,
+          "name": "blue",
+          "hex": "#1E88E5"
+        },
+        {
+          "number": 6,
+          "name": "purple",
+          "hex": "#8E24AA"
+        },
+        {
+          "number": 8,
+          "name": "brown",
+          "hex": "#8D6E63"
+        }
+      ],
+      "regions": [
+        {
+          "id": "region-1",
+          "number": 8,
+          "labelPoint": {
+            "x": 427,
+            "y": 375
+          },
+          "area": 44876,
+          "inscribedRadius": 40
+        },
+        {
+          "id": "region-2",
+          "number": 6,
+          "labelPoint": {
+            "x": 223,
+            "y": 176
+          },
+          "area": 13810,
+          "inscribedRadius": 41
+        },
+        {
+          "id": "region-3",
+          "number": 5,
+          "labelPoint": {
+            "x": 343,
+            "y": 256
+          },
+          "area": 14160,
+          "inscribedRadius": 31
+        },
+        {
+          "id": "region-4",
+          "number": 2,
+          "labelPoint": {
+            "x": 80,
+            "y": 278
+          },
+          "area": 11331,
+          "inscribedRadius": 30
+        },
+        {
+          "id": "region-5",
+          "number": 2,
+          "labelPoint": {
+            "x": 209,
+            "y": 253
+          },
+          "area": 19861,
+          "inscribedRadius": 26
+        },
+        {
+          "id": "region-6",
+          "number": 1,
+          "labelPoint": {
+            "x": 617,
+            "y": 346
+          },
+          "area": 14319,
+          "inscribedRadius": 35
+        },
+        {
+          "id": "region-7",
+          "number": 1,
+          "labelPoint": {
+            "x": 199,
+            "y": 428
+          },
+          "area": 15588,
+          "inscribedRadius": 34
+        },
+        {
+          "id": "region-8",
+          "number": 1,
+          "labelPoint": {
+            "x": 86,
+            "y": 369
+          },
+          "area": 9121,
+          "inscribedRadius": 28
+        },
+        {
+          "id": "region-9",
+          "number": 4,
+          "labelPoint": {
+            "x": 645,
+            "y": 492
+          },
+          "area": 3774,
+          "inscribedRadius": 16
+        },
+        {
+          "id": "region-10",
+          "number": 4,
+          "labelPoint": {
+            "x": 468,
+            "y": 487
+          },
+          "area": 5497,
+          "inscribedRadius": 24
+        },
+        {
+          "id": "region-11",
+          "number": 4,
+          "labelPoint": {
+            "x": 561,
+            "y": 579
+          },
+          "area": 14093,
+          "inscribedRadius": 23
+        },
+        {
+          "id": "region-12",
+          "number": 4,
+          "labelPoint": {
+            "x": 79,
+            "y": 515
+          },
+          "area": 6414,
+          "inscribedRadius": 23
+        },
+        {
+          "id": "region-13",
+          "number": 4,
+          "labelPoint": {
+            "x": 156,
+            "y": 564
+          },
+          "area": 11545,
+          "inscribedRadius": 29
+        },
+        {
+          "id": "region-14",
+          "number": 4,
+          "labelPoint": {
+            "x": 290,
+            "y": 577
+          },
+          "area": 18658,
+          "inscribedRadius": 36
+        },
+        {
+          "id": "region-15",
+          "number": 4,
+          "labelPoint": {
+            "x": 427,
+            "y": 589
+          },
+          "area": 17908,
+          "inscribedRadius": 37
+        }
+      ],
+      "decor": [
+        {
+          "id": "decor-1",
+          "color": "#FFFFFF",
+          "seedPoint": {
+            "x": 498,
+            "y": 247
+          },
+          "area": 398
+        },
+        {
+          "id": "decor-2",
+          "color": "#FFFFFF",
+          "seedPoint": {
+            "x": 427,
+            "y": 252
+          },
+          "area": 488
+        },
+        {
+          "id": "decor-3",
+          "color": "#FFFFFF",
+          "seedPoint": {
+            "x": 493,
+            "y": 260
+          },
+          "area": 31
+        },
+        {
+          "id": "decor-4",
+          "color": "#FFFFFF",
+          "seedPoint": {
+            "x": 612,
+            "y": 284
+          },
+          "area": 1930
+        },
+        {
+          "id": "decor-5",
+          "color": "#FFFFFF",
+          "seedPoint": {
+            "x": 424,
+            "y": 265
+          },
+          "area": 38
+        },
+        {
+          "id": "decor-6",
+          "color": "#EC407A",
+          "seedPoint": {
+            "x": 462,
+            "y": 317
+          },
+          "area": 343
+        },
+        {
+          "id": "decor-7",
+          "color": "#FFFFFF",
+          "seedPoint": {
+            "x": 537,
+            "y": 346
+          },
+          "area": 1865
+        },
+        {
+          "id": "decor-8",
+          "color": "#FFFFFF",
+          "seedPoint": {
+            "x": 677,
+            "y": 344
+          },
+          "area": 1815
+        },
+        {
+          "id": "decor-9",
+          "color": "#FFFFFF",
+          "seedPoint": {
+            "x": 611,
+            "y": 420
+          },
+          "area": 7090
+        },
+        {
+          "id": "decor-10",
+          "color": "#43A047",
+          "seedPoint": {
+            "x": 542,
+            "y": 452
+          },
+          "area": 1046
+        },
+        {
+          "id": "decor-11",
+          "color": "#43A047",
+          "seedPoint": {
+            "x": 481,
+            "y": 447
+          },
+          "area": 1
+        },
+        {
+          "id": "decor-12",
+          "color": "#43A047",
+          "seedPoint": {
+            "x": 404,
+            "y": 501
+          },
+          "area": 211
+        }
+      ]
+    }
+  ]
+}
