@@ -1,10 +1,16 @@
-{
-  "file": "garden-bed.m4a",
-  "source": "site/children-apps/audio/hub-bed.m4a",
-  "reuse": "Byte-identical copy of the project's existing children-apps hub bed; no new generation or paid API call.",
-  "tool": "ElevenLabs Music API /v1/music",
-  "model": "music_v1",
-  "generatedOn": "2026-08-29",
-  "promptSource": "site/children-apps/tools/render-hub-bed.py",
-  "sha256": "9b4c457b3dfe7dd74ac2bcee9e08fe2993a5a45c591855eecac469c0d8667fa2"
-}
+[
+  {
+    "file": "menu-bed.m4a",
+    "tool": "ElevenLabs Music API /v1/music",
+    "model": "music_v1",
+    "outputFormat": "pcm_44100",
+    "prompt": "Gentle, bright, playful instrumental music for a children's painting garden menu. A soft music box melody, warm marimba accents, light pizzicato strings, a delicate glockenspiel and a warm, airy pad. Calm and welcoming, in a major key. Very soft dynamics, no drums, no percussion, no vocals, no singing, no voices, no choir, no lyrics, no sound effects. Even level throughout with no build-ups, no swells and no ending, so it can loop quietly underneath a page without ever drawing attention to itself.",
+    "lengthRequestedSeconds": 75,
+    "lengthReceivedSeconds": 75.0,
+    "loopLengthSeconds": 70.95,
+    "generatedOn": "2026-09-25",
+    "sha256": "a595a7879279efb98112ac83e0268d68e22cb92692be47c3556e4f3a6ca4a2ff",
+    "termsCheckedForPublicRedistribution": true,
+    "termsNote": "AUDIO-DIRECTION.md, 'Redistribution: what ElevenLabs' terms actually allow'. Creator plan, free and unmonetised, single platform, so 'Studio Games' does not apply. AUDIO-DIRECTION.md decision 10a: a hub gets a bed; this bed plays only on the mode menu."
+  }
+]

@@ -167,7 +167,7 @@ let menuReturns = 0;
 const mosaicWindow = {
   speak: (line) => spoken.push(line),
   tinyPop() {},
-  stopGalleryMusic() {},
+  stopMenuMusic() {},
   openPage: (page) => opened.push(page),
   showModeMenu: () => { menuReturns += 1; nodes.modeMenuScreen.hidden = false; },
   addEventListener() {},
@@ -252,6 +252,7 @@ vm.runInNewContext(coloringProgram, {
   galleryScreen: coloringNodes.galleryScreen,
   openPage: (page) => coloringOpened.push(page),
   speak: (line) => coloringSpoken.push(line),
+  stopMenuMusic: () => {},
 }, { filename: "app.js#colouring-doorway" });
 
 const coloringCards = coloringNodes.pageGallery.children;
@@ -291,7 +292,7 @@ const pixelWindow = {
   PIXEL_CARDS: data,
   speak: (line) => pixelSpoken.push(line),
   tinyPop() {},
-  stopGalleryMusic() {},
+  stopMenuMusic() {},
   addEventListener() {},
   setTimeout() { return 1; },
   clearTimeout() {},
@@ -354,7 +355,7 @@ const blankStorage = new Map();
 const blankWindow = {
   speak: (line) => blankSpoken.push(line),
   tinyPop() {},
-  stopGalleryMusic() {},
+  stopMenuMusic() {},
   showColoringGallery() {},
   addEventListener() {},
   setTimeout() { return 1; },

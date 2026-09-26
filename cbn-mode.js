@@ -10,6 +10,11 @@
   const context = canvas.getContext("2d", { willReadFrequently: true });
   const palette = document.querySelector("#cbnPalette");
   const message = document.querySelector("#cbnCelebration");
+  const clearButton = document.querySelector("#cbnClear");
+  const undoButton = document.querySelector("#cbnUndo");
+
+  const speak = typeof window.speak === "function" ? window.speak : () => {};
+  const pop = typeof window.tinyPop === "function" ? window.tinyPop : () => {};
 
   let manifest = null;
   let picture = null;
@@ -18,6 +23,9 @@
   let selectedNumber = null;
   let filledRegions = new Map();
   let missesByRegion = new Map();
+  let clearArmed = false;
+  let clearArmTimer = null;
+  let clearedBackup = null;
 
   function hideAllScreens() {
     document.querySelectorAll(".screen").forEach((element) => {
@@ -31,6 +39,64 @@
 
   function saveProgress() {
     localStorage.setItem(storageKey(), JSON.stringify([...filledRegions]));
+  }
+
+  function disarmClear() {
+    clearArmed = false;
+    clearButton.classList.remove("is-armed");
+    if (clearArmTimer) {
+      window.clearTimeout(clearArmTimer);
+      clearArmTimer = null;
+    }
+  }
+
+  function armClear() {
+    clearArmed = true;
+    clearButton.classList.add("is-armed");
+    if (clearArmTimer) window.clearTimeout(clearArmTimer);
+    clearArmTimer = window.setTimeout(disarmClear, 6000);
+    pop(360);
+    speak("app.clear-arm");
+  }
+
+  function updateUndoButton() {
+    undoButton.disabled = !(clearedBackup && clearedBackup.size > 0);
+  }
+
+  function restoreClearedRegions() {
+    if (!clearedBackup || !clearedBackup.size) return;
+    filledRegions = clearedBackup;
+    clearedBackup = null;
+    saveProgress();
+    render();
+    pop(560, 0.09);
+    speak("app.undo-restore");
+    updateUndoButton();
+  }
+
+  function clearPicture() {
+    clearedBackup = new Map(filledRegions);
+    filledRegions = new Map();
+    saveProgress();
+    render();
+    pop(320, 0.07);
+    window.setTimeout(() => pop(240, 0.09), 90);
+    speak("app.clear-done");
+    updateUndoButton();
+  }
+
+  function handleClearTap() {
+    if (!filledRegions.size) {
+      disarmClear();
+      speak("app.already-clean");
+      return;
+    }
+    if (clearArmed) {
+      disarmClear();
+      clearPicture();
+    } else {
+      armClear();
+    }
   }
 
   function downloadPicture() {
@@ -147,6 +213,9 @@
 
   function openPicture(nextPicture) {
     picture = nextPicture;
+    disarmClear();
+    clearedBackup = null;
+    updateUndoButton();
     restoreProgress();
     missesByRegion = new Map();
     selectedNumber = picture.palette[0].number;
@@ -215,13 +284,14 @@
   }
 
   function fillCorrectRegion(region) {
+    if (clearArmed) disarmClear();
     const color = picture.palette.find((entry) => entry.number === selectedNumber).hex;
     filledRegions.set(region.id, color);
     missesByRegion.delete(region.id);
     palette.querySelector(`[data-number="${region.number}"]`).classList.remove("hint-glow");
     saveProgress();
     render();
-    window.tinyPop(520, 0.06);
+    pop(520, 0.06);
     if (filledRegions.size === picture.regions.length) celebrateCompletion();
   }
 
@@ -272,6 +342,8 @@
   document.querySelector("#cbnGalleryBack").addEventListener("click", () => window.showModeMenu());
   document.querySelector("#cbnBack").addEventListener("click", () => window.openCbnGallery());
   document.querySelector("#cbnSave").addEventListener("click", downloadPicture);
+  clearButton.addEventListener("click", handleClearTap);
+  undoButton.addEventListener("click", restoreClearedRegions);
 
   initialise().catch(() => {
     message.textContent = "Pictures could not load.";

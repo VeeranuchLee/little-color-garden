@@ -75,7 +75,7 @@ const referenceImage = document.querySelector("#referenceImage");
 const studioReference = document.querySelector("#studioReference");
 const studioReferenceImage = document.querySelector("#studioReferenceImage");
 const celebration = document.querySelector("#celebration");
-const galleryMusicButton = document.querySelector("#galleryMusicButton");
+const menuMusicButton = document.querySelector("#modeMenuMusic");
 const studioMessage = document.querySelector("#studioMessage");
 const gradientStart = document.querySelector("#gradientStart");
 const gradientEnd = document.querySelector("#gradientEnd");
@@ -83,9 +83,10 @@ const stampSize = document.querySelector("#stampSize");
 const stampRotation = document.querySelector("#stampRotation");
 
 const REFERENCE_PREF_KEY = "little-color-garden:show-reference";
-const galleryMusic = new Audio("./assets/audio/garden-bed.m4a");
-galleryMusic.loop = true;
-galleryMusic.volume = 0.26;
+const menuMusic = new Audio("./assets/audio/menu-bed.m4a");
+menuMusic.loop = true;
+const MENU_MUSIC_VOLUME = 0.18;
+menuMusic.volume = MENU_MUSIC_VOLUME;
 
 const paintLayer = document.createElement("canvas");
 const paintContext = paintLayer.getContext("2d");
@@ -187,29 +188,41 @@ function showMessage(message) {
 }
 
 function updateMusicButton(playing) {
-  galleryMusicButton.classList.toggle("music-off", !playing);
-  galleryMusicButton.setAttribute("aria-pressed", String(playing));
-  galleryMusicButton.setAttribute("aria-label", playing ? "Stop music" : "Play music");
-  galleryMusicButton.querySelector("span").textContent = playing ? "♫" : "♪";
+  menuMusicButton.classList.toggle("music-off", !playing);
+  menuMusicButton.setAttribute("aria-pressed", String(playing));
+  menuMusicButton.setAttribute("aria-label", playing ? "Stop music" : "Play music");
+  menuMusicButton.querySelector("span").textContent = playing ? "♫" : "♪";
 }
 
-// Leaving the gallery stops the bed, every way out. `openPage` already did this;
-// Pixel Mosaic is the other door and it lives in its own file, so the stop is
-// exposed the way this app exposes `speak` and `tinyPop` — a top-level function
-// on `window` that the other script picks up if it is there.
-function stopGalleryMusic() {
-  galleryMusic.pause();
+// The menu bed plays only on the mode menu (AUDIO-DIRECTION.md decision 10a).
+// Entering any mode stops it; the button itself is on the menu header.
+function stopMenuMusic() {
+  menuMusic.pause();
   updateMusicButton(false);
 }
 
-async function toggleGalleryMusic() {
-  if (!galleryMusic.paused) {
-    galleryMusic.pause();
+function duckMenuMusic() {
+  if (menuMusic && !menuMusic.paused && !menuMusic.dataset.ducked) {
+    menuMusic.dataset.ducked = "true";
+    menuMusic.volume = 0.04;
+  }
+}
+
+function restoreMenuMusic() {
+  if (menuMusic && menuMusic.dataset.ducked) {
+    menuMusic.volume = MENU_MUSIC_VOLUME;
+    delete menuMusic.dataset.ducked;
+  }
+}
+
+async function toggleMenuMusic() {
+  if (!menuMusic.paused) {
+    menuMusic.pause();
     updateMusicButton(false);
     return;
   }
   try {
-    await galleryMusic.play();
+    await menuMusic.play();
     updateMusicButton(true);
   } catch (_) {
     updateMusicButton(false);
@@ -411,6 +424,8 @@ function speak(id) {
     if (!voiceClip) voiceClip = new Audio();
     voiceClip.pause();
     voiceClip.src = `./assets/audio/voice/${id}.m4a`;
+    duckMenuMusic();
+    voiceClip.addEventListener("ended", restoreMenuMusic, { once: true });
     const played = voiceClip.play();
     if (played && played.catch) played.catch(() => {});
   } catch (_) {
@@ -552,7 +567,7 @@ function swatchTone(color) {
 // references, the fill-only tool row. A coloring page takes the exact path it
 // always did, because every branch defaults to that path.
 function openPage(page) {
-  stopGalleryMusic();
+  stopMenuMusic();
   const mosaic = page.kind === "mosaic";
   activePage = page;
   galleryScreen.hidden = true;
@@ -656,6 +671,7 @@ function goHome() {
 // used to live on the coloring gallery moved up with the menu, unchanged.
 
 function showColoringGallery() {
+  stopMenuMusic();
   modeMenuScreen.hidden = true;
   galleryScreen.hidden = false;
   document.body.style.background = "#8a6bea";
@@ -663,9 +679,14 @@ function showColoringGallery() {
 }
 
 function showModeMenu() {
-  // Leaving the gallery stops the bed, every way out -- this is now one of them.
-  stopGalleryMusic();
-  galleryScreen.hidden = true;
+  // The menu bed plays only here; entering a mode stops it elsewhere.
+  // Hide EVERY screen, not just this file's gallery: the mode scripts (stamp,
+  // cbn, pixel, mosaic) own screens this file never names, and a screen left
+  // open under the menu showed through when the next mode opened -- owner
+  // 2026-09-26: "pixel -> i get stamping" after visiting Stamping first.
+  document.querySelectorAll(".screen").forEach((screen) => {
+    screen.hidden = true;
+  });
   modeMenuScreen.hidden = false;
   document.body.style.background = "#6f52d6";
   speak("app.mode-menu");
@@ -1119,7 +1140,7 @@ function loadStrokes(pageId) {
   }
 }
 
-galleryMusicButton.addEventListener("click", toggleGalleryMusic);
+menuMusicButton.addEventListener("click", toggleMenuMusic);
 document.querySelector("#voiceButton").addEventListener("click", () => {
   // The shared board's own directions; a mosaic page has no brush and no
   // finished picture to peek at, so its sentence is its own.
@@ -1155,20 +1176,34 @@ eraserButton.addEventListener("click", () => {
 });
 
 document.querySelector("#galleryBackButton").addEventListener("click", showModeMenu);
-document.querySelector("#modeColoring").addEventListener("click", showColoringGallery);
+document.querySelector("#modeColoring").addEventListener("click", () => {
+  stopMenuMusic();
+  showColoringGallery();
+});
 document.querySelector("#modePixel").addEventListener("click", () => {
   // pixel-mode.js owns the pixel screens and the renderer that drew this
   // card's art; it publishes the door once it has loaded.
+  stopMenuMusic();
   if (typeof window.openPixelGallery === "function") window.openPixelGallery();
 });
 document.querySelector("#modeMosaic").addEventListener("click", () => {
   // mosaic-mode.js owns the mosaic gallery the same way; the board beyond it
   // is this file's own coloring screen opened on a mosaic page.
+  stopMenuMusic();
   if (typeof window.openMosaicGallery === "function") window.openMosaicGallery();
 });
-document.querySelector("#modeCbn").addEventListener("click", () => window.openCbnGallery && window.openCbnGallery());
-document.querySelector("#modeStamp").addEventListener("click", () => window.openStampGallery && window.openStampGallery());
+document.querySelector("#modeCbn").addEventListener("click", () => {
+  stopMenuMusic();
+  if (window.openCbnGallery) window.openCbnGallery();
+});
+document.querySelector("#modeStamp").addEventListener("click", () => {
+  stopMenuMusic();
+  if (window.openStampGallery) window.openStampGallery();
+});
 document.querySelector("#modeMenuVoice").addEventListener("click", () => speak("app.mode-menu-repeat"));
+
+// Other mode scripts stop the menu bed when they open their own screens.
+window.stopMenuMusic = stopMenuMusic;
 
 function selectTool(tool) {
   currentTool = tool;

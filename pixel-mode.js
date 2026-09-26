@@ -144,7 +144,7 @@
   // window so this IIFE's own names cannot shadow them mid-initialisation.
   const speak = typeof window.speak === "function" ? window.speak : () => {};
   const pop = typeof window.tinyPop === "function" ? window.tinyPop : () => {};
-  const stopMusic = typeof window.stopGalleryMusic === "function" ? window.stopGalleryMusic : () => {};
+  const stopMusic = typeof window.stopMenuMusic === "function" ? window.stopMenuMusic : () => {};
 
   // --- drawing ---------------------------------------------------------
   function roundedPath(ctx, x, y, w, h, r) {
@@ -972,17 +972,6 @@
     });
   }
 
-  // The mode menu's Pixel card: its art is drawn by this mode's own card
-  // renderer, so the preview on the menu is the mode itself. This replaces the
-  // old entry card in the coloring gallery, which is gone now that the two
-  // activities have separate doors (owner brief, 2026-09-14).
-  function decorateModeMenu() {
-    const art = document.querySelector("#modePixelArt");
-    if (!art) return;
-    const rainbow = DATA.cards.find((card) => card.id === "rainbow") || DATA.cards[0];
-    renderStill(art.getContext("2d"), art, cardIndices.get(rainbow.id), 12);
-  }
-
   // The menu's Pixel button opens the pixel gallery. app.js owns the menu, so
   // the door is exposed the way this app exposes `speak` and `tinyPop` -- a
   // top-level function on `window` the other script picks up if it is there.
@@ -1087,5 +1076,4 @@
   buildLevels();
   buildPixelGallery();
   buildPalette();
-  decorateModeMenu();
 })();

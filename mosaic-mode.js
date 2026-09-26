@@ -51,7 +51,7 @@
   // window so this IIFE's own names cannot shadow them mid-initialisation.
   const speak = typeof window.speak === "function" ? window.speak : () => {};
   const pop = typeof window.tinyPop === "function" ? window.tinyPop : () => {};
-  const stopMusic = typeof window.stopGalleryMusic === "function" ? window.stopGalleryMusic : () => {};
+  const stopMusic = typeof window.stopMenuMusic === "function" ? window.stopMenuMusic : () => {};
   const openPage = typeof window.openPage === "function" ? window.openPage : null;
   const showModeMenu = typeof window.showModeMenu === "function" ? window.showModeMenu : null;
 

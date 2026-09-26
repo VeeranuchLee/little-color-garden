@@ -8,7 +8,7 @@
 //
 // The module is self-contained the way pixel-mode.js is: it never touches the
 // coloring-page screen's state, and reuses only what app.js already exposes
-// on `window` (`speak`, `tinyPop`, `stopGalleryMusic`, `showColoringGallery`,
+// on `window` (`speak`, `tinyPop`, `stopMenuMusic`, `showColoringGallery`,
 // `buildColorPalette`). The stroke engine mirrors app.js's brush path --
 // round caps, `destination-out` for the eraser, a transparent paint layer
 // composed over white -- so a saved Blank Page stroke is the same shape a
@@ -26,7 +26,7 @@
 
   const speak = typeof window.speak === "function" ? window.speak : () => {};
   const pop = typeof window.tinyPop === "function" ? window.tinyPop : () => {};
-  const stopMusic = typeof window.stopGalleryMusic === "function" ? window.stopGalleryMusic : () => {};
+  const stopMusic = typeof window.stopMenuMusic === "function" ? window.stopMenuMusic : () => {};
   const showColoringGallery =
     typeof window.showColoringGallery === "function" ? window.showColoringGallery : () => {};
   const buildColorPalette =

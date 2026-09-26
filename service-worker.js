@@ -1,7 +1,11 @@
 // v24 2026-09-22: tappable pockets -- the fill now answers compact small regions
 //      (the sunflower's tongue, rocket segments, turtle shell scales) and the
 //      Coloring Pages' enclosed details; see tools/check-mosaic-fill.py.
-const CACHE_NAME = "little-color-garden-v25";
+// v26 2026-09-25: mode-menu polish -- the Codex garden background and the five
+//      mode-card icons under assets/menu/, plus the CBN clear/undo button and
+//      the new menu music bed (menu-bed.m4a bypasses the cache the same way
+//      the old garden-bed.m4a did; see the fetch handler below).
+const CACHE_NAME = "little-color-garden-v26";
 const PAGE_IDS = [
   "solar-system",
   "space-kid",
@@ -220,6 +224,8 @@ const APP_FILES = [
     "snail", "star", "strawberry", "sun", "sunflower", "tree", "tulip", "turtle"
   ].map((name) => `./assets/stamps/stamp-${name}.webp`),
   ...["garden", "sea", "sky"].map((name) => `./assets/scenes/scene-${name}.webp`),
+  ...["landscape", "portrait"].map((name) => `./assets/menu/menu-bg-${name}.webp`),
+  ...["pixel", "coloring", "mosaic", "cbn", "stamping"].map((name) => `./assets/menu/icon-${name}.webp`),
   "./manifest.webmanifest",
   "./assets/icons/icon-192.png",
   "./assets/icons/icon-512.png",

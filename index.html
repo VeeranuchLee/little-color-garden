@@ -24,7 +24,7 @@
            the same way: its own door, its own sheets, and the coloring
            screen's own tap-to-fill beyond them. -->
       <section id="modeMenuScreen" class="screen mode-menu-screen" aria-label="Choose what to make">
-        <header class="gallery-header">
+        <header class="gallery-header mode-menu-header">
           <!-- Owner, 2026-08-27: *"need to make sure ALL games has back icon to the hub"*
                -- a 4-year-old could not get out of the app. The header was
                [voice][brand][dead spacer]; the arrow takes the left slot, which is where
@@ -46,42 +46,48 @@
             <div class="paint-smile"><span></span><span></span></div>
           </div>
 
-          <button class="round-button sound-button" id="modeMenuVoice" type="button" aria-label="Hear what to do">
-            <span aria-hidden="true">🔊</span>
-          </button>
+          <div class="mode-menu-actions">
+            <button class="round-button sound-button" id="modeMenuVoice" type="button" aria-label="Hear what to do">
+              <span aria-hidden="true">🔊</span>
+            </button>
+            <button class="round-button sound-button music-off" id="modeMenuMusic" type="button" aria-label="Play music" aria-pressed="false">
+              <span aria-hidden="true">♫</span>
+            </button>
+          </div>
         </header>
 
-        <h1 class="mode-title">What will you make?</h1>
+        <div class="mode-menu-body">
+          <h1 class="mode-title">What will you make?</h1>
 
-        <div class="mode-cards" role="group" aria-label="Pick a way to play">
-          <!-- Every preview is drawn from the app's own assets: the Pixel card
-               is rendered by pixel-mode.js through the board's card renderer
-               (fill in the canvas below), the Coloring card is one of the
-               existing coloring pages and the Mosaic card is one of the mosaic
-               sheets, both shown as line art. -->
+          <div class="mode-cards" role="group" aria-label="Pick a way to play">
+          <!-- Codex art (art-source/menu-v2/, approved 2026-09-25): one icon per
+               mode, built to assets/menu/ by tools/build-menu-art.py. Pixel's
+               canvas preview (rendered live by pixel-mode.js) is retired in
+               favor of the same icon treatment as the other four cards. -->
           <button class="mode-card" id="modePixel" type="button" aria-label="Pixel. Copy pictures with little tiles.">
-            <span class="mode-art"><canvas id="modePixelArt" width="240" height="180" aria-hidden="true"></canvas></span>
+            <span class="mode-art mode-art--icon"><img src="./assets/menu/icon-pixel.webp" alt="" draggable="false" /></span>
             <b class="mode-name">Pixel</b>
             <span class="mode-tag">Copy pictures with little tiles</span>
           </button>
           <button class="mode-card" id="modeColoring" type="button" aria-label="Colouring. Colour a picture, or draw your own.">
-            <span class="mode-art"><img src="./assets/pages/pink-princess.png" alt="" draggable="false" /></span>
+            <span class="mode-art mode-art--icon"><img src="./assets/menu/icon-coloring.webp" alt="" draggable="false" /></span>
             <b class="mode-name">Coloring</b>
             <span class="mode-tag">Colour a picture, or draw your own</span>
           </button>
           <button class="mode-card" id="modeMosaic" type="button" aria-label="Mosaic. Tap the shapes to fill them with colour.">
-            <span class="mode-art"><img src="./assets/mosaic/smiling-sunflower.png" alt="" draggable="false" /></span>
+            <span class="mode-art mode-art--icon"><img src="./assets/menu/icon-mosaic.webp" alt="" draggable="false" /></span>
             <b class="mode-name">Mosaic</b>
             <span class="mode-tag">Tap the shapes to fill them with color</span>
           </button>
           <button class="mode-card" id="modeCbn" type="button" aria-label="Color by Number. Match each number to its color.">
-            <span class="mode-art"><img src="./assets/cbn/cbn-butterfly-finished.webp" alt="" draggable="false" /></span>
+            <span class="mode-art mode-art--icon"><img src="./assets/menu/icon-cbn.webp" alt="" draggable="false" /></span>
             <b class="mode-name">Color by Number</b><span class="mode-tag">Match numbers and colors</span>
           </button>
           <button class="mode-card" id="modeStamp" type="button" aria-label="Stamping. Make a picture with stamps.">
-            <span class="mode-art mode-art--stamp"><img src="./assets/stamps/stamp-ladybug.webp" alt="" draggable="false" /></span>
+            <span class="mode-art mode-art--icon"><img src="./assets/menu/icon-stamping.webp" alt="" draggable="false" /></span>
             <b class="mode-name">Stamping</b><span class="mode-tag">Make a picture with stamps</span>
           </button>
+        </div>
         </div>
       </section>
 
@@ -106,9 +112,6 @@
             <div class="paint-smile"><span></span><span></span></div>
           </div>
 
-          <button class="round-button sound-button music-off" id="galleryMusicButton" type="button" aria-label="Play music" aria-pressed="false">
-            <span aria-hidden="true">♫</span>
-          </button>
         </header>
 
         <div id="pageGallery" class="page-gallery" role="group" aria-label="Pictures to color"></div>
@@ -276,11 +279,18 @@
       </section>
 
       <section id="cbnScreen" class="screen activity-workspace cbn-workspace" hidden>
-        <header class="activity-header">
+        <header class="activity-header cbn-header">
           <button id="cbnBack" class="round-button" type="button" aria-label="Back to Color by Number pictures">←</button>
           <h1 id="cbnTitle">Color by Number</h1>
           <div id="cbnCelebration" class="activity-message" aria-live="polite"></div>
-          <button id="cbnSave" class="round-button" type="button" aria-label="Save Color by Number picture">💾</button>
+          <div class="cbn-header-actions">
+            <button id="cbnUndo" class="round-button" type="button" aria-label="Undo last color" disabled>↶</button>
+            <button id="cbnClear" class="round-button tool-button--clear" type="button" aria-label="Clean the whole picture">
+              <span aria-hidden="true">🧹</span>
+              <i class="arm-ring" aria-hidden="true"></i>
+            </button>
+            <button id="cbnSave" class="round-button" type="button" aria-label="Save Color by Number picture">💾</button>
+          </div>
         </header>
         <div class="activity-board">
           <div class="activity-stage">
