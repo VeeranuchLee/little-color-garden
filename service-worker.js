@@ -5,7 +5,15 @@
 //      mode-card icons under assets/menu/, plus the CBN clear/undo button and
 //      the new menu music bed (menu-bed.m4a bypasses the cache the same way
 //      the old garden-bed.m4a did; see the fetch handler below).
-const CACHE_NAME = "little-color-garden-v26";
+// v27 2026-09-28: cell-by-cell audit -- app.js and cbn-mode.js changed (the
+//      24px-radius tap-assist for Mosaic and Color by Number); see
+//      coloring-app/CELL-AUDIT-SPEC.md and qa/2026-09-28-cell-audit/.
+// v27 2026-09-28: Blank Page tool expansion -- Fill/Shapes/Stamp/Magic/Undo/Redo
+//      and a safe Clear, plus the 40 themed stamp images under assets/blank-stamps/.
+// v28 2026-09-28: merge cell-audit (v27) into blank-tools (v27) -- both touched
+//      service-worker precache list and voice entries; bumped above main for a clean
+//      cache that carries the cell-audit tap-assist and the blank-tools stamps/lines.
+const CACHE_NAME = "little-color-garden-v28";
 const PAGE_IDS = [
   "solar-system",
   "space-kid",
@@ -224,6 +232,12 @@ const APP_FILES = [
     "snail", "star", "strawberry", "sun", "sunflower", "tree", "tulip", "turtle"
   ].map((name) => `./assets/stamps/stamp-${name}.webp`),
   ...["garden", "sea", "sky"].map((name) => `./assets/scenes/scene-${name}.webp`),
+  ...Object.entries({
+    space: ["ringed-planet", "smiling-star", "rocket", "crescent-moon", "blue-planet", "comet", "astronaut-helmet", "ufo", "sun", "constellation"],
+    princess: ["crown", "wand", "glass-slipper", "gown", "heart-tiara", "carriage", "royal-kitten", "rose-bouquet", "gem-heart", "mirror"],
+    mermaid: ["tail", "seashell", "pearl-oyster", "seahorse", "coral", "starfish", "treasure-chest", "dolphin", "tropical-fish", "sea-crown"],
+    castle: ["rainbow-castle", "turret", "magic-door", "magic-key", "crystal-ball", "dragon", "unicorn", "potion", "spell-book", "crystal"]
+  }).flatMap(([theme, names]) => names.map((name) => `./assets/blank-stamps/${theme}-${name}.webp`)),
   ...["landscape", "portrait"].map((name) => `./assets/menu/menu-bg-${name}.webp`),
   ...["pixel", "coloring", "mosaic", "cbn", "stamping"].map((name) => `./assets/menu/icon-${name}.webp`),
   "./manifest.webmanifest",

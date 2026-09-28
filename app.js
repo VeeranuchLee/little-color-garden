@@ -143,6 +143,11 @@ let lineDrawRect = null;
 let exteriorMask = null;
 const POCKET_MAX = 1815;
 const TAPPABLE_RADIUS = 3;
+// A line, junction or refused hairline pocket is not allowed to make a visible
+// neighbouring cell unselectable.  Twenty-four CSS pixels extends a cell to the
+// repository's 48px touch floor without changing the art or the flood mapping.
+// The direct region always wins; assistance is only consulted after a no-op.
+const CELL_TAP_ASSIST_RADIUS_CSS = 24;
 
 function computeLineDrawRect(image, canvas, mosaic) {
   if (!mosaic) {
@@ -902,30 +907,56 @@ function floodFill(point, color) {
   if (!linePixels) return 0;
   const width = paintLayer.width;
   const height = paintLayer.height;
-  const startX = Math.max(0, Math.min(width - 1, Math.round(point.x)));
-  const startY = Math.max(0, Math.min(height - 1, Math.round(point.y)));
   const rgba = color.match(/[a-f\d]{2}/gi).map((part) => parseInt(part, 16));
-  const visited = new Uint8Array(width * height);
-  const indices = [];
-  const stack = [startY * width + startX];
   const isBoundary = (index) => {
     if (exteriorMask && exteriorMask[index]) return true;
     const offset = index * 4;
     return linePixels[offset + 3] > 90 && linePixels[offset] + linePixels[offset + 1] + linePixels[offset + 2] < 430;
   };
-  while (stack.length) {
-    const index = stack.pop();
-    if (index < 0 || index >= visited.length || visited[index] || isBoundary(index)) continue;
-    visited[index] = 1;
-    indices.push(index);
-    const x = index % width;
-    if (x) stack.push(index - 1);
-    if (x < width - 1) stack.push(index + 1);
-    if (index >= width) stack.push(index - width);
-    if (index < width * (height - 1)) stack.push(index + width);
+  const regionFrom = (seedPoint) => {
+    const startX = Math.max(0, Math.min(width - 1, Math.round(seedPoint.x)));
+    const startY = Math.max(0, Math.min(height - 1, Math.round(seedPoint.y)));
+    const visited = new Uint8Array(width * height);
+    const indices = [];
+    const stack = [startY * width + startX];
+    while (stack.length) {
+      const index = stack.pop();
+      if (index < 0 || index >= visited.length || visited[index] || isBoundary(index)) continue;
+      visited[index] = 1;
+      indices.push(index);
+      const x = index % width;
+      if (x) stack.push(index - 1);
+      if (x < width - 1) stack.push(index + 1);
+      if (index >= width) stack.push(index - width);
+      if (index < width * (height - 1)) stack.push(index + width);
+    }
+    if (!indices.length) return [];
+    if (indices.length <= POCKET_MAX && inscribedRadius(indices, width) < TAPPABLE_RADIUS) return [];
+    return indices;
+  };
+
+  let indices = regionFrom(point);
+  if (!indices.length) {
+    const rect = paintCanvas.getBoundingClientRect();
+    const radius = Math.ceil(CELL_TAP_ASSIST_RADIUS_CSS * width / Math.max(1, rect.width));
+    // Nearest-first rings keep assistance deterministic. It cannot redirect a tap
+    // from one genuine cell to another because this branch runs only after a no-op.
+    outer: for (let distance = 1; distance <= radius; distance++) {
+      for (let dx = -distance; dx <= distance; dx++) {
+        for (const dy of [-distance, distance]) {
+          indices = regionFrom({ x: point.x + dx, y: point.y + dy });
+          if (indices.length) break outer;
+        }
+      }
+      for (let dy = -distance + 1; dy < distance; dy++) {
+        for (const dx of [-distance, distance]) {
+          indices = regionFrom({ x: point.x + dx, y: point.y + dy });
+          if (indices.length) break outer;
+        }
+      }
+    }
   }
   if (!indices.length) return 0;
-  if (indices.length <= POCKET_MAX && inscribedRadius(indices, width) < TAPPABLE_RADIUS) return 0;
   const output = paintContext.getImageData(0, 0, width, height);
   for (const index of indices) {
     const offset = index * 4;

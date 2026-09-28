@@ -87,63 +87,63 @@
     },
     {
       "file": "abstract-fine-100.png",
-      "sha256": "d5d64d459e0365d93035cc0efd2699ae0941051a8258c5bc098e826c0cba790c",
-      "mask_px": 176774,
-      "cells": 100,
+      "sha256": "48bb770de35618d81a235c63c2171ee4f1947ef02d1f9793b8c4023ce677d281",
+      "mask_px": 179196,
+      "cells": 30,
       "pockets": 0,
       "compact_fills": 0,
       "largest_refused_radius": 0,
       "smallest_compact_radius": null,
       "largest_pocket_px": 0,
-      "smallest_cell_px": 3284
+      "smallest_cell_px": 15484
     },
     {
       "file": "abstract-fine-130.png",
-      "sha256": "73d6ae81e3da1ac32466e61557e8df9b40f8c10520a1582acdd1d464368650ad",
-      "mask_px": 176774,
-      "cells": 130,
+      "sha256": "123e3e35889746af213107eb93e9c76ae7520a97a18dfe52f4d10bb8b3448fcf",
+      "mask_px": 179196,
+      "cells": 38,
       "pockets": 0,
       "compact_fills": 0,
       "largest_refused_radius": 0,
       "smallest_compact_radius": null,
       "largest_pocket_px": 0,
-      "smallest_cell_px": 2903
+      "smallest_cell_px": 11797
     },
     {
       "file": "abstract-fine-160.png",
-      "sha256": "a03bbd9182d8dedb425308b8d878baf791df1c2600d5e7e867add54c0e723ebc",
-      "mask_px": 176774,
-      "cells": 160,
+      "sha256": "cd5794c51df5087d8d4efbb8ae984a27b044dee58093a30cb0f063a268468a4f",
+      "mask_px": 179196,
+      "cells": 46,
       "pockets": 0,
       "compact_fills": 0,
       "largest_refused_radius": 0,
       "smallest_compact_radius": null,
       "largest_pocket_px": 0,
-      "smallest_cell_px": 2574
+      "smallest_cell_px": 10259
     },
     {
       "file": "abstract-fine-180.png",
-      "sha256": "436e8dd0f9ec436481d8776abb486112eaffb0d911c7428616c92739a3ff6a89",
-      "mask_px": 176774,
-      "cells": 180,
+      "sha256": "c4c406905e699c5917ce7f3ad2e8f3926938075f666e0febebdec92196c010d2",
+      "mask_px": 179196,
+      "cells": 54,
       "pockets": 0,
       "compact_fills": 0,
       "largest_refused_radius": 0,
       "smallest_compact_radius": null,
       "largest_pocket_px": 0,
-      "smallest_cell_px": 2450
+      "smallest_cell_px": 8432
     },
     {
       "file": "abstract-fine-200.png",
-      "sha256": "a7755152b115e305cd44e0263b6d4f7aa898798f8ec1ae8db9d3fc953fd7a240",
-      "mask_px": 176774,
-      "cells": 200,
+      "sha256": "21498441559bc10f2c56830c3c05c438ccf9f3e8915ebf56f5ae4b09a4862585",
+      "mask_px": 179196,
+      "cells": 62,
       "pockets": 0,
       "compact_fills": 0,
       "largest_refused_radius": 0,
       "smallest_compact_radius": null,
       "largest_pocket_px": 0,
-      "smallest_cell_px": 2026
+      "smallest_cell_px": 7512
     },
     {
       "file": "abstract-pebbles.png",
@@ -533,8 +533,8 @@
     }
   ],
   "generated": {
-    "date": "2026-09-22",
+    "date": "2026-09-28",
     "by": "tools/check-mosaic-fill.py --refresh-calibration",
-    "commit": "f523c5ec9bbb7e87d8f7580c8049087a2380c284"
+    "commit": "50effeebdb462238919dd781132d6cb7024b6b5e"
   }
 }

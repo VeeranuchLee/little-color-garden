@@ -254,12 +254,32 @@
       point
     );
     const regionPixels = new Set(indices);
-    return picture.regions.find((region) => {
+    const direct = picture.regions.find((region) => {
       if (filledRegions.has(region.id)) return false;
       const labelIndex = Math.round(region.labelPoint.y) * canvas.width
         + Math.round(region.labelPoint.x);
       return regionPixels.has(labelIndex);
     });
+    if (direct) return direct;
+
+    // A tap on a numeral stroke or boundary gets the same 48px assist as Mosaic.
+    // Nearest label is the canonical seed for the region, so assistance cannot map
+    // a cell to a different number or colour. Already-filled cells are excluded.
+    const rect = canvas.getBoundingClientRect();
+    const radius = 24 * canvas.width / Math.max(1, rect.width);
+    let nearest = null;
+    let nearestSquared = radius * radius;
+    picture.regions.forEach((region) => {
+      if (filledRegions.has(region.id)) return;
+      const dx = point.x - region.labelPoint.x;
+      const dy = point.y - region.labelPoint.y;
+      const distanceSquared = dx * dx + dy * dy;
+      if (distanceSquared <= nearestSquared) {
+        nearest = region;
+        nearestSquared = distanceSquared;
+      }
+    });
+    return nearest;
   }
 
   function pulseWrongAnswer(region) {

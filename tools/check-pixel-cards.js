@@ -342,8 +342,9 @@ console.log("PASS  Pixel cold-mount: 12 cards (free + 11 challenges); doorway an
 // meet inside Coloring. Execute its real module and the real gallery builders,
 // then click that first card and inspect the drawing surface it opens.
 const blankIds = [
-  "galleryScreen", "blankScreen", "blankCanvas", "blankMessage", "blankBrush",
-  "blankEraser", "blankClear", "blankPalette", "blankHome", "blankVoice",
+  "galleryScreen", "blankScreen", "blankCanvas", "blankMessage", "blankClear",
+  "blankPalette", "blankHome", "blankVoice", "blankShapeTray", "blankStampPanel",
+  "blankStampTray", "blankStampCategories", "blankUndo", "blankRedo",
 ];
 const blankNodes = Object.fromEntries(blankIds.map((id) => [id, domElement(id)]));
 blankNodes.galleryScreen.hidden = false;
@@ -368,6 +369,7 @@ const blankDocument = {
     }
     return blankNodes[selector.replace(/^#/, "")] || null;
   },
+  querySelectorAll() { return []; },
   createElement: (tag) => domElement(tag),
 };
 const blankPaletteProgram = [

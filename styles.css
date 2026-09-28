@@ -474,6 +474,21 @@ button:disabled {
   touch-action: pinch-zoom; /* 2026-09-25: one finger draws, two fingers still zoom out (zoom-trap fix C) */
 }
 
+/* The blank page canvas must stretch to fill its paper-frame.  With
+   width/height at 100% and place-items:center the grid item could not resolve
+   its block size against an auto row, so it fell back to its intrinsic bitmap
+   height and overflowed the frame.  Stretching with auto size lets the grid
+   area define the layout box, and fitCanvasToPage() keeps the backing store in
+   sync so circles and stamps stay undistorted. */
+#blankCanvas {
+  align-self: stretch;
+  justify-self: stretch;
+  width: auto;
+  height: auto;
+  min-width: 0;
+  min-height: 0;
+}
+
 .canvas-loader {
   position: absolute;
   inset: 0;
@@ -1316,23 +1331,77 @@ button:disabled {
   .mode-card:last-child { grid-column: 1 / -1; width: min(100%, 280px); justify-self: center; }
 }
 
-/* ==========================================================================
-   Blank Page — the first card of Coloring (owner brief, 2026-09-14). The
-   coloring screen's own family (same stage, same paper, same tool surface)
-   carrying only brush, eraser and clear: "do not turn this into a complex
-   art studio."
-   ========================================================================== */
+/* Blank Page child-first tool shelf (owner brief, 2026-09-28). */
 .blank-screen {
   --game-bg: linear-gradient(160deg, #f6ecff 0%, #e3f2ff 46%, #dcf6ea 100%);
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto minmax(0, 1fr) auto auto;
+  grid-template-areas: "tools" "canvas" "studio" "palette";
 }
 
 .blank-tools {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  width: min(320px, 100%);
-  margin: 0 auto;
+  display: flex;
+  gap: 8px;
+  width: 100%;
+  overflow-x: auto;
+  padding: 4px 2px 7px;
+  scrollbar-width: thin;
 }
 
+.blank-screen > .top-toolbar { grid-area: tools; padding-block: max(6px, env(safe-area-inset-top)) 5px; }
+.blank-screen > .canvas-stage { grid-area: canvas; padding: 4px 8px 7px; }
+.blank-screen > .studio-tools { grid-area: studio; padding-block: 4px 5px; }
+.blank-screen > .color-palette { grid-area: palette; }
+.blank-screen .paper-frame {
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  aspect-ratio: auto;
+  border-width: 6px;
+  border-radius: 22px;
+  place-items: stretch;
+}
+.blank-tools .primary-tool { flex: 1 0 64px; min-width: 64px; min-height: 68px; padding: 6px 4px; }
+.blank-tools .primary-tool > span:first-child { font-size: 27px; }
+.blank-history { min-width: 64px; min-height: 64px; font-size: 30px; }
+.blank-history:disabled { opacity: .38; filter: grayscale(.7); }
+.blank-choice-tray, .blank-category-tray, .blank-stamp-tray { display: flex; gap: 8px; overflow-x: auto; padding: 7px 3px; scrollbar-width: thin; }
+.blank-choice-tray[hidden], .blank-stamp-panel[hidden] { display: none; }
+.blank-choice-tray button, .blank-category-tray button, .blank-stamp-choice { flex: 0 0 64px; min-width: 64px; min-height: 64px; border: 3px solid #fff; border-radius: 18px; background: linear-gradient(#fff, #f4ebff); box-shadow: 0 4px 0 rgba(75,48,121,.18); color: #60439b; font: 800 18px/1 system-ui, sans-serif; }
+.blank-choice-tray button { font-size: 34px; }
+.blank-category-tray button { flex: 0 0 86px; height: 94px; padding: 4px; white-space: nowrap; overflow: hidden; }
+.blank-category-tray button small { display: block; overflow: hidden; font-size: 11px; line-height: 15px; text-overflow: ellipsis; }
+.blank-pack-picture { display: grid; place-items: center; width: 64px; height: 64px; margin: 0 auto 2px; overflow: hidden; }
+.blank-pack-picture img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.blank-pack-picture--glyph { border-radius: 13px; background: linear-gradient(#fff7ad, #ffb8dc); font-size: 25px; color: #7148ad; }
+.blank-choice-tray .is-selected, .blank-category-tray .is-selected, .blank-stamp-choice.is-selected { outline: 5px solid #ffe26a; outline-offset: 1px; background: #fff8c8; }
+.blank-choice-tray, .blank-stamp-panel { position: absolute; z-index: 12; right: 8px; bottom: calc(100% + 5px); left: 8px; padding: 7px; border: 3px solid rgba(255,255,255,.96); border-radius: 20px; background: rgba(245,239,255,.97); box-shadow: 0 -6px 22px rgba(64,77,117,.18); }
+.blank-stamp-panel { min-width: 0; }
+.blank-stamp-tray { min-height: 78px; }
+.blank-stamp-choice { flex-basis: 76px; width: 76px; height: 76px; padding: 5px; overflow: hidden; }
+.blank-stamp-choice img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.blank-stamp-choice--tile { font-size: 32px; color: #7148ad; background: linear-gradient(#fff7ad, #ffb8dc); }
+.blank-screen .studio-message { position: absolute; right: 12px; bottom: calc(100% + 8px); left: 12px; width: max-content; margin: auto; }
+.blank-screen > .color-palette {
+  display: flex;
+  justify-content: flex-start;
+  gap: 8px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 5px max(10px, env(safe-area-inset-right)) max(9px, env(safe-area-inset-bottom)) max(10px, env(safe-area-inset-left));
+  scrollbar-width: thin;
+}
+.blank-screen > .color-palette .color-button { flex: 0 0 48px; }
+
 @media (orientation: landscape) {
+  .blank-screen {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr) auto auto;
+    grid-template-areas: "tools" "canvas" "studio" "palette";
+  }
+  .blank-screen > .top-toolbar { flex-direction: row; justify-content: center; overflow: visible; }
+  .blank-screen > .studio-tools { width: 100%; border-top: 4px solid rgba(82,67,126,.14); border-left: 0; overflow: visible; }
+  .blank-screen > .color-palette { display: flex; padding-block: 4px max(8px, env(safe-area-inset-bottom)); border-left: 0; }
   .blank-tools { width: 100%; margin: 0; }
 }
 

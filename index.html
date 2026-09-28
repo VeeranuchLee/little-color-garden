@@ -203,9 +203,7 @@
         <div id="celebration" class="celebration" aria-hidden="true"></div>
       </section>
 
-      <!-- Blank Page (owner brief, 2026-09-14): the first card of Coloring --
-           free drawing on a white page with exactly three things: brush,
-           eraser, clear. -->
+      <!-- Blank Page: a small child-friendly art toy, expanded 2026-09-28. -->
       <section id="blankScreen" class="screen coloring-screen blank-screen" aria-label="Blank page" hidden>
         <header class="top-toolbar">
           <button class="tool-button tool-button--home" id="blankHome" type="button" aria-label="Go back to the pictures">
@@ -214,6 +212,8 @@
           <button class="tool-button tool-button--voice" id="blankVoice" type="button" aria-label="Hear what to do">
             <span aria-hidden="true">🔊</span>
           </button>
+          <button class="tool-button blank-history" id="blankUndo" type="button" aria-label="Undo" disabled><span aria-hidden="true">↶</span></button>
+          <button class="tool-button blank-history" id="blankRedo" type="button" aria-label="Redo" disabled><span aria-hidden="true">↷</span></button>
           <button class="tool-button tool-button--clear" id="blankClear" type="button" aria-label="Clean the whole page">
             <span aria-hidden="true">🧹</span>
             <i class="arm-ring" aria-hidden="true"></i>
@@ -229,8 +229,19 @@
         <div class="studio-tools" aria-label="Drawing tools">
           <p class="studio-message" id="blankMessage" aria-live="polite"></p>
           <div class="primary-tools blank-tools" role="group" aria-label="Choose a tool">
-            <button class="primary-tool is-selected" id="blankBrush" type="button"><span aria-hidden="true">🖌️</span><b>Brush</b></button>
-            <button class="primary-tool" id="blankEraser" type="button"><span class="eraser-chip" aria-hidden="true"><i></i></span><b>Eraser</b></button>
+            <button class="primary-tool is-selected" data-blank-tool="brush" type="button"><span aria-hidden="true">🖌️</span><b>Brush</b></button>
+            <button class="primary-tool" data-blank-tool="fill" type="button"><span aria-hidden="true">🪣</span><b>Fill</b></button>
+            <button class="primary-tool" data-blank-tool="shape" type="button"><span aria-hidden="true">⭐</span><b>Shapes</b></button>
+            <button class="primary-tool" data-blank-tool="stamp" type="button"><span aria-hidden="true">🐚</span><b>Stamp</b></button>
+            <button class="primary-tool" data-blank-tool="magic" type="button"><span aria-hidden="true">🌈</span><b>Magic</b></button>
+            <button class="primary-tool" data-blank-tool="eraser" type="button"><span class="eraser-chip" aria-hidden="true"><i></i></span><b>Eraser</b></button>
+          </div>
+          <div id="blankShapeTray" class="blank-choice-tray" aria-label="Choose a shape" hidden>
+            <button class="is-selected" data-shape="circle" type="button" aria-label="Circle">●</button><button data-shape="star" type="button" aria-label="Star">★</button><button data-shape="heart" type="button" aria-label="Heart">♥</button><button data-shape="square" type="button" aria-label="Square">■</button><button data-shape="triangle" type="button" aria-label="Triangle">▲</button>
+          </div>
+          <div id="blankStampPanel" class="blank-stamp-panel" hidden>
+            <div id="blankStampCategories" class="blank-category-tray" aria-label="Stamp categories"></div>
+            <div id="blankStampTray" class="blank-stamp-tray" aria-label="Choose a stamp"></div>
           </div>
         </div>
 
