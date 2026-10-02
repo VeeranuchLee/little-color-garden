@@ -112,13 +112,39 @@
     return channels.map((channel) => Number.parseInt(channel, 16));
   }
 
+  // The cell under a point, bounded by the line art exactly as the app-wide
+  // colorGardenFloodRegion bounds it, but without that helper's tiny-pocket
+  // filter: a thin "number beside the shape" cell can be narrower than the
+  // pocket rule and must still fill (owner, 2026-10-02: "Number beside the shape").
+  function floodCell(point) {
+    const width = canvas.width;
+    const height = canvas.height;
+    const startX = Math.max(0, Math.min(width - 1, Math.round(point.x)));
+    const startY = Math.max(0, Math.min(height - 1, Math.round(point.y)));
+    const visited = new Uint8Array(width * height);
+    const indices = [];
+    const stack = [startY * width + startX];
+    const isBoundary = (index) => {
+      const offset = index * 4;
+      return linePixels[offset + 3] > 90
+        && linePixels[offset] + linePixels[offset + 1] + linePixels[offset + 2] < 430;
+    };
+    while (stack.length) {
+      const index = stack.pop();
+      if (index < 0 || index >= visited.length || visited[index] || isBoundary(index)) continue;
+      visited[index] = 1;
+      indices.push(index);
+      const x = index % width;
+      if (x) stack.push(index - 1);
+      if (x < width - 1) stack.push(index + 1);
+      if (index >= width) stack.push(index - width);
+      if (index < width * (height - 1)) stack.push(index + width);
+    }
+    return indices;
+  }
+
   function paintArea(seedPoint, color) {
-    const indices = window.colorGardenFloodRegion(
-      linePixels,
-      canvas.width,
-      canvas.height,
-      seedPoint
-    );
+    const indices = floodCell(seedPoint);
     const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
     const [red, green, blue] = hexToRgb(color);
 
@@ -132,8 +158,14 @@
     context.putImageData(imageData, 0, 0);
   }
 
+  // A group cell (several thin parts of one object, e.g. all rays of one sun)
+  // lists its parts in "members"; one tap fills them all.
+  function seedsOf(region) {
+    return region.members ? region.members.map((member) => member.labelPoint) : [region.labelPoint];
+  }
+
   function paintRegion(region, color) {
-    paintArea(region.labelPoint, color);
+    seedsOf(region).forEach((seed) => paintArea(seed, color));
   }
 
   function labelFontSize(region) {
@@ -144,7 +176,45 @@
     return Math.max(minimumCanvasSize, Math.min(preferredCanvasSize, region.inscribedRadius * 1.4));
   }
 
+  // A thin cell's number sits in a round bubble beside the shape, with a short
+  // pointer touching it. Geometry comes from build-cbn.py (data/cbn.json), which
+  // keeps every bubble clear of lines, numerals and the other bubbles.
+  function drawBubble(region) {
+    const { x, y, r, font, tip } = region.bubble;
+    const distance = Math.max(1e-6, Math.hypot(tip.x - x, tip.y - y));
+    const startX = x + (tip.x - x) / distance * r;
+    const startY = y + (tip.y - y) / distance * r;
+    context.save();
+    context.strokeStyle = "#20202b";
+    context.fillStyle = "#20202b";
+    context.lineCap = "round";
+    context.lineWidth = 2.5;
+    context.beginPath();
+    context.moveTo(startX, startY);
+    context.lineTo(tip.x, tip.y);
+    context.stroke();
+    context.beginPath();
+    context.arc(tip.x, tip.y, 3, 0, Math.PI * 2);
+    context.fill();
+    context.beginPath();
+    context.arc(x, y, r, 0, Math.PI * 2);
+    context.fillStyle = "#fff";
+    context.fill();
+    context.lineWidth = 2.5;
+    context.stroke();
+    context.font = `900 ${font}px system-ui`;
+    context.textAlign = "center";
+    context.textBaseline = "middle";
+    context.fillStyle = "#20202b";
+    context.fillText(region.number, x, y + 1);
+    context.restore();
+  }
+
   function drawLabel(region) {
+    if (region.bubble) {
+      drawBubble(region);
+      return;
+    }
     const fontSize = labelFontSize(region);
     context.font = `900 ${fontSize}px system-ui`;
     context.textAlign = "center";
@@ -205,7 +275,14 @@
   function restoreProgress() {
     try {
       const saved = JSON.parse(localStorage.getItem(storageKey()) || "[]");
-      filledRegions = new Map(Array.isArray(saved) ? saved : []);
+      // Drop saved fills whose cell is gone or now wants another colour (cell
+      // ids can change when a picture's outlines are corrected).
+      const colourOf = new Map(picture.regions.map((region) => [
+        region.id,
+        (picture.palette.find((entry) => entry.number === region.number) || {}).hex
+      ]));
+      filledRegions = new Map((Array.isArray(saved) ? saved : [])
+        .filter(([id, color]) => colourOf.has(id) && colourOf.get(id) === color));
     } catch {
       filledRegions = new Map();
     }
@@ -246,21 +323,37 @@
     };
   }
 
+  function bubbleAtPoint(point, radius) {
+    let nearest = null;
+    let nearestDistance = Infinity;
+    picture.regions.forEach((region) => {
+      if (!region.bubble || filledRegions.has(region.id)) return;
+      const distance = Math.hypot(point.x - region.bubble.x, point.y - region.bubble.y);
+      if (distance <= Math.max(region.bubble.r + 3, radius) && distance < nearestDistance) {
+        nearest = region;
+        nearestDistance = distance;
+      }
+    });
+    return nearest;
+  }
+
   function regionAtPoint(point) {
-    const indices = window.colorGardenFloodRegion(
-      linePixels,
-      canvas.width,
-      canvas.height,
-      point
-    );
-    const regionPixels = new Set(indices);
+    // A bubble is drawn on top of whatever it sits on, so a tap on it is a tap
+    // on its thin cell -- checked before the cell under the finger.
+    const onBubble = bubbleAtPoint(point, 0);
+    if (onBubble) return onBubble;
+    const regionPixels = new Set(floodCell(point));
     const direct = picture.regions.find((region) => {
       if (filledRegions.has(region.id)) return false;
-      const labelIndex = Math.round(region.labelPoint.y) * canvas.width
-        + Math.round(region.labelPoint.x);
-      return regionPixels.has(labelIndex);
+      return seedsOf(region).some((seed) => regionPixels.has(
+        Math.round(seed.y) * canvas.width + Math.round(seed.x)
+      ));
     });
     if (direct) return direct;
+
+    // Near a bubble (48px target, like every other assist): its cell.
+    const nearBubble = bubbleAtPoint(point, 24 * canvas.width / Math.max(1, canvas.getBoundingClientRect().width));
+    if (nearBubble) return nearBubble;
 
     // A tap on a numeral stroke or boundary gets the same 48px assist as Mosaic.
     // Nearest label is the canonical seed for the region, so assistance cannot map
@@ -271,13 +364,15 @@
     let nearestSquared = radius * radius;
     picture.regions.forEach((region) => {
       if (filledRegions.has(region.id)) return;
-      const dx = point.x - region.labelPoint.x;
-      const dy = point.y - region.labelPoint.y;
-      const distanceSquared = dx * dx + dy * dy;
-      if (distanceSquared <= nearestSquared) {
-        nearest = region;
-        nearestSquared = distanceSquared;
-      }
+      seedsOf(region).forEach((seed) => {
+        const dx = point.x - seed.x;
+        const dy = point.y - seed.y;
+        const distanceSquared = dx * dx + dy * dy;
+        if (distanceSquared <= nearestSquared) {
+          nearest = region;
+          nearestSquared = distanceSquared;
+        }
+      });
     });
     return nearest;
   }

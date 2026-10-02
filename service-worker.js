@@ -13,7 +13,13 @@
 // v28 2026-09-28: merge cell-audit (v27) into blank-tools (v27) -- both touched
 //      service-worker precache list and voice entries; bumped above main for a clean
 //      cache that carries the cell-audit tap-assist and the blank-tools stamps/lines.
-const CACHE_NAME = "little-color-garden-v28";
+// v29 2026-10-02: Color by Number closed outlines -- the owl's branch tip, the
+//      butterfly's stem, the cupcake's inner flames and the snail's spiral band
+//      are now closed cells (bug found by the owner's daughter); the line art,
+//      finished cards and data/cbn.json changed under the same names. Same v29:
+//      "Number beside the shape" (owner) -- thin cells that were pre-painted are
+//      now numbered cells with a number bubble; cbn-mode.js draws and taps them.
+const CACHE_NAME = "little-color-garden-v29";
 const PAGE_IDS = [
   "solar-system",
   "space-kid",

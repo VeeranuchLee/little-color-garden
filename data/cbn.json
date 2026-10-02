@@ -310,29 +310,155 @@
           },
           "area": 12642,
           "inscribedRadius": 20
+        },
+        {
+          "id": "thin-1",
+          "number": 8,
+          "labelPoint": {
+            "x": 467,
+            "y": 103
+          },
+          "area": 1167,
+          "inscribedRadius": 10,
+          "members": [
+            {
+              "labelPoint": {
+                "x": 344,
+                "y": 66
+              },
+              "area": 575
+            },
+            {
+              "labelPoint": {
+                "x": 467,
+                "y": 103
+              },
+              "area": 592
+            }
+          ],
+          "bubble": {
+            "x": 460,
+            "y": 66,
+            "r": 17,
+            "font": 28,
+            "tip": {
+              "x": 464,
+              "y": 90
+            }
+          }
+        },
+        {
+          "id": "thin-2",
+          "number": 8,
+          "labelPoint": {
+            "x": 305,
+            "y": 366
+          },
+          "area": 2192,
+          "inscribedRadius": 11,
+          "members": [
+            {
+              "labelPoint": {
+                "x": 305,
+                "y": 366
+              },
+              "area": 1383
+            },
+            {
+              "labelPoint": {
+                "x": 349,
+                "y": 375
+              },
+              "area": 421
+            },
+            {
+              "labelPoint": {
+                "x": 321,
+                "y": 388
+              },
+              "area": 388
+            }
+          ],
+          "bubble": {
+            "x": 288,
+            "y": 446,
+            "r": 17,
+            "font": 28,
+            "tip": {
+              "x": 309,
+              "y": 433
+            }
+          }
+        },
+        {
+          "id": "thin-3",
+          "number": 7,
+          "labelPoint": {
+            "x": 253,
+            "y": 402
+          },
+          "area": 1165,
+          "inscribedRadius": 11,
+          "members": [
+            {
+              "labelPoint": {
+                "x": 253,
+                "y": 402
+              },
+              "area": 1095
+            },
+            {
+              "labelPoint": {
+                "x": 434,
+                "y": 429
+              },
+              "area": 70
+            }
+          ],
+          "bubble": {
+            "x": 216,
+            "y": 430,
+            "r": 17,
+            "font": 28,
+            "tip": {
+              "x": 221,
+              "y": 405
+            }
+          }
+        },
+        {
+          "id": "thin-4",
+          "number": 4,
+          "labelPoint": {
+            "x": 336,
+            "y": 685
+          },
+          "area": 2799,
+          "inscribedRadius": 11,
+          "members": [
+            {
+              "labelPoint": {
+                "x": 336,
+                "y": 685
+              },
+              "area": 2799
+            }
+          ],
+          "bubble": {
+            "x": 406,
+            "y": 572,
+            "r": 17,
+            "font": 28,
+            "tip": {
+              "x": 361,
+              "y": 580
+            }
+          }
         }
       ],
       "decor": [
         {
           "id": "decor-1",
-          "color": "#8D6E63",
-          "seedPoint": {
-            "x": 344,
-            "y": 66
-          },
-          "area": 575
-        },
-        {
-          "id": "decor-2",
-          "color": "#8D6E63",
-          "seedPoint": {
-            "x": 467,
-            "y": 103
-          },
-          "area": 592
-        },
-        {
-          "id": "decor-3",
           "color": "#FFFFFF",
           "seedPoint": {
             "x": 361,
@@ -341,7 +467,7 @@
           "area": 346
         },
         {
-          "id": "decor-4",
+          "id": "decor-2",
           "color": "#FFFFFF",
           "seedPoint": {
             "x": 348,
@@ -350,7 +476,7 @@
           "area": 35
         },
         {
-          "id": "decor-5",
+          "id": "decor-3",
           "color": "#FFFFFF",
           "seedPoint": {
             "x": 415,
@@ -359,7 +485,7 @@
           "area": 293
         },
         {
-          "id": "decor-6",
+          "id": "decor-4",
           "color": "#FFFFFF",
           "seedPoint": {
             "x": 402,
@@ -368,7 +494,7 @@
           "area": 30
         },
         {
-          "id": "decor-7",
+          "id": "decor-5",
           "color": "#E53935",
           "seedPoint": {
             "x": 202,
@@ -377,7 +503,7 @@
           "area": 2
         },
         {
-          "id": "decor-8",
+          "id": "decor-6",
           "color": "#FB8C00",
           "seedPoint": {
             "x": 245,
@@ -386,7 +512,7 @@
           "area": 3
         },
         {
-          "id": "decor-9",
+          "id": "decor-7",
           "color": "#1E88E5",
           "seedPoint": {
             "x": 305,
@@ -395,16 +521,7 @@
           "area": 1
         },
         {
-          "id": "decor-10",
-          "color": "#8D6E63",
-          "seedPoint": {
-            "x": 305,
-            "y": 366
-          },
-          "area": 1383
-        },
-        {
-          "id": "decor-11",
+          "id": "decor-8",
           "color": "#FFFFFF",
           "seedPoint": {
             "x": 368,
@@ -413,16 +530,7 @@
           "area": 490
         },
         {
-          "id": "decor-12",
-          "color": "#8D6E63",
-          "seedPoint": {
-            "x": 349,
-            "y": 375
-          },
-          "area": 421
-        },
-        {
-          "id": "decor-13",
+          "id": "decor-9",
           "color": "#FFFFFF",
           "seedPoint": {
             "x": 337,
@@ -431,25 +539,7 @@
           "area": 365
         },
         {
-          "id": "decor-14",
-          "color": "#EC407A",
-          "seedPoint": {
-            "x": 253,
-            "y": 402
-          },
-          "area": 1095
-        },
-        {
-          "id": "decor-15",
-          "color": "#8D6E63",
-          "seedPoint": {
-            "x": 321,
-            "y": 388
-          },
-          "area": 388
-        },
-        {
-          "id": "decor-16",
+          "id": "decor-10",
           "color": "#FFFFFF",
           "seedPoint": {
             "x": 313,
@@ -458,16 +548,7 @@
           "area": 16
         },
         {
-          "id": "decor-17",
-          "color": "#EC407A",
-          "seedPoint": {
-            "x": 434,
-            "y": 429
-          },
-          "area": 70
-        },
-        {
-          "id": "decor-18",
+          "id": "decor-11",
           "color": "#000000",
           "seedPoint": {
             "x": 356,
@@ -530,26 +611,6 @@
       "regions": [
         {
           "id": "region-1",
-          "number": 3,
-          "labelPoint": {
-            "x": 536,
-            "y": 83
-          },
-          "area": 3920,
-          "inscribedRadius": 23
-        },
-        {
-          "id": "region-2",
-          "number": 3,
-          "labelPoint": {
-            "x": 187,
-            "y": 84
-          },
-          "area": 3926,
-          "inscribedRadius": 23
-        },
-        {
-          "id": "region-3",
           "number": 1,
           "labelPoint": {
             "x": 351,
@@ -559,7 +620,7 @@
           "inscribedRadius": 37
         },
         {
-          "id": "region-4",
+          "id": "region-2",
           "number": 5,
           "labelPoint": {
             "x": 189,
@@ -569,7 +630,7 @@
           "inscribedRadius": 13
         },
         {
-          "id": "region-5",
+          "id": "region-3",
           "number": 2,
           "labelPoint": {
             "x": 516,
@@ -579,7 +640,7 @@
           "inscribedRadius": 14
         },
         {
-          "id": "region-6",
+          "id": "region-4",
           "number": 5,
           "labelPoint": {
             "x": 209,
@@ -589,7 +650,7 @@
           "inscribedRadius": 14
         },
         {
-          "id": "region-7",
+          "id": "region-5",
           "number": 7,
           "labelPoint": {
             "x": 369,
@@ -599,7 +660,7 @@
           "inscribedRadius": 41
         },
         {
-          "id": "region-8",
+          "id": "region-6",
           "number": 2,
           "labelPoint": {
             "x": 517,
@@ -609,7 +670,7 @@
           "inscribedRadius": 13
         },
         {
-          "id": "region-9",
+          "id": "region-7",
           "number": 3,
           "labelPoint": {
             "x": 276,
@@ -619,7 +680,7 @@
           "inscribedRadius": 13
         },
         {
-          "id": "region-10",
+          "id": "region-8",
           "number": 5,
           "labelPoint": {
             "x": 434,
@@ -629,7 +690,7 @@
           "inscribedRadius": 13
         },
         {
-          "id": "region-11",
+          "id": "region-9",
           "number": 7,
           "labelPoint": {
             "x": 424,
@@ -639,7 +700,7 @@
           "inscribedRadius": 45
         },
         {
-          "id": "region-12",
+          "id": "region-10",
           "number": 5,
           "labelPoint": {
             "x": 233,
@@ -649,7 +710,7 @@
           "inscribedRadius": 13
         },
         {
-          "id": "region-13",
+          "id": "region-11",
           "number": 4,
           "labelPoint": {
             "x": 355,
@@ -659,7 +720,7 @@
           "inscribedRadius": 14
         },
         {
-          "id": "region-14",
+          "id": "region-12",
           "number": 2,
           "labelPoint": {
             "x": 494,
@@ -669,7 +730,7 @@
           "inscribedRadius": 13
         },
         {
-          "id": "region-15",
+          "id": "region-13",
           "number": 8,
           "labelPoint": {
             "x": 276,
@@ -679,7 +740,7 @@
           "inscribedRadius": 22
         },
         {
-          "id": "region-16",
+          "id": "region-14",
           "number": 5,
           "labelPoint": {
             "x": 177,
@@ -689,7 +750,7 @@
           "inscribedRadius": 19
         },
         {
-          "id": "region-17",
+          "id": "region-15",
           "number": 6,
           "labelPoint": {
             "x": 543,
@@ -699,7 +760,7 @@
           "inscribedRadius": 19
         },
         {
-          "id": "region-18",
+          "id": "region-16",
           "number": 3,
           "labelPoint": {
             "x": 238,
@@ -709,7 +770,7 @@
           "inscribedRadius": 24
         },
         {
-          "id": "region-19",
+          "id": "region-17",
           "number": 7,
           "labelPoint": {
             "x": 487,
@@ -719,7 +780,7 @@
           "inscribedRadius": 22
         },
         {
-          "id": "region-20",
+          "id": "region-18",
           "number": 7,
           "labelPoint": {
             "x": 300,
@@ -729,7 +790,7 @@
           "inscribedRadius": 26
         },
         {
-          "id": "region-21",
+          "id": "region-19",
           "number": 2,
           "labelPoint": {
             "x": 424,
@@ -739,7 +800,7 @@
           "inscribedRadius": 25
         },
         {
-          "id": "region-22",
+          "id": "region-20",
           "number": 4,
           "labelPoint": {
             "x": 361,
@@ -747,20 +808,151 @@
           },
           "area": 9265,
           "inscribedRadius": 26
+        },
+        {
+          "id": "thin-1",
+          "number": 3,
+          "labelPoint": {
+            "x": 185,
+            "y": 52
+          },
+          "area": 8416,
+          "inscribedRadius": 11,
+          "members": [
+            {
+              "labelPoint": {
+                "x": 185,
+                "y": 52
+              },
+              "area": 2099
+            },
+            {
+              "labelPoint": {
+                "x": 536,
+                "y": 52
+              },
+              "area": 2092
+            },
+            {
+              "labelPoint": {
+                "x": 217,
+                "y": 179
+              },
+              "area": 1863
+            },
+            {
+              "labelPoint": {
+                "x": 524,
+                "y": 190
+              },
+              "area": 1912
+            },
+            {
+              "labelPoint": {
+                "x": 524,
+                "y": 265
+              },
+              "area": 450
+            }
+          ],
+          "bubble": {
+            "x": 580,
+            "y": 168,
+            "r": 17,
+            "font": 28,
+            "tip": {
+              "x": 553,
+              "y": 161
+            }
+          }
+        },
+        {
+          "id": "thin-2",
+          "number": 4,
+          "labelPoint": {
+            "x": 427,
+            "y": 58
+          },
+          "area": 1609,
+          "inscribedRadius": 7,
+          "members": [
+            {
+              "labelPoint": {
+                "x": 427,
+                "y": 58
+              },
+              "area": 1609
+            }
+          ],
+          "bubble": {
+            "x": 442,
+            "y": 20,
+            "r": 17,
+            "font": 28,
+            "tip": {
+              "x": 437,
+              "y": 47
+            }
+          }
+        },
+        {
+          "id": "thin-3",
+          "number": 2,
+          "labelPoint": {
+            "x": 187,
+            "y": 97
+          },
+          "area": 1768,
+          "inscribedRadius": 10,
+          "members": [
+            {
+              "labelPoint": {
+                "x": 187,
+                "y": 97
+              },
+              "area": 890
+            },
+            {
+              "labelPoint": {
+                "x": 535,
+                "y": 97
+              },
+              "area": 878
+            }
+          ],
+          "bubble": {
+            "x": 144,
+            "y": 138,
+            "r": 17,
+            "font": 28,
+            "tip": {
+              "x": 181,
+              "y": 122
+            }
+          }
         }
       ],
       "decor": [
         {
           "id": "decor-1",
-          "color": "#43A047",
+          "color": "#FDD835",
           "seedPoint": {
-            "x": 427,
-            "y": 58
+            "x": 170,
+            "y": 119
           },
-          "area": 1609
+          "area": 1
         },
         {
           "id": "decor-2",
+          "color": "#000000",
+          "seedPoint": {
+            "x": 553,
+            "y": 119
+          },
+          "area": 1
+        },
+        {
+          "id": "decor-3",
           "color": "#FFFFFF",
           "seedPoint": {
             "x": 200,
@@ -769,40 +961,13 @@
           "area": 2
         },
         {
-          "id": "decor-3",
+          "id": "decor-4",
           "color": "#FFFFFF",
           "seedPoint": {
             "x": 522,
             "y": 128
           },
           "area": 3
-        },
-        {
-          "id": "decor-4",
-          "color": "#FDD835",
-          "seedPoint": {
-            "x": 217,
-            "y": 179
-          },
-          "area": 1863
-        },
-        {
-          "id": "decor-5",
-          "color": "#FDD835",
-          "seedPoint": {
-            "x": 524,
-            "y": 190
-          },
-          "area": 1912
-        },
-        {
-          "id": "decor-6",
-          "color": "#FDD835",
-          "seedPoint": {
-            "x": 524,
-            "y": 265
-          },
-          "area": 450
         }
       ]
     },
@@ -1204,116 +1369,182 @@
           },
           "area": 48261,
           "inscribedRadius": 47
+        },
+        {
+          "id": "thin-1",
+          "number": 2,
+          "labelPoint": {
+            "x": 468,
+            "y": 60
+          },
+          "area": 4538,
+          "inscribedRadius": 7,
+          "members": [
+            {
+              "labelPoint": {
+                "x": 556,
+                "y": 28
+              },
+              "area": 559
+            },
+            {
+              "labelPoint": {
+                "x": 468,
+                "y": 60
+              },
+              "area": 587
+            },
+            {
+              "labelPoint": {
+                "x": 638,
+                "y": 67
+              },
+              "area": 582
+            },
+            {
+              "labelPoint": {
+                "x": 438,
+                "y": 143
+              },
+              "area": 585
+            },
+            {
+              "labelPoint": {
+                "x": 651,
+                "y": 143
+              },
+              "area": 584
+            },
+            {
+              "labelPoint": {
+                "x": 638,
+                "y": 214
+              },
+              "area": 553
+            },
+            {
+              "labelPoint": {
+                "x": 467,
+                "y": 220
+              },
+              "area": 555
+            },
+            {
+              "labelPoint": {
+                "x": 556,
+                "y": 256
+              },
+              "area": 533
+            }
+          ],
+          "bubble": {
+            "x": 406,
+            "y": 128,
+            "r": 17,
+            "font": 28,
+            "tip": {
+              "x": 428,
+              "y": 140
+            }
+          }
+        },
+        {
+          "id": "thin-2",
+          "number": 8,
+          "labelPoint": {
+            "x": 555,
+            "y": 293
+          },
+          "area": 1702,
+          "inscribedRadius": 11,
+          "members": [
+            {
+              "labelPoint": {
+                "x": 555,
+                "y": 293
+              },
+              "area": 1702
+            }
+          ],
+          "bubble": {
+            "x": 646,
+            "y": 304,
+            "r": 17,
+            "font": 28,
+            "tip": {
+              "x": 620,
+              "y": 301
+            }
+          }
+        },
+        {
+          "id": "thin-3",
+          "number": 4,
+          "labelPoint": {
+            "x": 209,
+            "y": 439
+          },
+          "area": 482,
+          "inscribedRadius": 8,
+          "members": [
+            {
+              "labelPoint": {
+                "x": 209,
+                "y": 439
+              },
+              "area": 482
+            }
+          ],
+          "bubble": {
+            "x": 174,
+            "y": 434,
+            "r": 17,
+            "font": 28,
+            "tip": {
+              "x": 201,
+              "y": 436
+            }
+          }
+        },
+        {
+          "id": "thin-4",
+          "number": 3,
+          "labelPoint": {
+            "x": 457,
+            "y": 570
+          },
+          "area": 203,
+          "inscribedRadius": 6,
+          "members": [
+            {
+              "labelPoint": {
+                "x": 457,
+                "y": 570
+              },
+              "area": 203
+            }
+          ],
+          "bubble": {
+            "x": 452,
+            "y": 536,
+            "r": 17,
+            "font": 28,
+            "tip": {
+              "x": 454,
+              "y": 562
+            }
+          }
         }
       ],
       "decor": [
         {
           "id": "decor-1",
-          "color": "#FB8C00",
-          "seedPoint": {
-            "x": 556,
-            "y": 28
-          },
-          "area": 559
-        },
-        {
-          "id": "decor-2",
-          "color": "#FB8C00",
-          "seedPoint": {
-            "x": 638,
-            "y": 67
-          },
-          "area": 582
-        },
-        {
-          "id": "decor-3",
-          "color": "#FB8C00",
-          "seedPoint": {
-            "x": 468,
-            "y": 60
-          },
-          "area": 587
-        },
-        {
-          "id": "decor-4",
-          "color": "#FB8C00",
-          "seedPoint": {
-            "x": 438,
-            "y": 143
-          },
-          "area": 585
-        },
-        {
-          "id": "decor-5",
-          "color": "#FB8C00",
-          "seedPoint": {
-            "x": 651,
-            "y": 143
-          },
-          "area": 584
-        },
-        {
-          "id": "decor-6",
-          "color": "#FB8C00",
-          "seedPoint": {
-            "x": 467,
-            "y": 220
-          },
-          "area": 555
-        },
-        {
-          "id": "decor-7",
-          "color": "#FB8C00",
-          "seedPoint": {
-            "x": 638,
-            "y": 214
-          },
-          "area": 553
-        },
-        {
-          "id": "decor-8",
-          "color": "#FB8C00",
-          "seedPoint": {
-            "x": 556,
-            "y": 256
-          },
-          "area": 533
-        },
-        {
-          "id": "decor-9",
-          "color": "#8D6E63",
-          "seedPoint": {
-            "x": 555,
-            "y": 293
-          },
-          "area": 1702
-        },
-        {
-          "id": "decor-10",
-          "color": "#43A047",
-          "seedPoint": {
-            "x": 209,
-            "y": 439
-          },
-          "area": 482
-        },
-        {
-          "id": "decor-11",
           "color": "#FFFFFF",
           "seedPoint": {
             "x": 216,
             "y": 477
           },
           "area": 4087
-        },
-        {
-          "id": "decor-12",
-          "color": "#FDD835",
-          "seedPoint": {
-            "x": 457,
-            "y": 570
-          },
-          "area": 203
         }
       ]
     },
@@ -1530,6 +1761,16 @@
         },
         {
           "id": "region-17",
+          "number": 8,
+          "labelPoint": {
+            "x": 32,
+            "y": 556
+          },
+          "area": 1607,
+          "inscribedRadius": 13
+        },
+        {
+          "id": "region-18",
           "number": 3,
           "labelPoint": {
             "x": 120,
@@ -1539,7 +1780,7 @@
           "inscribedRadius": 18
         },
         {
-          "id": "region-18",
+          "id": "region-19",
           "number": 3,
           "labelPoint": {
             "x": 585,
@@ -1549,7 +1790,7 @@
           "inscribedRadius": 20
         },
         {
-          "id": "region-19",
+          "id": "region-20",
           "number": 8,
           "labelPoint": {
             "x": 470,
@@ -1559,7 +1800,7 @@
           "inscribedRadius": 20
         },
         {
-          "id": "region-20",
+          "id": "region-21",
           "number": 4,
           "labelPoint": {
             "x": 654,
@@ -1569,7 +1810,7 @@
           "inscribedRadius": 15
         },
         {
-          "id": "region-21",
+          "id": "region-22",
           "number": 4,
           "labelPoint": {
             "x": 186,
@@ -1579,7 +1820,7 @@
           "inscribedRadius": 14
         },
         {
-          "id": "region-22",
+          "id": "region-23",
           "number": 4,
           "labelPoint": {
             "x": 102,
@@ -1587,6 +1828,128 @@
           },
           "area": 4473,
           "inscribedRadius": 14
+        },
+        {
+          "id": "thin-1",
+          "number": 8,
+          "labelPoint": {
+            "x": 217,
+            "y": 366
+          },
+          "area": 2742,
+          "inscribedRadius": 10,
+          "members": [
+            {
+              "labelPoint": {
+                "x": 217,
+                "y": 366
+              },
+              "area": 1026
+            },
+            {
+              "labelPoint": {
+                "x": 446,
+                "y": 487
+              },
+              "area": 974
+            },
+            {
+              "labelPoint": {
+                "x": 207,
+                "y": 490
+              },
+              "area": 742
+            }
+          ],
+          "bubble": {
+            "x": 248,
+            "y": 336,
+            "r": 17,
+            "font": 28,
+            "tip": {
+              "x": 241,
+              "y": 361
+            }
+          }
+        },
+        {
+          "id": "thin-2",
+          "number": 5,
+          "labelPoint": {
+            "x": 457,
+            "y": 432
+          },
+          "area": 2331,
+          "inscribedRadius": 11,
+          "members": [
+            {
+              "labelPoint": {
+                "x": 457,
+                "y": 432
+              },
+              "area": 2331
+            }
+          ],
+          "bubble": {
+            "x": 482,
+            "y": 358,
+            "r": 17,
+            "font": 28,
+            "tip": {
+              "x": 457,
+              "y": 365
+            }
+          }
+        },
+        {
+          "id": "thin-3",
+          "number": 3,
+          "labelPoint": {
+            "x": 353,
+            "y": 543
+          },
+          "area": 2862,
+          "inscribedRadius": 9,
+          "members": [
+            {
+              "labelPoint": {
+                "x": 239,
+                "y": 533
+              },
+              "area": 649
+            },
+            {
+              "labelPoint": {
+                "x": 406,
+                "y": 537
+              },
+              "area": 675
+            },
+            {
+              "labelPoint": {
+                "x": 292,
+                "y": 542
+              },
+              "area": 767
+            },
+            {
+              "labelPoint": {
+                "x": 353,
+                "y": 543
+              },
+              "area": 771
+            }
+          ],
+          "bubble": {
+            "x": 322,
+            "y": 508,
+            "r": 17,
+            "font": 28,
+            "tip": {
+              "x": 299,
+              "y": 521
+            }
+          }
         }
       ],
       "decor": [
@@ -1610,42 +1973,6 @@
         },
         {
           "id": "decor-3",
-          "color": "#8D6E63",
-          "seedPoint": {
-            "x": 217,
-            "y": 366
-          },
-          "area": 1026
-        },
-        {
-          "id": "decor-4",
-          "color": "#1E88E5",
-          "seedPoint": {
-            "x": 457,
-            "y": 432
-          },
-          "area": 2331
-        },
-        {
-          "id": "decor-5",
-          "color": "#8D6E63",
-          "seedPoint": {
-            "x": 446,
-            "y": 487
-          },
-          "area": 974
-        },
-        {
-          "id": "decor-6",
-          "color": "#8D6E63",
-          "seedPoint": {
-            "x": 207,
-            "y": 490
-          },
-          "area": 742
-        },
-        {
-          "id": "decor-7",
           "color": "#FFFFFF",
           "seedPoint": {
             "x": 206,
@@ -1654,43 +1981,7 @@
           "area": 320
         },
         {
-          "id": "decor-8",
-          "color": "#FDD835",
-          "seedPoint": {
-            "x": 292,
-            "y": 542
-          },
-          "area": 767
-        },
-        {
-          "id": "decor-9",
-          "color": "#FDD835",
-          "seedPoint": {
-            "x": 353,
-            "y": 543
-          },
-          "area": 771
-        },
-        {
-          "id": "decor-10",
-          "color": "#FDD835",
-          "seedPoint": {
-            "x": 239,
-            "y": 533
-          },
-          "area": 649
-        },
-        {
-          "id": "decor-11",
-          "color": "#FDD835",
-          "seedPoint": {
-            "x": 406,
-            "y": 537
-          },
-          "area": 675
-        },
-        {
-          "id": "decor-12",
+          "id": "decor-4",
           "color": "#43A047",
           "seedPoint": {
             "x": 662,
@@ -1699,7 +1990,7 @@
           "area": 1
         },
         {
-          "id": "decor-13",
+          "id": "decor-5",
           "color": "#000000",
           "seedPoint": {
             "x": 183,
@@ -1708,7 +1999,7 @@
           "area": 1
         },
         {
-          "id": "decor-14",
+          "id": "decor-6",
           "color": "#000000",
           "seedPoint": {
             "x": 609,
@@ -1928,6 +2219,42 @@
           },
           "area": 9900,
           "inscribedRadius": 38
+        },
+        {
+          "id": "thin-1",
+          "number": 3,
+          "labelPoint": {
+            "x": 464,
+            "y": 213
+          },
+          "area": 6110,
+          "inscribedRadius": 6,
+          "members": [
+            {
+              "labelPoint": {
+                "x": 464,
+                "y": 213
+              },
+              "area": 3161
+            },
+            {
+              "labelPoint": {
+                "x": 464,
+                "y": 331
+              },
+              "area": 2949
+            }
+          ],
+          "bubble": {
+            "x": 534,
+            "y": 342,
+            "r": 17,
+            "font": 28,
+            "tip": {
+              "x": 511,
+              "y": 354
+            }
+          }
         }
       ],
       "decor": [
@@ -1942,30 +2269,12 @@
         },
         {
           "id": "decor-2",
-          "color": "#FDD835",
-          "seedPoint": {
-            "x": 464,
-            "y": 213
-          },
-          "area": 3161
-        },
-        {
-          "id": "decor-3",
           "color": "#FFFFFF",
           "seedPoint": {
             "x": 66,
             "y": 226
           },
           "area": 208
-        },
-        {
-          "id": "decor-4",
-          "color": "#FDD835",
-          "seedPoint": {
-            "x": 464,
-            "y": 331
-          },
-          "area": 2949
         }
       ]
     },
@@ -2089,56 +2398,125 @@
           },
           "area": 41032,
           "inscribedRadius": 29
+        },
+        {
+          "id": "thin-1",
+          "number": 3,
+          "labelPoint": {
+            "x": 79,
+            "y": 82
+          },
+          "area": 6614,
+          "inscribedRadius": 10,
+          "members": [
+            {
+              "labelPoint": {
+                "x": 156,
+                "y": 57
+              },
+              "area": 834
+            },
+            {
+              "labelPoint": {
+                "x": 79,
+                "y": 82
+              },
+              "area": 866
+            },
+            {
+              "labelPoint": {
+                "x": 235,
+                "y": 82
+              },
+              "area": 860
+            },
+            {
+              "labelPoint": {
+                "x": 52,
+                "y": 153
+              },
+              "area": 833
+            },
+            {
+              "labelPoint": {
+                "x": 261,
+                "y": 153
+              },
+              "area": 836
+            },
+            {
+              "labelPoint": {
+                "x": 72,
+                "y": 227
+              },
+              "area": 808
+            },
+            {
+              "labelPoint": {
+                "x": 239,
+                "y": 228
+              },
+              "area": 774
+            },
+            {
+              "labelPoint": {
+                "x": 155,
+                "y": 263
+              },
+              "area": 803
+            }
+          ],
+          "bubble": {
+            "x": 110,
+            "y": 56,
+            "r": 17,
+            "font": 28,
+            "tip": {
+              "x": 98,
+              "y": 79
+            }
+          }
+        },
+        {
+          "id": "thin-2",
+          "number": 8,
+          "labelPoint": {
+            "x": 436,
+            "y": 366
+          },
+          "area": 5156,
+          "inscribedRadius": 11,
+          "members": [
+            {
+              "labelPoint": {
+                "x": 434,
+                "y": 70
+              },
+              "area": 706
+            },
+            {
+              "labelPoint": {
+                "x": 436,
+                "y": 366
+              },
+              "area": 4450
+            }
+          ],
+          "bubble": {
+            "x": 454,
+            "y": 34,
+            "r": 17,
+            "font": 28,
+            "tip": {
+              "x": 442,
+              "y": 57
+            }
+          }
         }
       ],
       "decor": [
         {
           "id": "decor-1",
-          "color": "#FDD835",
-          "seedPoint": {
-            "x": 156,
-            "y": 57
-          },
-          "area": 834
-        },
-        {
-          "id": "decor-2",
-          "color": "#8D6E63",
-          "seedPoint": {
-            "x": 434,
-            "y": 70
-          },
-          "area": 706
-        },
-        {
-          "id": "decor-3",
-          "color": "#FDD835",
-          "seedPoint": {
-            "x": 79,
-            "y": 82
-          },
-          "area": 866
-        },
-        {
-          "id": "decor-4",
-          "color": "#FDD835",
-          "seedPoint": {
-            "x": 235,
-            "y": 82
-          },
-          "area": 860
-        },
-        {
-          "id": "decor-5",
-          "color": "#8D6E63",
-          "seedPoint": {
-            "x": 436,
-            "y": 366
-          },
-          "area": 4450
-        },
-        {
-          "id": "decor-6",
           "color": "#FFFFFF",
           "seedPoint": {
             "x": 416,
@@ -2147,58 +2525,13 @@
           "area": 1923
         },
         {
-          "id": "decor-7",
-          "color": "#FDD835",
-          "seedPoint": {
-            "x": 52,
-            "y": 153
-          },
-          "area": 833
-        },
-        {
-          "id": "decor-8",
-          "color": "#FDD835",
-          "seedPoint": {
-            "x": 261,
-            "y": 153
-          },
-          "area": 836
-        },
-        {
-          "id": "decor-9",
-          "color": "#FDD835",
-          "seedPoint": {
-            "x": 72,
-            "y": 227
-          },
-          "area": 808
-        },
-        {
-          "id": "decor-10",
-          "color": "#FDD835",
-          "seedPoint": {
-            "x": 239,
-            "y": 228
-          },
-          "area": 774
-        },
-        {
-          "id": "decor-11",
+          "id": "decor-2",
           "color": "#000000",
           "seedPoint": {
             "x": 46,
             "y": 250
           },
           "area": 1
-        },
-        {
-          "id": "decor-12",
-          "color": "#FDD835",
-          "seedPoint": {
-            "x": 155,
-            "y": 263
-          },
-          "area": 803
         }
       ]
     },
@@ -2222,6 +2555,11 @@
           "hex": "#FB8C00"
         },
         {
+          "number": 3,
+          "name": "yellow",
+          "hex": "#FDD835"
+        },
+        {
           "number": 4,
           "name": "green",
           "hex": "#43A047"
@@ -2235,6 +2573,11 @@
           "number": 6,
           "name": "purple",
           "hex": "#8E24AA"
+        },
+        {
+          "number": 7,
+          "name": "pink",
+          "hex": "#EC407A"
         },
         {
           "number": 8,
@@ -2290,7 +2633,7 @@
             "x": 209,
             "y": 253
           },
-          "area": 19861,
+          "area": 12068,
           "inscribedRadius": 26
         },
         {
@@ -2305,6 +2648,16 @@
         },
         {
           "id": "region-7",
+          "number": 3,
+          "labelPoint": {
+            "x": 182,
+            "y": 368
+          },
+          "area": 7455,
+          "inscribedRadius": 18
+        },
+        {
+          "id": "region-8",
           "number": 1,
           "labelPoint": {
             "x": 199,
@@ -2314,17 +2667,17 @@
           "inscribedRadius": 34
         },
         {
-          "id": "region-8",
+          "id": "region-9",
           "number": 1,
           "labelPoint": {
-            "x": 86,
-            "y": 369
+            "x": 85,
+            "y": 367
           },
-          "area": 9121,
+          "area": 9111,
           "inscribedRadius": 28
         },
         {
-          "id": "region-9",
+          "id": "region-10",
           "number": 4,
           "labelPoint": {
             "x": 645,
@@ -2334,7 +2687,7 @@
           "inscribedRadius": 16
         },
         {
-          "id": "region-10",
+          "id": "region-11",
           "number": 4,
           "labelPoint": {
             "x": 468,
@@ -2344,7 +2697,7 @@
           "inscribedRadius": 24
         },
         {
-          "id": "region-11",
+          "id": "region-12",
           "number": 4,
           "labelPoint": {
             "x": 561,
@@ -2354,7 +2707,7 @@
           "inscribedRadius": 23
         },
         {
-          "id": "region-12",
+          "id": "region-13",
           "number": 4,
           "labelPoint": {
             "x": 79,
@@ -2364,7 +2717,7 @@
           "inscribedRadius": 23
         },
         {
-          "id": "region-13",
+          "id": "region-14",
           "number": 4,
           "labelPoint": {
             "x": 156,
@@ -2374,7 +2727,7 @@
           "inscribedRadius": 29
         },
         {
-          "id": "region-14",
+          "id": "region-15",
           "number": 4,
           "labelPoint": {
             "x": 290,
@@ -2384,7 +2737,7 @@
           "inscribedRadius": 36
         },
         {
-          "id": "region-15",
+          "id": "region-16",
           "number": 4,
           "labelPoint": {
             "x": 427,
@@ -2392,6 +2745,93 @@
           },
           "area": 17908,
           "inscribedRadius": 37
+        },
+        {
+          "id": "thin-1",
+          "number": 7,
+          "labelPoint": {
+            "x": 462,
+            "y": 317
+          },
+          "area": 343,
+          "inscribedRadius": 6,
+          "members": [
+            {
+              "labelPoint": {
+                "x": 462,
+                "y": 317
+              },
+              "area": 343
+            }
+          ],
+          "bubble": {
+            "x": 430,
+            "y": 324,
+            "r": 17,
+            "font": 28,
+            "tip": {
+              "x": 453,
+              "y": 316
+            }
+          }
+        },
+        {
+          "id": "thin-2",
+          "number": 4,
+          "labelPoint": {
+            "x": 542,
+            "y": 452
+          },
+          "area": 1046,
+          "inscribedRadius": 9,
+          "members": [
+            {
+              "labelPoint": {
+                "x": 542,
+                "y": 452
+              },
+              "area": 1046
+            }
+          ],
+          "bubble": {
+            "x": 496,
+            "y": 422,
+            "r": 17,
+            "font": 28,
+            "tip": {
+              "x": 523,
+              "y": 430
+            }
+          }
+        },
+        {
+          "id": "thin-3",
+          "number": 4,
+          "labelPoint": {
+            "x": 404,
+            "y": 501
+          },
+          "area": 211,
+          "inscribedRadius": 4,
+          "members": [
+            {
+              "labelPoint": {
+                "x": 404,
+                "y": 501
+              },
+              "area": 211
+            }
+          ],
+          "bubble": {
+            "x": 384,
+            "y": 474,
+            "r": 17,
+            "font": 28,
+            "tip": {
+              "x": 395,
+              "y": 498
+            }
+          }
         }
       ],
       "decor": [
@@ -2442,15 +2882,6 @@
         },
         {
           "id": "decor-6",
-          "color": "#EC407A",
-          "seedPoint": {
-            "x": 462,
-            "y": 317
-          },
-          "area": 343
-        },
-        {
-          "id": "decor-7",
           "color": "#FFFFFF",
           "seedPoint": {
             "x": 537,
@@ -2459,7 +2890,7 @@
           "area": 1865
         },
         {
-          "id": "decor-8",
+          "id": "decor-7",
           "color": "#FFFFFF",
           "seedPoint": {
             "x": 677,
@@ -2468,7 +2899,7 @@
           "area": 1815
         },
         {
-          "id": "decor-9",
+          "id": "decor-8",
           "color": "#FFFFFF",
           "seedPoint": {
             "x": 611,
@@ -2477,31 +2908,13 @@
           "area": 7090
         },
         {
-          "id": "decor-10",
-          "color": "#43A047",
-          "seedPoint": {
-            "x": 542,
-            "y": 452
-          },
-          "area": 1046
-        },
-        {
-          "id": "decor-11",
+          "id": "decor-9",
           "color": "#43A047",
           "seedPoint": {
             "x": 481,
             "y": 447
           },
           "area": 1
-        },
-        {
-          "id": "decor-12",
-          "color": "#43A047",
-          "seedPoint": {
-            "x": 404,
-            "y": 501
-          },
-          "area": 211
         }
       ]
     }
