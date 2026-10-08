@@ -9,7 +9,7 @@
 //      24px-radius tap-assist for Mosaic and Color by Number); see
 //      coloring-app/CELL-AUDIT-SPEC.md and qa/2026-09-28-cell-audit/.
 // v27 2026-09-28: Blank Page tool expansion -- Fill/Shapes/Stamp/Magic/Undo/Redo
-//      and a safe Clear, plus the 40 themed stamp images under assets/blank-stamps/.
+//      and a safe Clear, plus the themed sticker images under assets/blank-stamps/.
 // v28 2026-09-28: merge cell-audit (v27) into blank-tools (v27) -- both touched
 //      service-worker precache list and voice entries; bumped above main for a clean
 //      cache that carries the cell-audit tap-assist and the blank-tools stamps/lines.
@@ -19,7 +19,13 @@
 //      finished cards and data/cbn.json changed under the same names. Same v29:
 //      "Number beside the shape" (owner) -- thin cells that were pre-painted are
 //      now numbered cells with a number bubble; cbn-mode.js draws and taps them.
-const CACHE_NAME = "little-color-garden-v29";
+// v30 2026-10-05: Stamping's plant library grows by 20 silhouette-distinct
+//      nature stamps, with picture-first category tabs for the 44-stamp tray.
+//      Same v30: Blank Page stickers stay draggable, resize (corner handle + pinch,
+//      0.4x-3x), delete, and the picker collapses after a choice.
+//      Same v30 candidate: 60 more Blank Page stickers and 20 Stamping stamps;
+//      this extends the already-armed candidate without advancing the cache name.
+const CACHE_NAME = "little-color-garden-v30";
 const PAGE_IDS = [
   "solar-system",
   "space-kid",
@@ -234,15 +240,28 @@ const APP_FILES = [
   "./data/stamps.json",
   ...[
     "apple", "bee", "bird", "bunny", "butterfly", "cat", "cloud", "daisy",
-    "dog", "fish", "heart", "ladybug", "moon", "mushroom", "rainbow", "rose",
-    "snail", "star", "strawberry", "sun", "sunflower", "tree", "tulip", "turtle"
+    "banana-plant", "berry-shrub", "cactus", "clover-groundcover", "dog", "fern",
+    "fish", "flower-groundcover", "flowering-bush", "flowering-vine", "grass-tuft",
+    "grass-wide", "heart", "ivy-trail", "ladybug", "leafy-plant", "monstera", "moon",
+    "mushroom", "palm-tree", "pine-tree", "rainbow", "reeds", "rose", "round-bush",
+    "sapling", "snail", "star", "strawberry", "succulent", "sun", "sunflower", "tree",
+    "tulip", "turtle", "willow-tree",
+    "weather-sun", "weather-cloud", "weather-rain-cloud", "weather-rainbow",
+    "weather-snowflake", "weather-lightning", "weather-moon", "weather-star",
+    "weather-wind-swirl", "weather-umbrella", "garden-ladybird", "garden-bee",
+    "garden-butterfly", "garden-snail", "garden-caterpillar", "garden-dragonfly",
+    "garden-ant", "garden-beetle", "garden-worm", "garden-spider"
   ].map((name) => `./assets/stamps/stamp-${name}.webp`),
   ...["garden", "sea", "sky"].map((name) => `./assets/scenes/scene-${name}.webp`),
   ...Object.entries({
-    space: ["ringed-planet", "smiling-star", "rocket", "crescent-moon", "blue-planet", "comet", "astronaut-helmet", "ufo", "sun", "constellation"],
-    princess: ["crown", "wand", "glass-slipper", "gown", "heart-tiara", "carriage", "royal-kitten", "rose-bouquet", "gem-heart", "mirror"],
-    mermaid: ["tail", "seashell", "pearl-oyster", "seahorse", "coral", "starfish", "treasure-chest", "dolphin", "tropical-fish", "sea-crown"],
-    castle: ["rainbow-castle", "turret", "magic-door", "magic-key", "crystal-ball", "dragon", "unicorn", "potion", "spell-book", "crystal"]
+    space: ["ringed-planet", "smiling-star", "rocket", "crescent-moon", "blue-planet", "comet", "astronaut-helmet", "ufo", "sun", "constellation", "satellite", "telescope", "galaxy", "astronaut-boot", "lunar-rover"],
+    princess: ["crown", "wand", "glass-slipper", "gown", "heart-tiara", "carriage", "royal-kitten", "rose-bouquet", "gem-heart", "mirror", "sceptre", "pearl-necklace", "hand-fan", "royal-pony", "teacup"],
+    mermaid: ["tail", "seashell", "pearl-oyster", "seahorse", "coral", "starfish", "treasure-chest", "dolphin", "tropical-fish", "sea-crown", "trident", "hair-comb", "harp", "kelp", "anchor"],
+    castle: ["rainbow-castle", "turret", "magic-door", "magic-key", "crystal-ball", "dragon", "unicorn", "potion", "spell-book", "crystal", "wizard-hat", "cauldron", "broom", "shield", "lantern"],
+    animals: ["cat", "puppy", "bunny", "panda", "fox", "owl", "hamster", "turtle", "duck", "koala"],
+    ocean: ["fish", "octopus", "whale", "starfish", "shell", "crab", "seahorse", "dolphin", "jellyfish", "coral"],
+    food: ["cupcake", "ice-cream", "donut", "strawberry", "lollipop", "cookie", "cake-slice", "watermelon", "cherries", "candy"],
+    vehicles: ["car", "bus", "train", "plane", "boat", "bicycle", "fire-truck", "tractor", "hot-air-balloon", "scooter"]
   }).flatMap(([theme, names]) => names.map((name) => `./assets/blank-stamps/${theme}-${name}.webp`)),
   ...["landscape", "portrait"].map((name) => `./assets/menu/menu-bg-${name}.webp`),
   ...["pixel", "coloring", "mosaic", "cbn", "stamping"].map((name) => `./assets/menu/icon-${name}.webp`),

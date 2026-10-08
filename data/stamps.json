@@ -8,9 +8,23 @@
       "height": 384
     },
     {
+      "id": "stamp-banana-plant",
+      "title": "Banana Plant",
+      "file": "assets/stamps/stamp-banana-plant.webp",
+      "width": 384,
+      "height": 368
+    },
+    {
       "id": "stamp-bee",
       "title": "Bee",
       "file": "assets/stamps/stamp-bee.webp",
+      "width": 384,
+      "height": 371
+    },
+    {
+      "id": "stamp-berry-shrub",
+      "title": "Berry Shrub",
+      "file": "assets/stamps/stamp-berry-shrub.webp",
       "width": 384,
       "height": 371
     },
@@ -36,6 +50,13 @@
       "height": 329
     },
     {
+      "id": "stamp-cactus",
+      "title": "Cactus",
+      "file": "assets/stamps/stamp-cactus.webp",
+      "width": 362,
+      "height": 384
+    },
+    {
       "id": "stamp-cat",
       "title": "Cat",
       "file": "assets/stamps/stamp-cat.webp",
@@ -48,6 +69,13 @@
       "file": "assets/stamps/stamp-cloud.webp",
       "width": 384,
       "height": 267
+    },
+    {
+      "id": "stamp-clover-groundcover",
+      "title": "Clover Ground Cover",
+      "file": "assets/stamps/stamp-clover-groundcover.webp",
+      "width": 384,
+      "height": 117
     },
     {
       "id": "stamp-daisy",
@@ -64,11 +92,53 @@
       "height": 384
     },
     {
+      "id": "stamp-fern",
+      "title": "Fern",
+      "file": "assets/stamps/stamp-fern.webp",
+      "width": 384,
+      "height": 324
+    },
+    {
       "id": "stamp-fish",
       "title": "Fish",
       "file": "assets/stamps/stamp-fish.webp",
       "width": 384,
       "height": 321
+    },
+    {
+      "id": "stamp-flower-groundcover",
+      "title": "Flower Ground Cover",
+      "file": "assets/stamps/stamp-flower-groundcover.webp",
+      "width": 384,
+      "height": 120
+    },
+    {
+      "id": "stamp-flowering-bush",
+      "title": "Flowering Bush",
+      "file": "assets/stamps/stamp-flowering-bush.webp",
+      "width": 384,
+      "height": 326
+    },
+    {
+      "id": "stamp-flowering-vine",
+      "title": "Flowering Vine",
+      "file": "assets/stamps/stamp-flowering-vine.webp",
+      "width": 182,
+      "height": 384
+    },
+    {
+      "id": "stamp-grass-tuft",
+      "title": "Grass Tuft",
+      "file": "assets/stamps/stamp-grass-tuft.webp",
+      "width": 384,
+      "height": 299
+    },
+    {
+      "id": "stamp-grass-wide",
+      "title": "Wide Grass",
+      "file": "assets/stamps/stamp-grass-wide.webp",
+      "width": 384,
+      "height": 126
     },
     {
       "id": "stamp-heart",
@@ -78,11 +148,32 @@
       "height": 320
     },
     {
+      "id": "stamp-ivy-trail",
+      "title": "Ivy Trail",
+      "file": "assets/stamps/stamp-ivy-trail.webp",
+      "width": 384,
+      "height": 118
+    },
+    {
       "id": "stamp-ladybug",
       "title": "Ladybug",
       "file": "assets/stamps/stamp-ladybug.webp",
       "width": 384,
       "height": 349
+    },
+    {
+      "id": "stamp-leafy-plant",
+      "title": "Leafy Plant",
+      "file": "assets/stamps/stamp-leafy-plant.webp",
+      "width": 384,
+      "height": 322
+    },
+    {
+      "id": "stamp-monstera",
+      "title": "Monstera",
+      "file": "assets/stamps/stamp-monstera.webp",
+      "width": 384,
+      "height": 357
     },
     {
       "id": "stamp-moon",
@@ -99,6 +190,20 @@
       "height": 384
     },
     {
+      "id": "stamp-palm-tree",
+      "title": "Palm Tree",
+      "file": "assets/stamps/stamp-palm-tree.webp",
+      "width": 359,
+      "height": 384
+    },
+    {
+      "id": "stamp-pine-tree",
+      "title": "Pine Tree",
+      "file": "assets/stamps/stamp-pine-tree.webp",
+      "width": 342,
+      "height": 384
+    },
+    {
       "id": "stamp-rainbow",
       "title": "Rainbow",
       "file": "assets/stamps/stamp-rainbow.webp",
@@ -106,11 +211,32 @@
       "height": 237
     },
     {
+      "id": "stamp-reeds",
+      "title": "Reeds",
+      "file": "assets/stamps/stamp-reeds.webp",
+      "width": 157,
+      "height": 384
+    },
+    {
       "id": "stamp-rose",
       "title": "Rose",
       "file": "assets/stamps/stamp-rose.webp",
       "width": 244,
       "height": 384
+    },
+    {
+      "id": "stamp-round-bush",
+      "title": "Round Bush",
+      "file": "assets/stamps/stamp-round-bush.webp",
+      "width": 384,
+      "height": 284
+    },
+    {
+      "id": "stamp-sapling",
+      "title": "Sapling",
+      "file": "assets/stamps/stamp-sapling.webp",
+      "width": 384,
+      "height": 378
     },
     {
       "id": "stamp-snail",
@@ -132,6 +258,13 @@
       "file": "assets/stamps/stamp-strawberry.webp",
       "width": 301,
       "height": 384
+    },
+    {
+      "id": "stamp-succulent",
+      "title": "Succulent",
+      "file": "assets/stamps/stamp-succulent.webp",
+      "width": 384,
+      "height": 383
     },
     {
       "id": "stamp-sun",
@@ -165,6 +298,153 @@
       "id": "stamp-turtle",
       "title": "Turtle",
       "file": "assets/stamps/stamp-turtle.webp",
+      "width": 384,
+      "height": 268
+    },
+    {
+      "id": "stamp-willow-tree",
+      "title": "Willow Tree",
+      "file": "assets/stamps/stamp-willow-tree.webp",
+      "width": 384,
+      "height": 349
+    },
+    {
+      "id": "stamp-garden-ant",
+      "title": "Ant",
+      "file": "assets/stamps/stamp-garden-ant.webp",
+      "width": 384,
+      "height": 336
+    },
+    {
+      "id": "stamp-garden-bee",
+      "title": "Bee",
+      "file": "assets/stamps/stamp-garden-bee.webp",
+      "width": 384,
+      "height": 300
+    },
+    {
+      "id": "stamp-garden-beetle",
+      "title": "Beetle",
+      "file": "assets/stamps/stamp-garden-beetle.webp",
+      "width": 384,
+      "height": 283
+    },
+    {
+      "id": "stamp-garden-butterfly",
+      "title": "Butterfly",
+      "file": "assets/stamps/stamp-garden-butterfly.webp",
+      "width": 384,
+      "height": 307
+    },
+    {
+      "id": "stamp-garden-caterpillar",
+      "title": "Caterpillar",
+      "file": "assets/stamps/stamp-garden-caterpillar.webp",
+      "width": 384,
+      "height": 177
+    },
+    {
+      "id": "stamp-garden-dragonfly",
+      "title": "Dragonfly",
+      "file": "assets/stamps/stamp-garden-dragonfly.webp",
+      "width": 384,
+      "height": 250
+    },
+    {
+      "id": "stamp-garden-ladybird",
+      "title": "Ladybird",
+      "file": "assets/stamps/stamp-garden-ladybird.webp",
+      "width": 384,
+      "height": 296
+    },
+    {
+      "id": "stamp-garden-snail",
+      "title": "Snail",
+      "file": "assets/stamps/stamp-garden-snail.webp",
+      "width": 384,
+      "height": 283
+    },
+    {
+      "id": "stamp-garden-spider",
+      "title": "Spider",
+      "file": "assets/stamps/stamp-garden-spider.webp",
+      "width": 384,
+      "height": 278
+    },
+    {
+      "id": "stamp-garden-worm",
+      "title": "Worm",
+      "file": "assets/stamps/stamp-garden-worm.webp",
+      "width": 384,
+      "height": 285
+    },
+    {
+      "id": "stamp-weather-cloud",
+      "title": "Cloud",
+      "file": "assets/stamps/stamp-weather-cloud.webp",
+      "width": 384,
+      "height": 203
+    },
+    {
+      "id": "stamp-weather-lightning",
+      "title": "Lightning",
+      "file": "assets/stamps/stamp-weather-lightning.webp",
+      "width": 351,
+      "height": 384
+    },
+    {
+      "id": "stamp-weather-moon",
+      "title": "Moon",
+      "file": "assets/stamps/stamp-weather-moon.webp",
+      "width": 384,
+      "height": 325
+    },
+    {
+      "id": "stamp-weather-rain-cloud",
+      "title": "Rain Cloud",
+      "file": "assets/stamps/stamp-weather-rain-cloud.webp",
+      "width": 384,
+      "height": 261
+    },
+    {
+      "id": "stamp-weather-rainbow",
+      "title": "Rainbow",
+      "file": "assets/stamps/stamp-weather-rainbow.webp",
+      "width": 384,
+      "height": 232
+    },
+    {
+      "id": "stamp-weather-snowflake",
+      "title": "Snowflake",
+      "file": "assets/stamps/stamp-weather-snowflake.webp",
+      "width": 384,
+      "height": 346
+    },
+    {
+      "id": "stamp-weather-star",
+      "title": "Star",
+      "file": "assets/stamps/stamp-weather-star.webp",
+      "width": 384,
+      "height": 381
+    },
+    {
+      "id": "stamp-weather-sun",
+      "title": "Sun",
+      "file": "assets/stamps/stamp-weather-sun.webp",
+      "width": 384,
+      "height": 326
+    },
+    {
+      "id": "stamp-weather-umbrella",
+      "title": "Umbrella",
+      "file": "assets/stamps/stamp-weather-umbrella.webp",
+      "width": 384,
+      "height": 344
+    },
+    {
+      "id": "stamp-weather-wind-swirl",
+      "title": "Wind Swirl",
+      "file": "assets/stamps/stamp-weather-wind-swirl.webp",
       "width": 384,
       "height": 268
     }

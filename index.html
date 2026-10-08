@@ -223,6 +223,12 @@
         <div class="canvas-stage">
           <div class="paper-frame">
             <canvas id="blankCanvas" width="724" height="1086" aria-label="Blank page. Pick a color, then draw."></canvas>
+            <!-- Placed stickers live above the paper, not inside its bitmap, so
+                 they stay draggable, resizable and deletable (owner brief,
+                 2026-10-05). The layer itself ignores pointers; each sticker
+                 takes its own, so the canvas beneath still draws everywhere a
+                 sticker is not. -->
+            <div id="blankStickers" class="blank-sticker-layer" aria-label="Stickers on the page"></div>
           </div>
         </div>
 
@@ -232,7 +238,7 @@
             <button class="primary-tool is-selected" data-blank-tool="brush" type="button"><span aria-hidden="true">🖌️</span><b>Brush</b></button>
             <button class="primary-tool" data-blank-tool="fill" type="button"><span aria-hidden="true">🪣</span><b>Fill</b></button>
             <button class="primary-tool" data-blank-tool="shape" type="button"><span aria-hidden="true">⭐</span><b>Shapes</b></button>
-            <button class="primary-tool" data-blank-tool="stamp" type="button"><span aria-hidden="true">🐚</span><b>Stamp</b></button>
+            <button class="primary-tool" data-blank-tool="stamp" type="button"><span aria-hidden="true">🐚</span><b>Stickers</b></button>
             <button class="primary-tool" data-blank-tool="magic" type="button"><span aria-hidden="true">🌈</span><b>Magic</b></button>
             <button class="primary-tool" data-blank-tool="eraser" type="button"><span class="eraser-chip" aria-hidden="true"><i></i></span><b>Eraser</b></button>
           </div>
@@ -240,8 +246,8 @@
             <button class="is-selected" data-shape="circle" type="button" aria-label="Circle">●</button><button data-shape="star" type="button" aria-label="Star">★</button><button data-shape="heart" type="button" aria-label="Heart">♥</button><button data-shape="square" type="button" aria-label="Square">■</button><button data-shape="triangle" type="button" aria-label="Triangle">▲</button>
           </div>
           <div id="blankStampPanel" class="blank-stamp-panel" hidden>
-            <div id="blankStampCategories" class="blank-category-tray" aria-label="Stamp categories"></div>
-            <div id="blankStampTray" class="blank-stamp-tray" aria-label="Choose a stamp"></div>
+            <div id="blankStampCategories" class="blank-category-tray" aria-label="Sticker categories"></div>
+            <div id="blankStampTray" class="blank-stamp-tray" aria-label="Choose a sticker"></div>
           </div>
         </div>
 
@@ -334,6 +340,7 @@
             <canvas id="stampCanvas" aria-label="Stamping canvas"></canvas>
           </div>
           <div class="stamp-controls">
+            <div id="stampCategoryTray" class="stamp-category-tray" role="group" aria-label="Choose a stamp group"></div>
             <div id="stampTray" class="stamp-tray" role="group" aria-label="Choose a stamp"></div>
             <div class="stamp-sizes" role="group" aria-label="Stamp size">
               <button data-size="0.12" type="button" aria-label="Small stamp">Small</button>

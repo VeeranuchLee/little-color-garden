@@ -8,6 +8,7 @@
   const gallery = document.querySelector("#stampGallery");
   const canvas = document.querySelector("#stampCanvas");
   const context = canvas.getContext("2d");
+  const categoryTray = document.querySelector("#stampCategoryTray");
   const tray = document.querySelector("#stampTray");
   const undoButton = document.querySelector("#stampUndo");
   const clearButton = document.querySelector("#stampClear");
@@ -23,6 +24,22 @@
   let clearArmed = false;
   let clearTimer = null;
   const stampImages = new Map();
+
+  const STAMP_CATEGORIES = [
+    { id: "plants", title: "Plants", cover: "stamp-fern" },
+    { id: "animals", title: "Animal Friends", cover: "stamp-butterfly" },
+    { id: "sky", title: "Sky", cover: "stamp-sun" },
+    { id: "fun", title: "Fun", cover: "stamp-heart" },
+    { id: "weather", title: "Weather & Sky", cover: "stamp-weather-rain-cloud" },
+    { id: "garden-friends", title: "Bugs & Garden Friends", cover: "stamp-garden-ladybird" }
+  ];
+  const ANIMAL_STAMPS = new Set([
+    "stamp-bee", "stamp-bird", "stamp-bunny", "stamp-butterfly", "stamp-cat",
+    "stamp-dog", "stamp-fish", "stamp-ladybug", "stamp-snail", "stamp-turtle"
+  ]);
+  const SKY_STAMPS = new Set([
+    "stamp-cloud", "stamp-moon", "stamp-rainbow", "stamp-star", "stamp-sun"
+  ]);
 
   function hideAllScreens() {
     document.querySelectorAll(".screen").forEach((element) => {
@@ -225,11 +242,32 @@
     link.click();
   }
 
-  function selectStamp(stampId, button) {
+  function stampCategory(stampId) {
+    if (stampId.startsWith("stamp-weather-")) return "weather";
+    if (stampId.startsWith("stamp-garden-")) return "garden-friends";
+    if (ANIMAL_STAMPS.has(stampId)) return "animals";
+    if (SKY_STAMPS.has(stampId)) return "sky";
+    if (stampId === "stamp-heart") return "fun";
+    return "plants";
+  }
+
+  function selectStamp(stampId, button, feedback = true) {
     selectedStampId = stampId;
     tray.querySelectorAll("button").forEach((candidate) => {
       candidate.classList.toggle("is-selected", candidate === button);
     });
+    if (feedback) window.tinyPop(260, 0.04);
+  }
+
+  function showStampCategory(categoryId, categoryButton, feedback = true) {
+    categoryTray.querySelectorAll("button").forEach((candidate) => {
+      candidate.classList.toggle("is-selected", candidate === categoryButton);
+    });
+    tray.querySelectorAll("button").forEach((button) => {
+      button.hidden = button.dataset.category !== categoryId;
+    });
+    const firstVisible = tray.querySelector("button:not([hidden])");
+    if (firstVisible) selectStamp(firstVisible.dataset.id, firstVisible, feedback);
   }
 
   function buildStampTray() {
@@ -237,6 +275,7 @@
       const button = document.createElement("button");
       button.type = "button";
       button.dataset.id = stamp.id;
+      button.dataset.category = stampCategory(stamp.id);
       button.setAttribute("aria-label", `${stamp.title} stamp`);
 
       const image = document.createElement("img");
@@ -246,8 +285,24 @@
       button.addEventListener("click", () => selectStamp(stamp.id, button));
       tray.appendChild(button);
     });
-    const firstButton = tray.querySelector("button");
-    if (firstButton) selectStamp(firstButton.dataset.id, firstButton);
+  }
+
+  function buildCategoryTray() {
+    STAMP_CATEGORIES.forEach((category) => {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.dataset.category = category.id;
+      button.setAttribute("aria-label", category.title);
+      const cover = stampDefinition(category.cover);
+      const image = document.createElement("img");
+      image.src = `./${cover.file}`;
+      image.alt = "";
+      button.appendChild(image);
+      button.addEventListener("click", () => showStampCategory(category.id, button));
+      categoryTray.appendChild(button);
+    });
+    const firstCategory = categoryTray.querySelector("button");
+    if (firstCategory) showStampCategory(firstCategory.dataset.category, firstCategory, false);
   }
 
   function buildGallery() {
@@ -299,6 +354,7 @@
     manifest = await response.json();
     await loadStampImages();
     buildStampTray();
+    buildCategoryTray();
     buildGallery();
   }
 

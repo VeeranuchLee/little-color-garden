@@ -2,13 +2,19 @@
 
 // Blank Coloring Page: a small, child-first drawing toy. Every canvas mutation
 // is one history action; stamps and shapes repeat-place until another choice is
-// made. There are deliberately no layers, selections, transforms, or text input.
+// made. There are deliberately no layers, selections, transforms, or text input
+// on the PAPER itself — but placed stickers (owner brief, 2026-10-05) are live
+// objects on their own layer above the bitmap: they stay draggable, can be
+// pinched or handle-resized between 0.4x and 3x of the default size, and the
+// selected one can be deleted. History carries the bitmap AND the stickers as
+// one page state, so Undo/Clear/Save always mean the whole page.
 (() => {
   const screen = document.querySelector("#blankScreen");
   if (!screen) return;
 
   const canvas = document.querySelector("#blankCanvas");
   const context = canvas.getContext("2d", { willReadFrequently: true });
+  const stickerLayer = document.querySelector("#blankStickers");
   const message = document.querySelector("#blankMessage");
   const paletteRoot = document.querySelector("#blankPalette");
   const shapeTray = document.querySelector("#blankShapeTray");
@@ -27,14 +33,22 @@
   const ERASER_SIZE = 54;
   const MAX_HISTORY = 30;
   const DEFAULT_STAMP_SHARE = .20;
+  // A placed sticker's size is a multiple of the default share; the pinch and
+  // the corner handle clamp inside this range (owner brief: roughly 0.4x-3x).
+  const STICKER_MIN_SCALE = .4;
+  const STICKER_MAX_SCALE = 3;
 
   const THEMED_STAMPS = {
-    space: ["ringed-planet", "smiling-star", "rocket", "crescent-moon", "blue-planet", "comet", "astronaut-helmet", "ufo", "sun", "constellation"],
-    princess: ["crown", "wand", "glass-slipper", "gown", "heart-tiara", "carriage", "royal-kitten", "rose-bouquet", "gem-heart", "mirror"],
-    mermaid: ["tail", "seashell", "pearl-oyster", "seahorse", "coral", "starfish", "treasure-chest", "dolphin", "tropical-fish", "sea-crown"],
-    castle: ["rainbow-castle", "turret", "magic-door", "magic-key", "crystal-ball", "dragon", "unicorn", "potion", "spell-book", "crystal"]
+    space: ["ringed-planet", "smiling-star", "rocket", "crescent-moon", "blue-planet", "comet", "astronaut-helmet", "ufo", "sun", "constellation", "satellite", "telescope", "galaxy", "astronaut-boot", "lunar-rover"],
+    princess: ["crown", "wand", "glass-slipper", "gown", "heart-tiara", "carriage", "royal-kitten", "rose-bouquet", "gem-heart", "mirror", "sceptre", "pearl-necklace", "hand-fan", "royal-pony", "teacup"],
+    mermaid: ["tail", "seashell", "pearl-oyster", "seahorse", "coral", "starfish", "treasure-chest", "dolphin", "tropical-fish", "sea-crown", "trident", "hair-comb", "harp", "kelp", "anchor"],
+    castle: ["rainbow-castle", "turret", "magic-door", "magic-key", "crystal-ball", "dragon", "unicorn", "potion", "spell-book", "crystal", "wizard-hat", "cauldron", "broom", "shield", "lantern"],
+    animals: ["cat", "puppy", "bunny", "panda", "fox", "owl", "hamster", "turtle", "duck", "koala"],
+    ocean: ["fish", "octopus", "whale", "starfish", "shell", "crab", "seahorse", "dolphin", "jellyfish", "coral"],
+    food: ["cupcake", "ice-cream", "donut", "strawberry", "lollipop", "cookie", "cake-slice", "watermelon", "cherries", "candy"],
+    vehicles: ["car", "bus", "train", "plane", "boat", "bicycle", "fire-truck", "tractor", "hot-air-balloon", "scooter"]
   };
-  const categoryLabels = { space: "Space", princess: "Princess", mermaid: "Mermaid", castle: "Magic Castle", abc: "ABC", numbers: "123" };
+  const categoryLabels = { space: "Space", princess: "Princess", mermaid: "Mermaid", castle: "Magic Castle", animals: "Animals & Pets", ocean: "Ocean", food: "Sweets & Food", vehicles: "Vehicles", abc: "ABC", numbers: "123" };
   const stampImages = new Map();
   let tool = "brush";
   let color = "#f04455";
@@ -47,8 +61,21 @@
   let beforeGesture = null;
   let undoStack = [];
   let redoStack = [];
+  let historyBusy = false;
   let clearArmed = false;
   let clearTimer = null;
+
+  // ---- Placed stickers (owner brief, 2026-10-05, section 1) ----------------
+  // Each sticker: { id, kind: "image"|"tile", theme?, value, x, y, scale }.
+  // x/y are the centre as a fraction of the canvas (so a page resize keeps the
+  // sticker where the child put it); scale multiplies the default share.
+  let stickers = [];
+  let stickerSeq = 1;
+  let selectedStickerId = null;
+  const stickerElements = new Map(); // sticker.id -> its live element
+  let stickerGesture = null; // { id, mode: "drag"|"pinch"|"handle", ... }
+  const stickerPointers = new Map(); // pointerId -> { x, y } during a gesture
+  const clampScale = (scale) => Math.min(STICKER_MAX_SCALE, Math.max(STICKER_MIN_SCALE, scale));
 
   function showMessage(text) {
     message.textContent = text;
@@ -62,6 +89,61 @@
   }
 
   function snapshot() { return canvas.toDataURL("image/png"); }
+
+  function stickerSnapshot() { return JSON.stringify(stickers); }
+
+  // One undo entry is the whole page: the paper bitmap plus every sticker.
+  function captureState() { return { image: snapshot(), stickers: stickerSnapshot() }; }
+
+  function saveState() {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify({ image: snapshot(), stickers })); } catch (_) {}
+  }
+
+  function updateHistoryButtons() {
+    undoButton.disabled = historyBusy || !undoStack.length;
+    redoButton.disabled = historyBusy || !redoStack.length;
+  }
+
+  function commit(before) {
+    // Callers that only touch the paper pass a bare image; the stickers ride
+    // along unchanged. Sticker gestures pass a full captureState().
+    undoStack.push(typeof before === "string" ? { image: before, stickers: stickerSnapshot() } : before);
+    if (undoStack.length > MAX_HISTORY) undoStack.shift();
+    redoStack = [];
+    updateHistoryButtons();
+    saveState();
+  }
+
+  async function undo() {
+    if (historyBusy || !undoStack.length) return;
+    historyBusy = true;
+    redoStack.push(captureState());
+    const entry = undoStack.pop();
+    // The sticker half of the page state is synchronous. Apply it at the
+    // history transition, before the bitmap's Image decode yields, so no old
+    // restore can leave or re-add live DOM objects after the click handler.
+    setStickers(entry.stickers);
+    updateHistoryButtons();
+    await restore(entry.image);
+    historyBusy = false;
+    updateHistoryButtons();
+    saveState();
+    pop(300, 0.06);
+  }
+
+  async function redo() {
+    if (historyBusy || !redoStack.length) return;
+    historyBusy = true;
+    undoStack.push(captureState());
+    const entry = redoStack.pop();
+    setStickers(entry.stickers);
+    updateHistoryButtons();
+    await restore(entry.image);
+    historyBusy = false;
+    updateHistoryButtons();
+    saveState();
+    pop(440, 0.06);
+  }
 
   function fitCanvasToPage(contents = null) {
     const rect = canvas.getBoundingClientRect();
@@ -78,6 +160,9 @@
     context.fillStyle = "#fff";
     context.fillRect(0, 0, width, height);
     if (contents) restore(contents);
+    // Sticker centres are fractions of the page, but widths are pixels: place
+    // them again for the new canvas size.
+    layoutAllStickers();
   }
 
   function restore(dataUrl) {
@@ -92,37 +177,6 @@
       image.onerror = resolve;
       image.src = dataUrl;
     });
-  }
-
-  function updateHistoryButtons() {
-    undoButton.disabled = !undoStack.length;
-    redoButton.disabled = !redoStack.length;
-  }
-
-  function commit(before) {
-    undoStack.push(before);
-    if (undoStack.length > MAX_HISTORY) undoStack.shift();
-    redoStack = [];
-    updateHistoryButtons();
-    try { localStorage.setItem(STORAGE_KEY, snapshot()); } catch (_) {}
-  }
-
-  async function undo() {
-    if (!undoStack.length) return;
-    redoStack.push(snapshot());
-    await restore(undoStack.pop());
-    updateHistoryButtons();
-    try { localStorage.setItem(STORAGE_KEY, snapshot()); } catch (_) {}
-    pop(300, 0.06);
-  }
-
-  async function redo() {
-    if (!redoStack.length) return;
-    undoStack.push(snapshot());
-    await restore(redoStack.pop());
-    updateHistoryButtons();
-    try { localStorage.setItem(STORAGE_KEY, snapshot()); } catch (_) {}
-    pop(440, 0.06);
   }
 
   function line(from, to, erase = false) {
@@ -242,42 +296,245 @@
     return stampImages.get(key);
   }
 
-  function drawStamp(point) {
-    const stampSize = Math.round(Math.min(canvas.width, canvas.height) * DEFAULT_STAMP_SHARE);
-    if (selectedStamp.kind === "tile") {
-      const size = stampSize;
-      const gradient = context.createLinearGradient(point.x, point.y - size / 2, point.x, point.y + size / 2);
-      gradient.addColorStop(0, "#fff7ad"); gradient.addColorStop(1, "#ffb8dc");
-      context.save(); context.fillStyle = gradient; context.strokeStyle = "#7453bd"; context.lineWidth = 8;
-      context.beginPath();
-      // roundRect is Safari 16.4+; a 9.7" iPad can be stuck on an older iOS, so
-      // fall back to a plain square tile rather than throwing and silently
-      // dropping every ABC/123 stamp placement.
-      if (typeof context.roundRect === "function") context.roundRect(point.x - size / 2, point.y - size / 2, size, size, 24);
-      else context.rect(point.x - size / 2, point.y - size / 2, size, size);
-      context.fill(); context.stroke();
-      context.fillStyle = color; context.font = `bold ${Math.round(size * .64)}px ui-rounded, system-ui, sans-serif`; context.textAlign = "center"; context.textBaseline = "middle";
-      context.fillText(selectedStamp.value, point.x, point.y + 4); context.restore();
-      return true;
-    }
-    const image = imageForStamp(selectedStamp.theme, selectedStamp.value);
-    if (!image.complete || !image.naturalWidth) return false;
-    const scale = stampSize / Math.max(image.naturalWidth, image.naturalHeight);
-    const width = image.naturalWidth * scale;
-    const height = image.naturalHeight * scale;
-    context.drawImage(image, point.x - width / 2, point.y - height / 2, width, height);
-    return true;
+  // ---- Sticker layer (owner brief, 2026-10-05) -----------------------------
+  // A placed sticker is a DOM object above the canvas, never pixels inside
+  // it, so it stays draggable, resizable and deletable after placement. The
+  // layer itself ignores pointers; each sticker takes its own, so drawing on
+  // the paper still works everywhere a sticker is not.
+
+  function layoutSticker(element, sticker) {
+    const rect = canvas.getBoundingClientRect();
+    const width = Math.min(rect.width, rect.height) * DEFAULT_STAMP_SHARE * sticker.scale;
+    element.style.width = `${Math.round(width)}px`;
+    element.style.left = `${sticker.x * 100}%`;
+    element.style.top = `${sticker.y * 100}%`;
+    // Tiles size their glyph with the sticker; image stickers keep their own
+    // aspect ratio by height:auto.
+    if (sticker.kind === "tile") element.style.fontSize = `${Math.round(width * .58)}px`;
   }
 
+  function layoutAllStickers() {
+    stickers.forEach((sticker) => {
+      const element = stickerElements.get(sticker.id);
+      if (element) layoutSticker(element, sticker);
+    });
+  }
+
+  function selectSticker(id) {
+    selectedStickerId = id;
+    stickerElements.forEach((element, stickerId) => element.classList.toggle("is-selected", stickerId === id));
+  }
+
+  function buildStickerElement(sticker) {
+    const element = document.createElement("div");
+    element.className = `blank-sticker${sticker.kind === "tile" ? " blank-sticker--tile" : ""}`;
+    element.dataset.stickerId = String(sticker.id);
+    element.setAttribute("role", "img");
+    if (sticker.kind === "tile") {
+      const glyph = document.createElement("span");
+      glyph.className = "blank-sticker__glyph";
+      glyph.textContent = sticker.value;
+      element.appendChild(glyph);
+      element.setAttribute("aria-label", `${sticker.value} sticker`);
+    } else {
+      const image = document.createElement("img");
+      image.src = `./assets/blank-stamps/${sticker.theme}-${sticker.value}.webp`;
+      image.alt = ""; image.draggable = false;
+      element.appendChild(image);
+      element.setAttribute("aria-label", `${sticker.value.replaceAll("-", " ")} sticker`);
+    }
+    // The delete control only exists for the selected sticker (CSS shows it),
+    // and it stops the pointer before the sticker can read it as a drag.
+    const remove = document.createElement("button");
+    remove.type = "button"; remove.className = "blank-sticker__delete";
+    remove.setAttribute("aria-label", "Remove this sticker");
+    remove.textContent = "🗑️";
+    remove.addEventListener("pointerdown", (event) => event.stopPropagation());
+    remove.addEventListener("click", () => deleteSticker(sticker.id));
+    const handle = document.createElement("span");
+    handle.className = "blank-sticker__handle";
+    handle.setAttribute("aria-hidden", "true");
+    element.appendChild(remove);
+    element.appendChild(handle);
+
+    element.addEventListener("pointerdown", (event) => beginStickerGesture(event, sticker, "sticker"));
+    handle.addEventListener("pointerdown", (event) => beginStickerGesture(event, sticker, "handle"));
+    return element;
+  }
+
+  function rebuildStickers() {
+    if (!stickerLayer) return;
+    stickerLayer.replaceChildren();
+    stickerElements.clear();
+    stickers.forEach((sticker) => {
+      const element = buildStickerElement(sticker);
+      stickerElements.set(sticker.id, element);
+      stickerLayer.appendChild(element);
+      layoutSticker(element, sticker);
+    });
+    if (!stickers.some((sticker) => sticker.id === selectedStickerId)) selectedStickerId = null;
+    selectSticker(selectedStickerId);
+  }
+
+  function replaceStickerState(nextStickers) {
+    // A page-level replacement (Clear, Undo/Redo, or opening a saved page) must
+    // tear down every part of the live-object layer together. In particular,
+    // do not leave a selected handle or an in-flight pointer gesture referring
+    // to DOM nodes that have just been removed.
+    stickerGesture = null;
+    stickerPointers.clear();
+    selectedStickerId = null;
+    stickers = nextStickers;
+    rebuildStickers();
+  }
+
+  function placeSticker(point, before) {
+    const sticker = { id: stickerSeq++, kind: selectedStamp.kind, theme: selectedStamp.theme, value: selectedStamp.value, x: point.x / canvas.width, y: point.y / canvas.height, scale: 1 };
+    stickers.push(sticker);
+    const element = buildStickerElement(sticker);
+    stickerElements.set(sticker.id, element);
+    stickerLayer.appendChild(element);
+    layoutSticker(element, sticker);
+    // The fresh sticker arrives selected, so its handle and delete control are
+    // visible the moment it lands: a child sees it can be moved or removed.
+    selectSticker(sticker.id);
+    commit(before);
+    pop(440, .05);
+  }
+
+  function deleteSticker(id) {
+    if (!stickers.some((sticker) => sticker.id === id)) return;
+    const before = captureState();
+    stickers = stickers.filter((sticker) => sticker.id !== id);
+    rebuildStickers();
+    commit(before);
+    pop(240, .07);
+  }
+
+  function sanitizeStickers(list) {
+    if (!Array.isArray(list)) return [];
+    // Saved stickers are untrusted (localStorage): keep only well-formed
+    // entries and re-clamp everything a gesture could have left behind.
+    return list
+      .filter((item) => item && (item.kind === "tile" ? typeof item.value === "string" && item.value
+        : item.kind === "image" && typeof item.theme === "string" && typeof item.value === "string")
+        && Number.isFinite(+item.x) && Number.isFinite(+item.y) && Number.isFinite(+item.scale))
+      .map((item) => ({ id: stickerSeq++, kind: item.kind, theme: item.theme, value: item.value,
+        x: Math.min(.97, Math.max(.03, +item.x)), y: Math.min(.97, Math.max(.03, +item.y)), scale: clampScale(+item.scale) }));
+  }
+
+  function setStickers(json) {
+    let list = [];
+    try { list = sanitizeStickers(JSON.parse(json)); } catch (_) {}
+    replaceStickerState(list);
+  }
+
+  // One gesture at a time: "sticker" drag-or-pinch on the body, "handle" the
+  // corner resize grip. A SECOND finger on the same sticker joins the gesture
+  // and turns a drag into a pinch; a finger on a different sticker is ignored
+  // while this gesture runs. Move and up are watched on the window so a drag
+  // keeps working even where pointer capture is unavailable.
+  function beginStickerGesture(event, sticker, surface) {
+    if (!stickerElements.has(sticker.id)) return;
+    const sameSticker = stickerGesture && stickerGesture.id === sticker.id;
+    if (stickerGesture && !sameSticker) return;
+    event.preventDefault();
+    event.stopPropagation();
+    stickerPointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
+    try { event.currentTarget.setPointerCapture(event.pointerId); } catch (_) {}
+    if (stickerGesture) {
+      // The joining finger of a pinch. Baseline the finger distance NOW, at
+      // the moment the second finger lands: pointer moves arrive one at a
+      // time, so the first move would otherwise measure an already-spread
+      // pair and resize from a wrong start.
+      if (stickerGesture.mode === "drag" && stickerPointers.size >= 2) {
+        const [first, second] = [...stickerPointers.values()];
+        stickerGesture.pinchStart = Math.max(12, Math.hypot(first.x - second.x, first.y - second.y));
+      }
+      return;
+    }
+    selectSticker(sticker.id);
+    pop(surface === "handle" ? 500 : 620, .03);
+    const element = stickerElements.get(sticker.id);
+    const rect = element.getBoundingClientRect();
+    const centre = { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
+    if (surface === "handle") {
+      stickerGesture = { id: sticker.id, mode: "handle", before: captureState(), changed: false,
+        startScale: sticker.scale, startDistance: Math.max(12, Math.hypot(event.clientX - centre.x, event.clientY - centre.y)) };
+      return;
+    }
+    stickerGesture = { id: sticker.id, mode: "drag", before: captureState(), changed: false,
+      startX: sticker.x, startY: sticker.y, originX: event.clientX, originY: event.clientY };
+  }
+
+  function moveStickerGesture(event) {
+    if (!stickerGesture || !stickerPointers.has(event.pointerId)) return;
+    event.preventDefault();
+    const sticker = stickers.find((item) => item.id === stickerGesture.id);
+    const element = sticker && stickerElements.get(sticker.id);
+    if (!sticker || !element) { stickerGesture = null; stickerPointers.clear(); return; }
+    stickerPointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
+
+    if (stickerGesture.mode === "handle") {
+      const rect = element.getBoundingClientRect();
+      const distance = Math.hypot(event.clientX - (rect.left + rect.width / 2), event.clientY - (rect.top + rect.height / 2));
+      const next = clampScale(stickerGesture.startScale * distance / stickerGesture.startDistance);
+      if (next !== sticker.scale) { sticker.scale = next; stickerGesture.changed = true; layoutSticker(element, sticker); }
+      return;
+    }
+    // A second finger landing on the sticker turns the drag into a pinch;
+    // pinchStart was baselined when that finger landed.
+    if (stickerGesture.mode !== "handle" && stickerPointers.size >= 2) {
+      const [first, second] = [...stickerPointers.values()];
+      const distance = Math.hypot(first.x - second.x, first.y - second.y);
+      if (stickerGesture.mode === "drag") stickerGesture = { ...stickerGesture, mode: "pinch", pinchStart: stickerGesture.pinchStart || Math.max(12, distance), pinchScale: sticker.scale };
+      const next = clampScale(stickerGesture.pinchScale * distance / stickerGesture.pinchStart);
+      if (next !== sticker.scale) { sticker.scale = next; stickerGesture.changed = true; layoutSticker(element, sticker); }
+      return;
+    }
+    const rect = canvas.getBoundingClientRect();
+    const nextX = stickerGesture.startX + (event.clientX - stickerGesture.originX) / rect.width;
+    const nextY = stickerGesture.startY + (event.clientY - stickerGesture.originY) / rect.height;
+    if (nextX !== sticker.x || nextY !== sticker.y) {
+      // Keep the centre on the page so a sticker is always grabbable again;
+      // art may hang over the edge, exactly like a real sticker on paper.
+      sticker.x = Math.min(.97, Math.max(.03, nextX));
+      sticker.y = Math.min(.97, Math.max(.03, nextY));
+      if (Math.hypot(event.clientX - stickerGesture.originX, event.clientY - stickerGesture.originY) > 4) stickerGesture.changed = true;
+      layoutSticker(element, sticker);
+    }
+  }
+
+  function endStickerGesture(pointerId) {
+    stickerPointers.delete(pointerId);
+    if (!stickerGesture) return;
+    // A pinch survives while at least two fingers remain (three-finger play);
+    // a drag or handle gesture survives while its one finger is down.
+    const keep = stickerGesture.mode === "pinch" ? stickerPointers.size >= 2 : stickerPointers.size >= 1;
+    if (keep) return;
+    const gesture = stickerGesture;
+    stickerGesture = null;
+    stickerPointers.clear();
+    if (gesture.changed) { commit(gesture.before); pop(560, .04); }
+  }
+
+  window.addEventListener("pointermove", moveStickerGesture, { passive: false });
+  window.addEventListener("pointerup", (event) => endStickerGesture(event.pointerId));
+  window.addEventListener("pointercancel", (event) => endStickerGesture(event.pointerId));
+
   function setTool(next) {
+    // The sticker picker opens with the tool and collapses the moment a sticker
+    // is chosen, so the whole canvas is free for placement (owner brief). Tapping
+    // Stickers again brings the picker back for another choice.
+    const sameStampTool = next === "stamp" && tool === "stamp";
     tool = next;
     toolButtons.forEach((button) => button.classList.toggle("is-selected", button.dataset.blankTool === next));
     shapeTray.hidden = next !== "shape";
-    stampPanel.hidden = next !== "stamp";
+    stampPanel.hidden = next === "stamp" ? (sameStampTool ? !stampPanel.hidden : false) : true;
     if (next !== "eraser" && palette) palette.markSelected(color);
     if (next === "eraser" && palette) palette.clearSelection();
     disarmClear();
-    showMessage({ brush: "Brush", fill: "Fill a space", shape: "Tap to place a shape", stamp: "Pick a stamp, then tap", magic: "Rainbow magic!", eraser: "Eraser" }[next]);
+    showMessage({ brush: "Brush", fill: "Fill a space", shape: "Tap to place a shape", stamp: "Pick a sticker, then tap", magic: "Rainbow magic!", eraser: "Eraser" }[next]);
   }
 
   function begin(event) {
@@ -285,12 +542,18 @@
     disarmClear();
     const point = pointFrom(event);
     if (["fill", "shape", "stamp"].includes(tool)) {
-      const before = snapshot();
-      const changed = tool === "fill" ? fillAt(point) : tool === "shape" ? (drawShape(point), true) : drawStamp(point);
-      if (changed) { commit(before); pop(tool === "fill" ? 280 : 440, .05); }
+      const before = captureState();
+      selectSticker(null);
+      if (tool === "fill") {
+        if (fillAt(point)) { commit(before); pop(280, .05); }
+      } else if (tool === "shape") {
+        drawShape(point); commit(before); pop(440, .05);
+      } else {
+        placeSticker(point, before);
+      }
       return;
     }
-    drawing = true; pointerId = event.pointerId; previousPoint = point; beforeGesture = snapshot();
+    drawing = true; pointerId = event.pointerId; previousPoint = point; beforeGesture = captureState();
     canvas.setPointerCapture(event.pointerId);
     if (tool === "magic") magicLine(point, point); else line(point, point, tool === "eraser");
   }
@@ -323,7 +586,7 @@
         break;
       }
     }
-    if (alreadyClean) {
+    if (alreadyClean && !stickers.length) {
       disarmClear();
       speak("blank.already-clean");
       return;
@@ -332,7 +595,11 @@
       clearArmed = true; clearButton.classList.add("is-armed");
       clearTimer = window.setTimeout(disarmClear, 6000); speak("blank.clear-arm"); pop(360, .06); return;
     }
-    const before = snapshot();
+    const before = captureState();
+    // Remove the live DOM objects synchronously in this confirmed-click
+    // handler. The bitmap clear follows, and both halves share `before` as
+    // one history entry for Undo/Redo.
+    replaceStickerState([]);
     context.fillStyle = "#fff"; context.fillRect(0, 0, canvas.width, canvas.height);
     commit(before); disarmClear(); speak("blank.clear-done"); pop(280, .08);
   }
@@ -350,6 +617,10 @@
       button.addEventListener("click", () => {
         selectedStamp = entry;
         selectAll(stampTray, "button").forEach((candidate) => candidate.classList.toggle("is-selected", candidate === button));
+        // Collapse right away so the full canvas is free for placement; the
+        // Stickers button brings the picker back.
+        stampPanel.hidden = true;
+        showMessage("Now tap the page!");
         pop(520, .04);
       });
       stampTray.appendChild(button);
@@ -398,17 +669,31 @@
   function openBlankPage() {
     if (window.stopMenuMusic) window.stopMenuMusic();
     document.querySelector("#galleryScreen").hidden = true; screen.hidden = false;
-    let saved = null;
-    try { saved = localStorage.getItem(STORAGE_KEY); } catch (_) {}
+    let savedImage = null;
+    let savedStickers = [];
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        if (saved.startsWith("data:")) savedImage = saved; // a page saved before stickers existed
+        else {
+          try {
+            const parsed = JSON.parse(saved);
+            if (parsed && typeof parsed.image === "string") savedImage = parsed.image;
+            if (parsed && Array.isArray(parsed.stickers)) savedStickers = parsed.stickers;
+          } catch (_) {}
+        }
+      }
+    } catch (_) {}
     fitCanvasToPage();
     context.fillStyle = "#fff"; context.fillRect(0, 0, canvas.width, canvas.height);
-    if (saved) restore(saved);
-    undoStack = []; redoStack = []; updateHistoryButtons(); disarmClear(); setTool("brush"); speak("blank.open");
+    if (savedImage) restore(savedImage);
+    setStickers(JSON.stringify(savedStickers));
+    undoStack = []; redoStack = []; historyBusy = false; updateHistoryButtons(); disarmClear(); setTool("brush"); speak("blank.open");
   }
 
   function closeBlankPage() {
-    try { localStorage.setItem(STORAGE_KEY, snapshot()); } catch (_) {}
-    disarmClear(); drawing = false; screen.hidden = true; if (window.showColoringGallery) window.showColoringGallery();
+    saveState();
+    disarmClear(); drawing = false; stickerGesture = null; stickerPointers.clear(); screen.hidden = true; if (window.showColoringGallery) window.showColoringGallery();
   }
 
   document.querySelector("#blankHome").addEventListener("click", closeBlankPage);

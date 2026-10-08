@@ -1018,6 +1018,7 @@ button:disabled {
 #stampCanvas { touch-action: pinch-zoom; /* 2026-09-25: one finger draws, two fingers still zoom out (zoom-trap fix C) */ }
 
 .cbn-palette,
+.stamp-category-tray,
 .stamp-tray,
 .stamp-sizes {
   display: flex;
@@ -1071,6 +1072,39 @@ button:disabled {
   gap: 10px;
   min-width: 0;
   min-height: 0;
+}
+
+.stamp-category-tray {
+  min-height: 68px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  overscroll-behavior: contain;
+}
+
+.stamp-category-tray button {
+  width: 64px;
+  height: 64px;
+  flex: 0 0 64px;
+  padding: 4px;
+  border: 3px solid #fff;
+  border-radius: 18px;
+  background: #f2ecff;
+  box-shadow: 0 4px 0 #786999;
+}
+
+.stamp-category-tray button.is-selected {
+  outline: 5px solid #ffd83d;
+  outline-offset: 2px;
+  background: #fff8c8;
+}
+
+.stamp-category-tray img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 .stamp-tray {
@@ -1215,7 +1249,17 @@ button:disabled {
 
   .stamp-controls {
     width: 82px;
-    grid-template-rows: minmax(0, 1fr) auto;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+  }
+
+  .stamp-category-tray {
+    display: grid;
+    grid-template-columns: 64px;
+    align-content: start;
+    justify-content: center;
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding: 4px;
   }
 
   .stamp-tray {
@@ -1254,6 +1298,13 @@ button:disabled {
     max-height: none;
   }
   .stamp-controls { max-height: none; }
+  .stamp-category-tray {
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 4px 2px;
+  }
   .stamp-tray {
     flex-wrap: nowrap;
     justify-content: flex-start;
@@ -1369,18 +1420,73 @@ button:disabled {
 .blank-choice-tray[hidden], .blank-stamp-panel[hidden] { display: none; }
 .blank-choice-tray button, .blank-category-tray button, .blank-stamp-choice { flex: 0 0 64px; min-width: 64px; min-height: 64px; border: 3px solid #fff; border-radius: 18px; background: linear-gradient(#fff, #f4ebff); box-shadow: 0 4px 0 rgba(75,48,121,.18); color: #60439b; font: 800 18px/1 system-ui, sans-serif; }
 .blank-choice-tray button { font-size: 34px; }
-.blank-category-tray button { flex: 0 0 86px; height: 94px; padding: 4px; white-space: nowrap; overflow: hidden; }
+/* Slightly larger pack buttons and sticker thumbnails (owner brief, 2026-10-05):
+   young thumbs need generous tap targets, and a sticker you can see clearly is
+   a sticker you can choose confidently. */
+.blank-category-tray button { flex: 0 0 96px; height: 104px; padding: 4px; white-space: nowrap; overflow: hidden; }
 .blank-category-tray button small { display: block; overflow: hidden; font-size: 11px; line-height: 15px; text-overflow: ellipsis; }
-.blank-pack-picture { display: grid; place-items: center; width: 64px; height: 64px; margin: 0 auto 2px; overflow: hidden; }
+.blank-pack-picture { display: grid; place-items: center; width: 72px; height: 72px; margin: 0 auto 2px; overflow: hidden; }
 .blank-pack-picture img { display: block; width: 100%; height: 100%; object-fit: contain; }
 .blank-pack-picture--glyph { border-radius: 13px; background: linear-gradient(#fff7ad, #ffb8dc); font-size: 25px; color: #7148ad; }
 .blank-choice-tray .is-selected, .blank-category-tray .is-selected, .blank-stamp-choice.is-selected { outline: 5px solid #ffe26a; outline-offset: 1px; background: #fff8c8; }
 .blank-choice-tray, .blank-stamp-panel { position: absolute; z-index: 12; right: 8px; bottom: calc(100% + 5px); left: 8px; padding: 7px; border: 3px solid rgba(255,255,255,.96); border-radius: 20px; background: rgba(245,239,255,.97); box-shadow: 0 -6px 22px rgba(64,77,117,.18); }
 .blank-stamp-panel { min-width: 0; }
-.blank-stamp-tray { min-height: 78px; }
-.blank-stamp-choice { flex-basis: 76px; width: 76px; height: 76px; padding: 5px; overflow: hidden; }
+.blank-stamp-tray { min-height: 88px; }
+.blank-stamp-choice { flex-basis: 88px; width: 88px; height: 88px; padding: 6px; overflow: hidden; }
 .blank-stamp-choice img { display: block; width: 100%; height: 100%; object-fit: contain; }
-.blank-stamp-choice--tile { font-size: 32px; color: #7148ad; background: linear-gradient(#fff7ad, #ffb8dc); }
+.blank-stamp-choice--tile { font-size: 38px; color: #7148ad; background: linear-gradient(#fff7ad, #ffb8dc); }
+
+/* Placed stickers (owner brief, 2026-10-05): live objects above the paper, so
+   they stay draggable, resizable and deletable after placement. The layer is
+   pointer-transparent; each sticker takes its own pointers and the paper
+   beneath still draws everywhere a sticker is not. */
+.blank-sticker-layer { position: absolute; inset: 0; z-index: 3; pointer-events: none; }
+.blank-sticker {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  pointer-events: auto;
+  /* INTERACTION-DIRECTION.md, the multi-finger exception: two fingers at once
+     are part of the play here -- a pinch resizes this sticker -- so `none` is
+     correct on this one bounded, child-sized object. It is deliberately NOT a
+     full-screen surface: html/body keep `manipulation` and the paper keeps
+     `pinch-zoom`, so the page's pinch escape is never blocked. No gesture
+     handlers anywhere; tap-zoom-guard.js still owns double taps. */
+  touch-action: none;
+  -webkit-user-select: none; user-select: none;
+  -webkit-touch-callout: none;
+  cursor: grab;
+}
+.blank-sticker:active { cursor: grabbing; }
+.blank-sticker img { display: block; width: 100%; height: auto; pointer-events: none; }
+.blank-sticker__glyph {
+  display: grid; place-items: center; aspect-ratio: 1; width: 100%;
+  border: .07em solid #7453bd; border-radius: 16%;
+  background: linear-gradient(#fff7ad, #ffb8dc); color: #7148ad;
+  font: 800 1em/1 ui-rounded, system-ui, sans-serif;
+}
+.blank-sticker.is-selected { outline: 5px dashed #ffe26a; outline-offset: 5px; border-radius: 12px; filter: drop-shadow(0 6px 10px rgba(64, 48, 109, .28)); }
+/* The delete control and the resize handle belong to the selected sticker only:
+   at rest a sticker is just art on the page, like every other hotspot here. */
+.blank-sticker__delete, .blank-sticker__handle { position: absolute; display: none; }
+.blank-sticker.is-selected .blank-sticker__delete,
+.blank-sticker.is-selected .blank-sticker__handle { display: grid; }
+.blank-sticker__delete {
+  top: -16px; right: -16px; width: 46px; height: 46px; place-items: center;
+  border: 3px solid #fff; border-radius: 50%;
+  background: linear-gradient(#ff8a96, #f04455); color: #fff;
+  font-size: 21px; line-height: 1; cursor: pointer;
+  box-shadow: 0 4px 0 rgba(75, 48, 121, .25);
+}
+.blank-sticker__handle {
+  right: -15px; bottom: -15px; width: 46px; height: 46px; place-items: center;
+  border: 3px solid #7453bd; border-radius: 50%; background: #fff;
+  cursor: nwse-resize; box-shadow: 0 4px 0 rgba(75, 48, 121, .25);
+}
+.blank-sticker__handle::after {
+  content: ""; width: 15px; height: 15px;
+  border-right: 4px solid #7453bd; border-bottom: 4px solid #7453bd;
+  transform: rotate(-45deg); margin-top: -4px;
+}
 .blank-screen .studio-message { position: absolute; right: 12px; bottom: calc(100% + 8px); left: 12px; width: max-content; margin: auto; }
 .blank-screen > .color-palette {
   display: flex;
