@@ -457,6 +457,7 @@ function tinyPop(frequency = 520, duration = 0.055) {
     // Sound is a bonus; coloring remains fully usable without audio permission.
   }
 }
+if (typeof AudioWake !== "undefined") AudioWake.attach(() => tinyPop.context, () => { tinyPop.context = null; });
 
 function buildGallery() {
   const fragment = document.createDocumentFragment();
