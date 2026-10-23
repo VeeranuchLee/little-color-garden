@@ -13,6 +13,7 @@
     <link rel="manifest" href="./manifest.webmanifest" />
     <link rel="apple-touch-icon" href="./assets/icons/apple-touch-icon.png" />
     <link rel="stylesheet" href="./styles.css" />
+    <link rel="stylesheet" href="./cg-back.css" />
   </head>
   <body>
     <main class="app-shell">
@@ -33,9 +34,7 @@
                published, /little-color-garden/ and /children-apps/ are siblings, but in
                the repo the hub lives under site/, so a relative link would work live and
                404 in every local preview. -->
-          <a class="round-button hub-button" href="https://veeranuchlee.github.io/children-apps/" aria-label="Back to Children Games">
-            <span aria-hidden="true">&larr;</span>
-          </a>
+          <a class="cg-back" href="https://veeranuchlee.github.io/children-apps/" aria-label="Back to Children Games"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
 
           <div class="brand-mark" aria-hidden="true">
             <span class="brand-star brand-star--one">✦</span>
@@ -48,7 +47,7 @@
 
           <div class="mode-menu-actions">
             <button class="round-button sound-button" id="modeMenuVoice" type="button" aria-label="Hear what to do">
-              <span aria-hidden="true">🔊</span>
+              <span aria-hidden="true"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4V5z" fill="currentColor" stroke="none"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 6a9 9 0 0 1 0 12"/></svg></span>
             </button>
             <button class="round-button sound-button music-off" id="modeMenuMusic" type="button" aria-label="Play music" aria-pressed="false">
               <span aria-hidden="true">♫</span>
@@ -123,7 +122,7 @@
             <span aria-hidden="true">⌂</span>
           </button>
           <button class="tool-button tool-button--voice" id="voiceButton" type="button" aria-label="Hear what to do">
-            <span aria-hidden="true">🔊</span>
+            <span aria-hidden="true"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4V5z" fill="currentColor" stroke="none"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 6a9 9 0 0 1 0 12"/></svg></span>
           </button>
           <button class="tool-button tool-button--peek" id="peekButton" type="button" aria-label="Show the finished picture next to yours" aria-pressed="false">
             <span class="peek-glyph" aria-hidden="true">
@@ -131,7 +130,7 @@
             </span>
           </button>
           <button class="tool-button tool-button--clear" id="clearButton" type="button" aria-label="Clean the whole picture">
-            <span aria-hidden="true">🧹</span>
+            <span aria-hidden="true"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.4 3.6 13.2 10.8"/><path d="M9.9 8.7 15.3 14.1"/><path d="M10.9 9.7 6.9 13.7"/><path d="M12.6 11.4 8.6 15.4"/><path d="M14.3 13.1 10.3 17.1"/></svg></span>
             <i class="arm-ring" aria-hidden="true"></i>
           </button>
           <button class="tool-button tool-button--finish" id="finishButton" type="button" aria-label="Celebrate my picture">
@@ -154,10 +153,10 @@
         <div class="studio-tools" aria-label="Art tools">
           <p class="studio-message" id="studioMessage" aria-live="polite"></p>
           <div class="primary-tools" role="group" aria-label="Choose a tool">
-            <button class="primary-tool is-selected" data-tool="brush" type="button"><span aria-hidden="true">🖌️</span><b>Brush</b></button>
-            <button class="primary-tool" data-tool="fill" type="button"><span aria-hidden="true">🪣</span><b>Fill</b></button>
-            <button class="primary-tool" data-tool="gradient" type="button"><span aria-hidden="true">🌈</span><b>Gradient</b></button>
-            <button class="primary-tool" data-tool="stamp" type="button"><span aria-hidden="true">⭐</span><b>Stamp</b></button>
+            <button class="primary-tool is-selected" data-tool="brush" type="button"><span aria-hidden="true"><svg class="icon-svg" viewBox="0 0 24 24"><path d="M20.5 3.5 13.3 10.7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><path d="M9.9 9.1 14.9 14.1 10.4 16.6 7.4 13.6z" fill="currentColor"/></svg></span><b>Brush</b></button>
+            <button class="primary-tool" data-tool="fill" type="button"><span aria-hidden="true"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6.6 9.2a4.5 4.5 0 0 1 9 0"/><path d="M5 9.2h12.2l-1.2 8.1a2.3 2.3 0 0 1-2.3 2H8.5a2.3 2.3 0 0 1-2.3-2z"/><path d="M20.5 12.6c.8 1 1.6 2.1 1.6 3.2a1.6 1.6 0 1 1-3.2 0c0-1.1.8-2.2 1.6-3.2z" fill="currentColor" stroke="none"/></svg></span><b>Fill</b></button>
+            <button class="primary-tool" data-tool="gradient" type="button"><span aria-hidden="true"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round"><path d="M4.5 16a7.5 7.5 0 0 1 15 0" stroke="#f04455"/><path d="M7 16a5 5 0 0 1 10 0" stroke="#eab215"/><path d="M9.5 16a2.5 2.5 0 0 1 5 0" stroke="#3c83ef"/></svg></span><b>Gradient</b></button>
+            <button class="primary-tool" data-tool="stamp" type="button"><span aria-hidden="true"><svg class="icon-svg" viewBox="0 0 24 24"><path d="M12 2.5l2.9 5.9 6.5 1-4.7 4.6 1.1 6.5L12 17.4l-5.8 3.1 1.1-6.5-4.7-4.6 6.5-1z" fill="currentColor"/></svg></span><b>Stamp</b></button>
             <button class="primary-tool" id="undoButton" type="button" aria-label="Undo last mark" disabled><span aria-hidden="true">↶</span><b>Undo</b></button>
           </div>
           <div class="secondary-tools" id="secondaryTools">
@@ -210,12 +209,12 @@
             <span aria-hidden="true">⌂</span>
           </button>
           <button class="tool-button tool-button--voice" id="blankVoice" type="button" aria-label="Hear what to do">
-            <span aria-hidden="true">🔊</span>
+            <span aria-hidden="true"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4V5z" fill="currentColor" stroke="none"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 6a9 9 0 0 1 0 12"/></svg></span>
           </button>
           <button class="tool-button blank-history" id="blankUndo" type="button" aria-label="Undo" disabled><span aria-hidden="true">↶</span></button>
           <button class="tool-button blank-history" id="blankRedo" type="button" aria-label="Redo" disabled><span aria-hidden="true">↷</span></button>
           <button class="tool-button tool-button--clear" id="blankClear" type="button" aria-label="Clean the whole page">
-            <span aria-hidden="true">🧹</span>
+            <span aria-hidden="true"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.4 3.6 13.2 10.8"/><path d="M9.9 8.7 15.3 14.1"/><path d="M10.9 9.7 6.9 13.7"/><path d="M12.6 11.4 8.6 15.4"/><path d="M14.3 13.1 10.3 17.1"/></svg></span>
             <i class="arm-ring" aria-hidden="true"></i>
           </button>
         </header>
@@ -235,11 +234,11 @@
         <div class="studio-tools" aria-label="Drawing tools">
           <p class="studio-message" id="blankMessage" aria-live="polite"></p>
           <div class="primary-tools blank-tools" role="group" aria-label="Choose a tool">
-            <button class="primary-tool is-selected" data-blank-tool="brush" type="button"><span aria-hidden="true">🖌️</span><b>Brush</b></button>
-            <button class="primary-tool" data-blank-tool="fill" type="button"><span aria-hidden="true">🪣</span><b>Fill</b></button>
-            <button class="primary-tool" data-blank-tool="shape" type="button"><span aria-hidden="true">⭐</span><b>Shapes</b></button>
-            <button class="primary-tool" data-blank-tool="stamp" type="button"><span aria-hidden="true">🐚</span><b>Stickers</b></button>
-            <button class="primary-tool" data-blank-tool="magic" type="button"><span aria-hidden="true">🌈</span><b>Magic</b></button>
+            <button class="primary-tool is-selected" data-blank-tool="brush" type="button"><span aria-hidden="true"><svg class="icon-svg" viewBox="0 0 24 24"><path d="M20.5 3.5 13.3 10.7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><path d="M9.9 9.1 14.9 14.1 10.4 16.6 7.4 13.6z" fill="currentColor"/></svg></span><b>Brush</b></button>
+            <button class="primary-tool" data-blank-tool="fill" type="button"><span aria-hidden="true"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6.6 9.2a4.5 4.5 0 0 1 9 0"/><path d="M5 9.2h12.2l-1.2 8.1a2.3 2.3 0 0 1-2.3 2H8.5a2.3 2.3 0 0 1-2.3-2z"/><path d="M20.5 12.6c.8 1 1.6 2.1 1.6 3.2a1.6 1.6 0 1 1-3.2 0c0-1.1.8-2.2 1.6-3.2z" fill="currentColor" stroke="none"/></svg></span><b>Fill</b></button>
+            <button class="primary-tool" data-blank-tool="shape" type="button"><span aria-hidden="true"><svg class="icon-svg" viewBox="0 0 24 24"><path d="M12 2.5l2.9 5.9 6.5 1-4.7 4.6 1.1 6.5L12 17.4l-5.8 3.1 1.1-6.5-4.7-4.6 6.5-1z" fill="currentColor"/></svg></span><b>Shapes</b></button>
+            <button class="primary-tool" data-blank-tool="stamp" type="button"><span aria-hidden="true"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12.6 11.4a1.4 1.4 0 0 1 1.4 1.4 3.2 3.2 0 0 1-3.2 3.2 4.9 4.9 0 0 1-4.9-4.9 6.6 6.6 0 0 1 6.6-6.6 8.4 8.4 0 0 1 8.4 8.4"/></svg></span><b>Stickers</b></button>
+            <button class="primary-tool" data-blank-tool="magic" type="button"><span aria-hidden="true"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round"><path d="M4.5 16a7.5 7.5 0 0 1 15 0" stroke="#f04455"/><path d="M7 16a5 5 0 0 1 10 0" stroke="#eab215"/><path d="M9.5 16a2.5 2.5 0 0 1 5 0" stroke="#3c83ef"/></svg></span><b>Magic</b></button>
             <button class="primary-tool" data-blank-tool="eraser" type="button"><span class="eraser-chip" aria-hidden="true"><i></i></span><b>Eraser</b></button>
           </div>
           <div id="blankShapeTray" class="blank-choice-tray" aria-label="Choose a shape" hidden>
@@ -280,7 +279,7 @@
           </div>
 
           <button class="round-button sound-button" id="mosaicGalleryVoice" type="button" aria-label="Hear what to do">
-            <span aria-hidden="true">🔊</span>
+            <span aria-hidden="true"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4V5z" fill="currentColor" stroke="none"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 6a9 9 0 0 1 0 12"/></svg></span>
           </button>
         </header>
 
@@ -303,10 +302,10 @@
           <div class="cbn-header-actions">
             <button id="cbnUndo" class="round-button" type="button" aria-label="Undo last color" disabled>↶</button>
             <button id="cbnClear" class="round-button tool-button--clear" type="button" aria-label="Clean the whole picture">
-              <span aria-hidden="true">🧹</span>
+              <span aria-hidden="true"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.4 3.6 13.2 10.8"/><path d="M9.9 8.7 15.3 14.1"/><path d="M10.9 9.7 6.9 13.7"/><path d="M12.6 11.4 8.6 15.4"/><path d="M14.3 13.1 10.3 17.1"/></svg></span>
               <i class="arm-ring" aria-hidden="true"></i>
             </button>
-            <button id="cbnSave" class="round-button" type="button" aria-label="Save Color by Number picture">💾</button>
+            <button id="cbnSave" class="round-button" type="button" aria-label="Save Color by Number picture"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.6v10.2"/><path d="M7.6 9.6 12 14l4.4-4.4"/><path d="M4.8 16.4v1.8a2.2 2.2 0 0 0 2.2 2.2h10a2.2 2.2 0 0 0 2.2-2.2v-1.8"/></svg></button>
           </div>
         </header>
         <div class="activity-board">
@@ -331,8 +330,8 @@
           <h1 id="stampTitle">Stamping</h1>
           <div class="stamp-header-actions">
             <button id="stampUndo" class="round-button" type="button" aria-label="Undo last stamp action">↶</button>
-            <button id="stampClear" class="round-button" type="button" aria-label="Clear all stamps">🧹</button>
-            <button id="stampSave" class="round-button" type="button" aria-label="Save stamped picture">💾</button>
+            <button id="stampClear" class="round-button" type="button" aria-label="Clear all stamps"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.4 3.6 13.2 10.8"/><path d="M9.9 8.7 15.3 14.1"/><path d="M10.9 9.7 6.9 13.7"/><path d="M12.6 11.4 8.6 15.4"/><path d="M14.3 13.1 10.3 17.1"/></svg></button>
+            <button id="stampSave" class="round-button" type="button" aria-label="Save stamped picture"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.6v10.2"/><path d="M7.6 9.6 12 14l4.4-4.4"/><path d="M4.8 16.4v1.8a2.2 2.2 0 0 0 2.2 2.2h10a2.2 2.2 0 0 0 2.2-2.2v-1.8"/></svg></button>
           </div>
         </header>
         <div class="activity-board stamp-board">
@@ -361,7 +360,7 @@
           </button>
           <div class="px-mark" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
           <button class="round-button sound-button" id="pixelGalleryVoice" type="button" aria-label="Hear what to do">
-            <span aria-hidden="true">🔊</span>
+            <span aria-hidden="true"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4V5z" fill="currentColor" stroke="none"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 6a9 9 0 0 1 0 12"/></svg></span>
           </button>
         </header>
         <div id="pixelLevels" class="px-levels" role="group" aria-label="How much help"></div>
@@ -374,13 +373,13 @@
             <span aria-hidden="true">⌂</span>
           </button>
           <button class="tool-button tool-button--voice" id="pixelVoice" type="button" aria-label="Hear what to do">
-            <span aria-hidden="true">🔊</span>
+            <span aria-hidden="true"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4V5z" fill="currentColor" stroke="none"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 6a9 9 0 0 1 0 12"/></svg></span>
           </button>
           <button class="tool-button tool-button--undo" id="pixelUndo" type="button" aria-label="Undo last tiles" disabled>
             <span aria-hidden="true">↶</span>
           </button>
           <button class="tool-button tool-button--clear" id="pixelClear" type="button" aria-label="Clean the whole board">
-            <span aria-hidden="true">🧹</span>
+            <span aria-hidden="true"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.4 3.6 13.2 10.8"/><path d="M9.9 8.7 15.3 14.1"/><path d="M10.9 9.7 6.9 13.7"/><path d="M12.6 11.4 8.6 15.4"/><path d="M14.3 13.1 10.3 17.1"/></svg></span>
             <i class="arm-ring" aria-hidden="true"></i>
           </button>
           <button class="tool-button tool-button--finish" id="pixelFinish" type="button" aria-label="Celebrate my mosaic">

@@ -13,6 +13,15 @@
   const undoButton = document.querySelector("#stampUndo");
   const clearButton = document.querySelector("#stampClear");
 
+  // Owner rule, 2026-10-20: no emoji in the UI -- the blank-page card's mark is
+  // a drawn pencil and sparkle in the app's own rounded style. The svg's
+  // <title> keeps the tile's text content non-empty (what the smoke checks).
+  const BLANK_TILE_MARK =
+    '<svg class="icon-svg" viewBox="0 0 24 24" aria-hidden="true"><title>Draw your own picture</title>' +
+    '<path d="M17.1 3.2a2.7 2.7 0 0 1 3.8 3.8L8 19.9l-5.6 1.7 1.7-5.6z" fill="currentColor"/></svg>' +
+    '<svg class="icon-svg" viewBox="0 0 24 24" aria-hidden="true">' +
+    '<path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z" fill="currentColor"/></svg>';
+
   let manifest = null;
   let scene = null;
   let sceneImage = null;
@@ -315,7 +324,7 @@
     const blankIcon = document.createElement("span");
     blankIcon.className = "blank-tile-icon";
     blankIcon.setAttribute("aria-hidden", "true");
-    blankIcon.textContent = "✏️ ✨";
+    blankIcon.innerHTML = BLANK_TILE_MARK;
     const blankTitle = document.createElement("b");
     blankTitle.textContent = "Blank Page";
     blankTile.append(blankIcon, blankTitle);

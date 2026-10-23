@@ -16,6 +16,13 @@
   const speak = typeof window.speak === "function" ? window.speak : () => {};
   const pop = typeof window.tinyPop === "function" ? window.tinyPop : () => {};
 
+  // Owner rule, 2026-10-20: no emoji in the UI -- the celebration sparkle is
+  // drawn beside the words, in the app's own rounded style, instead of an
+  // emoji inside them.
+  const SPARKLE_ICON =
+    '<svg class="icon-svg" viewBox="0 0 24 24" aria-hidden="true">' +
+    '<path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z" fill="currentColor"/></svg>';
+
   let manifest = null;
   let picture = null;
   let lineImage = null;
@@ -391,7 +398,8 @@
   }
 
   function celebrateCompletion() {
-    message.textContent = "You finished it! ✨";
+    message.textContent = "You finished it!";
+    message.insertAdjacentHTML("beforeend", SPARKLE_ICON);
     window.tinyPop(720, 0.1);
     window.setTimeout(() => {
       message.textContent = "";

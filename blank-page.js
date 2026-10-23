@@ -37,6 +37,13 @@
   // the corner handle clamp inside this range (owner brief: roughly 0.4x-3x).
   const STICKER_MIN_SCALE = .4;
   const STICKER_MAX_SCALE = 3;
+  // Owner rule, 2026-10-20: no emoji in the UI -- the sticker delete control
+  // is a drawn bin (lid + body) in the app's own rounded style, not an emoji.
+  const BIN_ICON =
+    '<svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+    '<path d="M4.5 6.5h15"/><path d="M9.5 6.3V4.9a1.4 1.4 0 0 1 1.4-1.4h2.2a1.4 1.4 0 0 1 1.4 1.4v1.4"/>' +
+    '<path d="M6.4 6.5l.8 11.7a2 2 0 0 0 2 1.9h5.6a2 2 0 0 0 2-1.9l.8-11.7"/>' +
+    '<path d="M10.2 10.4v5.7M13.8 10.4v5.7"/></svg>';
 
   const THEMED_STAMPS = {
     space: ["ringed-planet", "smiling-star", "rocket", "crescent-moon", "blue-planet", "comet", "astronaut-helmet", "ufo", "sun", "constellation", "satellite", "telescope", "galaxy", "astronaut-boot", "lunar-rover"],
@@ -348,7 +355,7 @@
     const remove = document.createElement("button");
     remove.type = "button"; remove.className = "blank-sticker__delete";
     remove.setAttribute("aria-label", "Remove this sticker");
-    remove.textContent = "🗑️";
+    remove.innerHTML = BIN_ICON;
     remove.addEventListener("pointerdown", (event) => event.stopPropagation());
     remove.addEventListener("click", () => deleteSticker(sticker.id));
     const handle = document.createElement("span");

@@ -25,7 +25,7 @@
 //      0.4x-3x), delete, and the picker collapses after a choice.
 //      Same v30 candidate: 60 more Blank Page stickers and 20 Stamping stamps;
 //      this extends the already-armed candidate without advancing the cache name.
-const CACHE_NAME = "little-color-garden-v32";
+const CACHE_NAME = "little-color-garden-v33";
 const PAGE_IDS = [
   "solar-system",
   "space-kid",
@@ -229,6 +229,7 @@ const APP_FILES = [
   "./index.html",
   "./audio-wake.js",
   "./styles.css",
+  "./cg-back.css",
   "./tap-zoom-guard.js",
   "./app.js",
   "./pixel-cards.js",
