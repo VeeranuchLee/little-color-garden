@@ -196,7 +196,7 @@ function updateMusicButton(playing) {
   menuMusicButton.classList.toggle("music-off", !playing);
   menuMusicButton.setAttribute("aria-pressed", String(playing));
   menuMusicButton.setAttribute("aria-label", playing ? "Stop music" : "Play music");
-  menuMusicButton.querySelector("span").textContent = playing ? "♫" : "♪";
+  menuMusicButton.querySelector("span").innerHTML = "<svg viewBox=\"0 0 24 24\" aria-hidden=\"true\" focusable=\"false\"><path d=\"M9 18V5l11-2v13\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle cx=\"6\" cy=\"18\" r=\"3\" fill=\"currentColor\"/><circle cx=\"17\" cy=\"16\" r=\"3\" fill=\"currentColor\"/></svg>";
 }
 
 // The menu bed plays only on the mode menu (AUDIO-DIRECTION.md decision 10a).

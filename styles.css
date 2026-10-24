@@ -214,6 +214,7 @@ button:disabled {
 .paint-smile span:first-child { left: 19px; }
 .paint-smile span:last-child { right: 19px; }
 
+.brand-star svg{width:1em;height:1em;display:block}
 .brand-star {
   position: absolute;
   z-index: 2;
@@ -1078,7 +1079,7 @@ button:disabled {
 .activity-message:empty { display: none; }
 
 /* The celebration sparkle sits inside the message's own line of text. */
-.activity-message .icon-svg { display: inline-block; vertical-align: -0.12em; }
+.activity-message svg { display: inline-block; width: 1em; height: 1em; vertical-align: -0.12em; }
 
 .stamp-controls {
   display: grid;

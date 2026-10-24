@@ -19,9 +19,7 @@
   // Owner rule, 2026-10-20: no emoji in the UI -- the celebration sparkle is
   // drawn beside the words, in the app's own rounded style, instead of an
   // emoji inside them.
-  const SPARKLE_ICON =
-    '<svg class="icon-svg" viewBox="0 0 24 24" aria-hidden="true">' +
-    '<path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z" fill="currentColor"/></svg>';
+  const SPARKLE_ICON = "<svg viewBox=\"0 0 24 24\" aria-hidden=\"true\" focusable=\"false\"><path d=\"M12 2c.7 6.2 3.8 9.3 10 10-6.2.7-9.3 3.8-10 10-.7-6.2-3.8-9.3-10-10 6.2-.7 9.3-3.8 10-10z\" fill=\"currentColor\"/></svg>";
 
   let manifest = null;
   let picture = null;
