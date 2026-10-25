@@ -14,7 +14,8 @@
     <link rel="apple-touch-icon" href="./assets/icons/apple-touch-icon.png" />
     <link rel="stylesheet" href="./styles.css" />
     <link rel="stylesheet" href="./cg-back.css" />
-  </head>
+    <script src="./cg-update.js" defer></script>
+</head>
   <body>
     <main class="app-shell">
       <!-- Top-level mode menu (owner brief, 2026-09-14): Pixel Mosaic and
@@ -98,9 +99,7 @@
         <div class="sky-blob sky-blob--three" aria-hidden="true"></div>
 
         <header class="gallery-header">
-          <button class="round-button hub-button" id="galleryBackButton" type="button" aria-label="Back to the menu">
-            <span aria-hidden="true">&larr;</span>
-          </button>
+          <span class="cg-back-slot" aria-hidden="true"></span><button class="cg-back" id="galleryBackButton" type="button" aria-label="Back to the menu"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
 
           <div class="brand-mark" aria-hidden="true">
             <span class="brand-star brand-star--one"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 2c.7 6.2 3.8 9.3 10 10-6.2.7-9.3 3.8-10 10-.7-6.2-3.8-9.3-10-10 6.2-.7 9.3-3.8 10-10z" fill="currentColor"/></svg></span>
@@ -118,9 +117,7 @@
 
       <section id="coloringScreen" class="screen coloring-screen" aria-label="Coloring page" hidden>
         <header class="top-toolbar">
-          <button class="tool-button tool-button--home" id="homeButton" type="button" aria-label="Go home">
-            <span aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 11l8-7 8 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 10v10h12V10" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 20v-5h4v5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-          </button>
+          <span class="cg-back-slot" aria-hidden="true"></span><button class="cg-back" id="homeButton" type="button" aria-label="Back to the pictures"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
           <button class="tool-button tool-button--voice" id="voiceButton" type="button" aria-label="Hear what to do">
             <span aria-hidden="true"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4V5z" fill="currentColor" stroke="none"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 6a9 9 0 0 1 0 12"/></svg></span>
           </button>
@@ -205,9 +202,7 @@
       <!-- Blank Page: a small child-friendly art toy, expanded 2026-09-28. -->
       <section id="blankScreen" class="screen coloring-screen blank-screen" aria-label="Blank page" hidden>
         <header class="top-toolbar">
-          <button class="tool-button tool-button--home" id="blankHome" type="button" aria-label="Go back to the pictures">
-            <span aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 11l8-7 8 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 10v10h12V10" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 20v-5h4v5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-          </button>
+          <span class="cg-back-slot" aria-hidden="true"></span><button class="cg-back" id="blankHome" type="button" aria-label="Back to the pictures"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
           <button class="tool-button tool-button--voice" id="blankVoice" type="button" aria-label="Hear what to do">
             <span aria-hidden="true"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4V5z" fill="currentColor" stroke="none"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 6a9 9 0 0 1 0 12"/></svg></span>
           </button>
@@ -265,9 +260,7 @@
         <div class="sky-blob sky-blob--three" aria-hidden="true"></div>
 
         <header class="gallery-header">
-          <button class="round-button hub-button" id="mosaicGalleryBack" type="button" aria-label="Back to the menu">
-            <span aria-hidden="true">&larr;</span>
-          </button>
+          <span class="cg-back-slot" aria-hidden="true"></span><button class="cg-back" id="mosaicGalleryBack" type="button" aria-label="Back to the menu"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
 
           <div class="brand-mark" aria-hidden="true">
             <span class="brand-star brand-star--one"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 2c.7 6.2 3.8 9.3 10 10-6.2.7-9.3 3.8-10 10-.7-6.2-3.8-9.3-10-10 6.2-.7 9.3-3.8 10-10z" fill="currentColor"/></svg></span>
@@ -288,7 +281,7 @@
 
       <section id="cbnGalleryScreen" class="screen activity-gallery" hidden>
         <header class="activity-header">
-          <button id="cbnGalleryBack" class="round-button" type="button" aria-label="Back to the menu"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          <span class="cg-back-slot" aria-hidden="true"></span><button id="cbnGalleryBack" class="cg-back" type="button" aria-label="Back to the menu"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
           <h1>Color by Number</h1>
         </header>
         <div id="cbnGallery" class="activity-cards"></div>
@@ -296,7 +289,7 @@
 
       <section id="cbnScreen" class="screen activity-workspace cbn-workspace" hidden>
         <header class="activity-header cbn-header">
-          <button id="cbnBack" class="round-button" type="button" aria-label="Back to Color by Number pictures"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          <span class="cg-back-slot" aria-hidden="true"></span><button id="cbnBack" class="cg-back" type="button" aria-label="Back to Color by Number pictures"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
           <h1 id="cbnTitle">Color by Number</h1>
           <div id="cbnCelebration" class="activity-message" aria-live="polite"></div>
           <div class="cbn-header-actions">
@@ -318,7 +311,7 @@
 
       <section id="stampGalleryScreen" class="screen activity-gallery" hidden>
         <header class="activity-header">
-          <button id="stampGalleryBack" class="round-button" type="button" aria-label="Back to the menu"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          <span class="cg-back-slot" aria-hidden="true"></span><button id="stampGalleryBack" class="cg-back" type="button" aria-label="Back to the menu"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
           <h1>Stamping</h1>
         </header>
         <div id="stampGallery" class="activity-cards"></div>
@@ -326,7 +319,7 @@
 
       <section id="stampScreen" class="screen activity-workspace stamp-workspace" hidden>
         <header class="activity-header stamp-header">
-          <button id="stampBack" class="round-button" type="button" aria-label="Back to Stamping scenes"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          <span class="cg-back-slot" aria-hidden="true"></span><button id="stampBack" class="cg-back" type="button" aria-label="Back to Stamping scenes"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
           <h1 id="stampTitle">Stamping</h1>
           <div class="stamp-header-actions">
             <button id="stampUndo" class="round-button" type="button" aria-label="Undo last stamp action"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 7L4 12l5 5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M4.5 12H14a5.5 5.5 0 0 1 0 11h-2" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
@@ -355,9 +348,7 @@
            exactly 36 colors in 3 rows x 12; cards use only those colors. -->
       <section id="pixelGalleryScreen" class="screen px-gallery-screen" aria-label="Pixel mosaic pictures to copy" hidden>
         <header class="gallery-header">
-          <button class="round-button hub-button" id="pixelGalleryBack" type="button" aria-label="Back to the menu">
-            <span aria-hidden="true">&larr;</span>
-          </button>
+          <span class="cg-back-slot" aria-hidden="true"></span><button class="cg-back" id="pixelGalleryBack" type="button" aria-label="Back to the menu"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
           <div class="px-mark" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
           <button class="round-button sound-button" id="pixelGalleryVoice" type="button" aria-label="Hear what to do">
             <span aria-hidden="true"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4V5z" fill="currentColor" stroke="none"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 6a9 9 0 0 1 0 12"/></svg></span>
@@ -369,9 +360,7 @@
 
       <section id="pixelBoardScreen" class="screen px-board-screen" aria-label="Pixel mosaic board" hidden>
         <header class="top-toolbar">
-          <button class="tool-button tool-button--home" id="pixelHome" type="button" aria-label="Go back to the cards">
-            <span aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 11l8-7 8 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 10v10h12V10" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 20v-5h4v5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-          </button>
+          <span class="cg-back-slot" aria-hidden="true"></span><button class="cg-back" id="pixelHome" type="button" aria-label="Back to the cards"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
           <button class="tool-button tool-button--voice" id="pixelVoice" type="button" aria-label="Hear what to do">
             <span aria-hidden="true"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4V5z" fill="currentColor" stroke="none"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 6a9 9 0 0 1 0 12"/></svg></span>
           </button>
