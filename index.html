@@ -206,12 +206,22 @@
           <button class="tool-button tool-button--voice" id="blankVoice" type="button" aria-label="Hear what to do">
             <span aria-hidden="true"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4V5z" fill="currentColor" stroke="none"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 6a9 9 0 0 1 0 12"/></svg></span>
           </button>
-          <button class="tool-button blank-history" id="blankUndo" type="button" aria-label="Undo" disabled><span aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 7L4 12l5 5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M4.5 12H14a5.5 5.5 0 0 1 0 11h-2" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span></button>
-          <button class="tool-button blank-history" id="blankRedo" type="button" aria-label="Redo" disabled><span aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 12a8 8 0 1 1-2.3-5.6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 4v5h-5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span></button>
+          <!-- Undo/Redo (owner, 2026-10-28: "and what's the gray ones?" -- the
+               arrows used to disappear when the buttons were disabled). Both
+               wear the shared undo icon; styles.css keeps the arrow visible
+               (faded) while disabled and mirrors the Redo copy. -->
+          <button class="tool-button blank-history" id="blankUndo" type="button" aria-label="Undo" disabled><span aria-hidden="true"><svg class="icon-svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 7L4 12l5 5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M4.5 12H14a5.5 5.5 0 0 1 0 11h-2" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span></button>
+          <button class="tool-button blank-history" id="blankRedo" type="button" aria-label="Redo" disabled><span aria-hidden="true"><svg class="icon-svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 7L4 12l5 5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M4.5 12H14a5.5 5.5 0 0 1 0 11h-2" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span></button>
           <button class="tool-button tool-button--clear" id="blankClear" type="button" aria-label="Clean the whole page">
             <span aria-hidden="true"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.4 3.6 13.2 10.8"/><path d="M9.9 8.7 15.3 14.1"/><path d="M10.9 9.7 6.9 13.7"/><path d="M12.6 11.4 8.6 15.4"/><path d="M14.3 13.1 10.3 17.1"/></svg></span>
             <i class="arm-ring" aria-hidden="true"></i>
           </button>
+          <!-- Turn and mirror the selected sticker (owner request 2026-10-25:
+               "we may also need similar thing to sticker in coloring too"). -->
+          <div id="blankStickerActions" class="blank-sticker-actions" role="group" aria-label="Turn or flip the sticker" hidden>
+            <button class="tool-button tool-button--turn" id="blankStickerRotate" type="button" aria-label="Turn this sticker"><span aria-hidden="true"><svg class="icon-svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="8.2" y="10.4" width="9" height="9" rx="2" transform="rotate(20 12.7 14.9)" fill="currentColor"/><path d="M4.2 13.2A8.2 8.2 0 0 1 17.6 5.4" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><path d="M18.4 1.8v4.4H14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span></button>
+            <button class="tool-button tool-button--turn" id="blankStickerFlip" type="button" aria-label="Flip this sticker"><span aria-hidden="true"><svg class="icon-svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 2.5v19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-dasharray="2.2 2.8"/><path d="M9.4 6.2v12.3H3.2z" fill="currentColor" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M14.6 6.2v12.3h6.2z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></span></button>
+          </div>
         </header>
 
         <div class="canvas-stage">
@@ -229,16 +239,26 @@
         <div class="studio-tools" aria-label="Drawing tools">
           <p class="studio-message" id="blankMessage" aria-live="polite"></p>
           <div class="primary-tools blank-tools" role="group" aria-label="Choose a tool">
-            <button class="primary-tool is-selected" data-blank-tool="brush" type="button"><span aria-hidden="true"><svg class="icon-svg" viewBox="0 0 24 24"><path d="M20.5 3.5 13.3 10.7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><path d="M9.9 9.1 14.9 14.1 10.4 16.6 7.4 13.6z" fill="currentColor"/></svg></span><b>Brush</b></button>
-            <button class="primary-tool" data-blank-tool="fill" type="button"><span aria-hidden="true"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6.6 9.2a4.5 4.5 0 0 1 9 0"/><path d="M5 9.2h12.2l-1.2 8.1a2.3 2.3 0 0 1-2.3 2H8.5a2.3 2.3 0 0 1-2.3-2z"/><path d="M20.5 12.6c.8 1 1.6 2.1 1.6 3.2a1.6 1.6 0 1 1-3.2 0c0-1.1.8-2.2 1.6-3.2z" fill="currentColor" stroke="none"/></svg></span><b>Fill</b></button>
-            <button class="primary-tool" data-blank-tool="shape" type="button"><span aria-hidden="true"><svg class="icon-svg" viewBox="0 0 24 24"><path d="M12 2.5l2.9 5.9 6.5 1-4.7 4.6 1.1 6.5L12 17.4l-5.8 3.1 1.1-6.5-4.7-4.6 6.5-1z" fill="currentColor"/></svg></span><b>Shapes</b></button>
-            <button class="primary-tool" data-blank-tool="stamp" type="button"><span aria-hidden="true"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12.6 11.4a1.4 1.4 0 0 1 1.4 1.4 3.2 3.2 0 0 1-3.2 3.2 4.9 4.9 0 0 1-4.9-4.9 6.6 6.6 0 0 1 6.6-6.6 8.4 8.4 0 0 1 8.4 8.4"/></svg></span><b>Stickers</b></button>
-            <button class="primary-tool" data-blank-tool="magic" type="button"><span aria-hidden="true"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round"><path d="M4.5 16a7.5 7.5 0 0 1 15 0" stroke="#f04455"/><path d="M7 16a5 5 0 0 1 10 0" stroke="#eab215"/><path d="M9.5 16a2.5 2.5 0 0 1 5 0" stroke="#3c83ef"/></svg></span><b>Magic</b></button>
-            <button class="primary-tool" data-blank-tool="eraser" type="button"><span class="eraser-chip" aria-hidden="true"><i></i></span><b>Eraser</b></button>
+            <!-- Icon tiles (owner brief, 2026-10-28): one drawn style and weight
+                 for all six -- rounded 2.4-weight strokes, pictures from the
+                 shared icon set where one exists (pencil, star, sparkle) and
+                 matching drawn pictures where the set has none (paint bucket,
+                 magic wand, eraser). The icon sits centred above its label. -->
+            <button class="primary-tool is-selected" data-blank-tool="brush" type="button"><span aria-hidden="true"><svg class="icon-svg" viewBox="0 0 24 24"><path d="M15 4l5 5L9 20H4v-5z" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M13 6l5 5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span><b>Brush</b></button>
+            <button class="primary-tool" data-blank-tool="fill" type="button"><span aria-hidden="true"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M11.2 3.6 3.4 11.4a2 2 0 0 0 0 2.8l4.9 4.9a2 2 0 0 0 2.8 0l7.8-7.8z"/><path d="M20.5 12.6c.8 1 1.6 2.1 1.6 3.2a1.6 1.6 0 1 1-3.2 0c0-1.1.8-2.2 1.6-3.2z" fill="currentColor" stroke="none"/></svg></span><b>Fill</b></button>
+            <button class="primary-tool" data-blank-tool="shape" type="button"><span aria-hidden="true"><svg class="icon-svg" viewBox="0 0 24 24"><path d="M12 2.8l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 16.9 6.6 19.7l1-6.1L3.2 9.3l6.1-.9z" fill="currentColor"/></svg></span><b>Shapes</b></button>
+            <button class="primary-tool" data-blank-tool="stamp" type="button"><span aria-hidden="true"><svg class="icon-svg" viewBox="0 0 24 24"><path d="M12 2c.7 6.2 3.8 9.3 10 10-6.2.7-9.3 3.8-10 10-.7-6.2-3.8-9.3-10-10 6.2-.7 9.3-3.8 10-10z" fill="currentColor"/></svg></span><b>Stickers</b></button>
+            <button class="primary-tool" data-blank-tool="magic" type="button"><span aria-hidden="true"><svg class="icon-svg" viewBox="0 0 24 24"><path d="M4 20.2 12.8 11.4" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><path d="M16.7 3.3l1 3.3 3.3 1-3.3 1-1 3.3-1-3.3-3.3-1 3.3-1z" fill="currentColor"/><circle cx="20.7" cy="14" r="1.4" fill="currentColor"/><circle cx="12" cy="5.2" r="1.4" fill="currentColor"/></svg></span><b>Magic</b></button>
+            <button class="primary-tool" data-blank-tool="eraser" type="button"><span aria-hidden="true"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M7.1 20.6 2.9 16.4a1.9 1.9 0 0 1 0-2.7l9.4-9.4a1.9 1.9 0 0 1 2.7 0l5.3 5.3a1.9 1.9 0 0 1 0 2.7l-8.5 8.3"/><path d="M21.4 20.6H7.1"/><path d="M5.6 11.2l7.3 7.3"/></svg></span><b>Eraser</b></button>
           </div>
           <div id="blankShapeTray" class="blank-choice-tray" aria-label="Choose a shape" hidden>
             <button class="is-selected" data-shape="circle" type="button" aria-label="Circle">●</button><button data-shape="star" type="button" aria-label="Star">★</button><button data-shape="heart" type="button" aria-label="Heart">♥</button><button data-shape="square" type="button" aria-label="Square">■</button><button data-shape="triangle" type="button" aria-label="Triangle">▲</button>
           </div>
+          <!-- The Magic picker (owner brief, 2026-10-28: "this magic one -> can
+               we have more to select? not only rainbow?"). blank-page.js fills it
+               with a tray of brushes, each shown as a small painted sample of its
+               own stroke, the way the Shapes tray offers shapes. -->
+          <div id="blankMagicTray" class="blank-choice-tray blank-magic-tray" aria-label="Choose a magic brush" hidden></div>
           <div id="blankStampPanel" class="blank-stamp-panel" hidden>
             <div id="blankStampCategories" class="blank-category-tray" aria-label="Sticker categories"></div>
             <div id="blankStampTray" class="blank-stamp-tray" aria-label="Choose a sticker"></div>
@@ -313,6 +333,7 @@
         <header class="activity-header">
           <span class="cg-back-slot" aria-hidden="true"></span><button id="stampGalleryBack" class="cg-back" type="button" aria-label="Back to the menu"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
           <h1>Stamping</h1>
+          <button class="round-button sound-button music-off stamp-music" type="button" aria-label="Play music" aria-pressed="false"><span aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 18V5l11-2v13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="6" cy="18" r="3" fill="currentColor"/><circle cx="17" cy="16" r="3" fill="currentColor"/></svg></span></button>
         </header>
         <div id="stampGallery" class="activity-cards"></div>
       </section>
@@ -322,6 +343,7 @@
           <span class="cg-back-slot" aria-hidden="true"></span><button id="stampBack" class="cg-back" type="button" aria-label="Back to Stamping scenes"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
           <h1 id="stampTitle">Stamping</h1>
           <div class="stamp-header-actions">
+            <button class="round-button sound-button music-off stamp-music" type="button" aria-label="Play music" aria-pressed="false"><span aria-hidden="true"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 18V5l11-2v13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="6" cy="18" r="3" fill="currentColor"/><circle cx="17" cy="16" r="3" fill="currentColor"/></svg></span></button>
             <button id="stampUndo" class="round-button" type="button" aria-label="Undo last stamp action"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 7L4 12l5 5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M4.5 12H14a5.5 5.5 0 0 1 0 11h-2" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
             <button id="stampClear" class="round-button" type="button" aria-label="Clear all stamps"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.4 3.6 13.2 10.8"/><path d="M9.9 8.7 15.3 14.1"/><path d="M10.9 9.7 6.9 13.7"/><path d="M12.6 11.4 8.6 15.4"/><path d="M14.3 13.1 10.3 17.1"/></svg></button>
             <button id="stampSave" class="round-button" type="button" aria-label="Save stamped picture"><svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.6v10.2"/><path d="M7.6 9.6 12 14l4.4-4.4"/><path d="M4.8 16.4v1.8a2.2 2.2 0 0 0 2.2 2.2h10a2.2 2.2 0 0 0 2.2-2.2v-1.8"/></svg></button>
@@ -338,6 +360,11 @@
               <button data-size="0.12" type="button" aria-label="Small stamp">Small</button>
               <button class="is-selected" data-size="0.18" type="button" aria-label="Medium stamp">Medium</button>
               <button data-size="0.26" type="button" aria-label="Large stamp">Large</button>
+              <!-- Turn and mirror the selected stamp (owner request 2026-10-25). They
+                   show only while a placed stamp is selected; visibility, not
+                   display, so the size buttons never jump sideways. -->
+              <button id="stampRotate" class="stamp-transform" type="button" aria-label="Turn this stamp"><svg class="icon-svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="8.2" y="10.4" width="9" height="9" rx="2" transform="rotate(20 12.7 14.9)" fill="currentColor"/><path d="M4.2 13.2A8.2 8.2 0 0 1 17.6 5.4" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><path d="M18.4 1.8v4.4H14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+              <button id="stampFlip" class="stamp-transform" type="button" aria-label="Flip this stamp"><svg class="icon-svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 2.5v19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-dasharray="2.2 2.8"/><path d="M9.4 6.2v12.3H3.2z" fill="currentColor" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M14.6 6.2v12.3h6.2z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></button>
             </div>
           </div>
         </div>
@@ -406,6 +433,7 @@
     <script src="./app.js"></script>
     <script src="./pixel-cards.js"></script>
     <script src="./pixel-mode.js"></script>
+    <script src="./sticker-kit.js"></script>
     <script src="./blank-page.js"></script>
     <script src="./mosaic-mode.js"></script>
     <script src="./cbn-mode.js"></script>

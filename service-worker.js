@@ -25,7 +25,10 @@
 //      0.4x-3x), delete, and the picker collapses after a choice.
 //      Same v30 candidate: 60 more Blank Page stickers and 20 Stamping stamps;
 //      this extends the already-armed candidate without advancing the cache name.
-const CACHE_NAME = "little-color-garden-v35";
+// 2026-10-25 (no version bump; set at merge): Stamping themes -- five scenes, the
+//      Unicorn and School stamp packs, shared sticker-kit.js (letter/number tiles, sticker packs and the
+//      rotate/mirror helpers), rotate and mirror for stamps and stickers.
+const CACHE_NAME = "little-color-garden-v39";
 const PAGE_IDS = [
   "solar-system",
   "space-kid",
@@ -238,6 +241,7 @@ const APP_FILES = [
   "./blank-page.js",
   "./mosaic-mode.js",
   "./cbn-mode.js",
+  "./sticker-kit.js",
   "./stamp-mode.js",
   "./data/cbn.json",
   "./data/stamps.json",
@@ -253,9 +257,15 @@ const APP_FILES = [
     "weather-snowflake", "weather-lightning", "weather-moon", "weather-star",
     "weather-wind-swirl", "weather-umbrella", "garden-ladybird", "garden-bee",
     "garden-butterfly", "garden-snail", "garden-caterpillar", "garden-dragonfly",
-    "garden-ant", "garden-beetle", "garden-worm", "garden-spider"
+    "garden-ant", "garden-beetle", "garden-worm", "garden-spider",
+    "school-alarm-clock", "school-apple", "school-backpack", "school-book",
+    "school-crayon-box", "school-globe", "school-lunchbox", "school-paint-palette",
+    "school-pencil", "school-ruler", "school-school-bus", "school-scissors",
+    "unicorn-castle-tower", "unicorn-crown", "unicorn-cupcake", "unicorn-heart-balloon",
+    "unicorn-moon-wand", "unicorn-pastel-cloud", "unicorn-rainbow", "unicorn-sparkle-star",
+    "unicorn-star-wand", "unicorn-unicorn", "unicorn-unicorn-head", "unicorn-winged-pony"
   ].map((name) => `./assets/stamps/stamp-${name}.webp`),
-  ...["garden", "sea", "sky"].map((name) => `./assets/scenes/scene-${name}.webp`),
+  ...["garden", "sea", "sky", "space", "princess", "unicorn", "undersea", "school"].map((name) => `./assets/scenes/scene-${name}.webp`),
   ...Object.entries({
     space: ["ringed-planet", "smiling-star", "rocket", "crescent-moon", "blue-planet", "comet", "astronaut-helmet", "ufo", "sun", "constellation", "satellite", "telescope", "galaxy", "astronaut-boot", "lunar-rover"],
     princess: ["crown", "wand", "glass-slipper", "gown", "heart-tiara", "carriage", "royal-kitten", "rose-bouquet", "gem-heart", "mirror", "sceptre", "pearl-necklace", "hand-fan", "royal-pony", "teacup"],
@@ -263,8 +273,16 @@ const APP_FILES = [
     castle: ["rainbow-castle", "turret", "magic-door", "magic-key", "crystal-ball", "dragon", "unicorn", "potion", "spell-book", "crystal", "wizard-hat", "cauldron", "broom", "shield", "lantern"],
     animals: ["cat", "puppy", "bunny", "panda", "fox", "owl", "hamster", "turtle", "duck", "koala"],
     ocean: ["fish", "octopus", "whale", "starfish", "shell", "crab", "seahorse", "dolphin", "jellyfish", "coral"],
-    food: ["cupcake", "ice-cream", "donut", "strawberry", "lollipop", "cookie", "cake-slice", "watermelon", "cherries", "candy"],
-    vehicles: ["car", "bus", "train", "plane", "boat", "bicycle", "fire-truck", "tractor", "hot-air-balloon", "scooter"]
+    food: ["cupcake", "ice-cream", "donut", "strawberry", "lollipop", "cookie", "cake-slice", "watermelon", "cherries", "candy", "pudding", "macaron", "ice-lolly", "pancake-stack", "fruit-tart"],
+    fruit: ["apple", "banana", "orange", "grapes", "pear", "pineapple", "mango", "peach", "lemon", "kiwi", "blueberries", "coconut", "plum", "papaya", "dragon-fruit"],
+    veg: ["carrot", "broccoli", "tomato", "corn", "peas-pod", "cucumber", "pumpkin", "mushroom", "potato", "onion", "bell-pepper", "aubergine", "lettuce", "sweet-potato", "radish"],
+    meals: ["rice-bowl", "noodle-bowl", "dumplings", "sushi", "fried-egg", "toast", "sandwich", "pizza-slice", "spaghetti", "soup-bowl", "bread-loaf", "croissant", "cheese-wedge", "milk-carton", "rice-ball"],
+    dishes: ["steak-vegetables", "fried-rice", "chicken-curry-rice", "pad-thai", "ramen", "burger", "fish-chips", "roast-chicken", "omelette", "fried-chicken", "salad-bowl", "tacos", "lasagne", "mac-cheese", "bibimbap", "tom-yum-soup", "green-curry", "dim-sum-basket", "pho", "roast-dinner-plate"],
+    vehicles: ["car", "bus", "train", "plane", "boat", "bicycle", "fire-truck", "tractor", "hot-air-balloon", "scooter"],
+    home: ["teapot", "teacup-saucer", "tea-table", "sofa", "armchair", "pink-princess-castle", "cupcake-stand", "lamp", "cushion", "bookshelf"],
+    baby: ["baby-food-jar", "baby-bottle", "bib", "nappy", "pink-crib", "pram", "rattle", "dummy", "high-chair", "baby-bath", "baby-blanket", "onesie", "baby-booties", "cot-mobile", "teething-ring", "spoon-bowl", "sippy-cup", "changing-bag", "stacking-rings", "baby-monitor"],
+    dinosaurs: ["t-rex", "triceratops", "stegosaurus", "brachiosaurus", "diplodocus", "ankylosaurus", "pteranodon", "parasaurolophus", "spinosaurus", "velociraptor", "egg", "baby-hatching"],
+    effects: ["campfire-flames", "candle-flame", "ice-block", "icicles", "snowflakes", "water-splash", "rain-drops", "waves", "bubbles", "smoke-puff", "steam-swirl", "sparkles", "lightning-bolt", "rainbow", "wind-swirl"]
   }).flatMap(([theme, names]) => names.map((name) => `./assets/blank-stamps/${theme}-${name}.webp`)),
   ...["landscape", "portrait"].map((name) => `./assets/menu/menu-bg-${name}.webp`),
   ...["pixel", "coloring", "mosaic", "cbn", "stamping"].map((name) => `./assets/menu/icon-${name}.webp`),

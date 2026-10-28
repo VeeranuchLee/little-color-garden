@@ -447,6 +447,174 @@
       "file": "assets/stamps/stamp-weather-wind-swirl.webp",
       "width": 384,
       "height": 268
+    },
+    {
+      "id": "stamp-school-alarm-clock",
+      "title": "Alarm Clock",
+      "file": "assets/stamps/stamp-school-alarm-clock.webp",
+      "width": 271,
+      "height": 305
+    },
+    {
+      "id": "stamp-school-apple",
+      "title": "Apple",
+      "file": "assets/stamps/stamp-school-apple.webp",
+      "width": 266,
+      "height": 297
+    },
+    {
+      "id": "stamp-school-backpack",
+      "title": "Backpack",
+      "file": "assets/stamps/stamp-school-backpack.webp",
+      "width": 306,
+      "height": 319
+    },
+    {
+      "id": "stamp-school-book",
+      "title": "Book",
+      "file": "assets/stamps/stamp-school-book.webp",
+      "width": 282,
+      "height": 298
+    },
+    {
+      "id": "stamp-school-crayon-box",
+      "title": "Crayon Box",
+      "file": "assets/stamps/stamp-school-crayon-box.webp",
+      "width": 286,
+      "height": 299
+    },
+    {
+      "id": "stamp-school-globe",
+      "title": "Globe",
+      "file": "assets/stamps/stamp-school-globe.webp",
+      "width": 264,
+      "height": 334
+    },
+    {
+      "id": "stamp-school-lunchbox",
+      "title": "Lunchbox",
+      "file": "assets/stamps/stamp-school-lunchbox.webp",
+      "width": 294,
+      "height": 294
+    },
+    {
+      "id": "stamp-school-paint-palette",
+      "title": "Paint Palette",
+      "file": "assets/stamps/stamp-school-paint-palette.webp",
+      "width": 303,
+      "height": 299
+    },
+    {
+      "id": "stamp-school-pencil",
+      "title": "Pencil",
+      "file": "assets/stamps/stamp-school-pencil.webp",
+      "width": 359,
+      "height": 384
+    },
+    {
+      "id": "stamp-school-ruler",
+      "title": "Ruler",
+      "file": "assets/stamps/stamp-school-ruler.webp",
+      "width": 296,
+      "height": 303
+    },
+    {
+      "id": "stamp-school-school-bus",
+      "title": "School Bus",
+      "file": "assets/stamps/stamp-school-school-bus.webp",
+      "width": 319,
+      "height": 268
+    },
+    {
+      "id": "stamp-school-scissors",
+      "title": "Scissors",
+      "file": "assets/stamps/stamp-school-scissors.webp",
+      "width": 269,
+      "height": 285
+    },
+    {
+      "id": "stamp-unicorn-castle-tower",
+      "title": "Castle Tower",
+      "file": "assets/stamps/stamp-unicorn-castle-tower.webp",
+      "width": 259,
+      "height": 349
+    },
+    {
+      "id": "stamp-unicorn-crown",
+      "title": "Crown",
+      "file": "assets/stamps/stamp-unicorn-crown.webp",
+      "width": 285,
+      "height": 233
+    },
+    {
+      "id": "stamp-unicorn-cupcake",
+      "title": "Cupcake",
+      "file": "assets/stamps/stamp-unicorn-cupcake.webp",
+      "width": 263,
+      "height": 308
+    },
+    {
+      "id": "stamp-unicorn-heart-balloon",
+      "title": "Heart Balloon",
+      "file": "assets/stamps/stamp-unicorn-heart-balloon.webp",
+      "width": 254,
+      "height": 330
+    },
+    {
+      "id": "stamp-unicorn-moon-wand",
+      "title": "Moon Wand",
+      "file": "assets/stamps/stamp-unicorn-moon-wand.webp",
+      "width": 213,
+      "height": 321
+    },
+    {
+      "id": "stamp-unicorn-pastel-cloud",
+      "title": "Pastel Cloud",
+      "file": "assets/stamps/stamp-unicorn-pastel-cloud.webp",
+      "width": 340,
+      "height": 228
+    },
+    {
+      "id": "stamp-unicorn-rainbow",
+      "title": "Rainbow",
+      "file": "assets/stamps/stamp-unicorn-rainbow.webp",
+      "width": 352,
+      "height": 222
+    },
+    {
+      "id": "stamp-unicorn-sparkle-star",
+      "title": "Sparkle Star",
+      "file": "assets/stamps/stamp-unicorn-sparkle-star.webp",
+      "width": 259,
+      "height": 263
+    },
+    {
+      "id": "stamp-unicorn-star-wand",
+      "title": "Star Wand",
+      "file": "assets/stamps/stamp-unicorn-star-wand.webp",
+      "width": 225,
+      "height": 314
+    },
+    {
+      "id": "stamp-unicorn-unicorn",
+      "title": "Unicorn",
+      "file": "assets/stamps/stamp-unicorn-unicorn.webp",
+      "width": 381,
+      "height": 384
+    },
+    {
+      "id": "stamp-unicorn-unicorn-head",
+      "title": "Unicorn Head",
+      "file": "assets/stamps/stamp-unicorn-unicorn-head.webp",
+      "width": 264,
+      "height": 317
+    },
+    {
+      "id": "stamp-unicorn-winged-pony",
+      "title": "Winged Pony",
+      "file": "assets/stamps/stamp-unicorn-winged-pony.webp",
+      "width": 384,
+      "height": 364
     }
   ],
   "scenes": [
@@ -468,6 +636,41 @@
       "id": "scene-sky",
       "title": "Sky",
       "file": "assets/scenes/scene-sky.webp",
+      "width": 1200,
+      "height": 800
+    },
+    {
+      "id": "scene-princess",
+      "title": "Princess",
+      "file": "assets/scenes/scene-princess.webp",
+      "width": 1200,
+      "height": 800
+    },
+    {
+      "id": "scene-school",
+      "title": "School",
+      "file": "assets/scenes/scene-school.webp",
+      "width": 1200,
+      "height": 800
+    },
+    {
+      "id": "scene-space",
+      "title": "Space",
+      "file": "assets/scenes/scene-space.webp",
+      "width": 1200,
+      "height": 800
+    },
+    {
+      "id": "scene-undersea",
+      "title": "Undersea",
+      "file": "assets/scenes/scene-undersea.webp",
+      "width": 1200,
+      "height": 800
+    },
+    {
+      "id": "scene-unicorn",
+      "title": "Unicorn",
+      "file": "assets/scenes/scene-unicorn.webp",
       "width": 1200,
       "height": 800
     }

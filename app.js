@@ -192,47 +192,167 @@ function showMessage(message) {
   showMessage.timer = window.setTimeout(() => { studioMessage.textContent = ""; }, 3200);
 }
 
-function updateMusicButton(playing) {
-  menuMusicButton.classList.toggle("music-off", !playing);
-  menuMusicButton.setAttribute("aria-pressed", String(playing));
-  menuMusicButton.setAttribute("aria-label", playing ? "Stop music" : "Play music");
-  menuMusicButton.querySelector("span").innerHTML = "<svg viewBox=\"0 0 24 24\" aria-hidden=\"true\" focusable=\"false\"><path d=\"M9 18V5l11-2v13\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle cx=\"6\" cy=\"18\" r=\"3\" fill=\"currentColor\"/><circle cx=\"17\" cy=\"16\" r=\"3\" fill=\"currentColor\"/></svg>";
+// One music switch for the whole app (owner request 2026-10-25: "add calm
+// music to stamping"). The same bed, menu-bed.m4a, plays on the mode menu when
+// the child turns it on there, and softly while they are in Stamping -- the one
+// mode that is free play with no narration to listen for. Every music button
+// shows the same state, and the choice is remembered: a child who turned the
+// music off is not met by it in Stamping. Never chosen, Stamping plays it (the
+// owner asked for it there); the menu keeps its off-until-tapped start.
+const MUSIC_PREF_KEY = "little-color-garden:music";
+const STAMP_MUSIC_VOLUME = 0.12;
+const MUSIC_FADE_MS = 700;
+let musicPlace = "menu";
+let musicFadeTimer = null;
+
+function musicPreference() {
+  try { return localStorage.getItem(MUSIC_PREF_KEY); } catch (_) { return null; }
 }
 
-// The menu bed plays only on the mode menu (AUDIO-DIRECTION.md decision 10a).
-// Entering any mode stops it; the button itself is on the menu header.
+function rememberMusic(on) {
+  try { localStorage.setItem(MUSIC_PREF_KEY, on ? "on" : "off"); } catch (_) {}
+}
+
+function musicVolume() {
+  return musicPlace === "stamp" ? STAMP_MUSIC_VOLUME : MENU_MUSIC_VOLUME;
+}
+
+function updateMusicButton(playing) {
+  document.querySelectorAll("#modeMenuMusic, .stamp-music").forEach((button) => {
+    button.classList.toggle("music-off", !playing);
+    button.setAttribute("aria-pressed", String(playing));
+    button.setAttribute("aria-label", playing ? "Stop music" : "Play music");
+    button.querySelector("span").innerHTML = "<svg viewBox=\"0 0 24 24\" aria-hidden=\"true\" focusable=\"false\"><path d=\"M9 18V5l11-2v13\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><circle cx=\"6\" cy=\"18\" r=\"3\" fill=\"currentColor\"/><circle cx=\"17\" cy=\"16\" r=\"3\" fill=\"currentColor\"/></svg>";
+  });
+}
+
+// iPadOS ignores media-element volume, so on the iPad the fade is a short
+// ramp on desktop browsers and an immediate stop there; either way the bed
+// ends when the child leaves.
+function fadeMusic(target, thenPause) {
+  window.clearInterval(musicFadeTimer);
+  musicFadeTimer = null;
+  const from = menuMusic.volume;
+  const steps = Math.max(1, Math.round(MUSIC_FADE_MS / 50));
+  let step = 0;
+  musicFadeTimer = window.setInterval(() => {
+    step += 1;
+    menuMusic.volume = Math.max(0, Math.min(1, from + (target - from) * (step / steps)));
+    if (step >= steps) {
+      window.clearInterval(musicFadeTimer);
+      musicFadeTimer = null;
+      if (thenPause) menuMusic.pause();
+    }
+  }, 50);
+}
+
+function musicPlaying() {
+  return !menuMusic.paused && !menuMusic.dataset.leaving;
+}
+
+async function startMusic() {
+  delete menuMusic.dataset.leaving;
+  delete menuMusic.dataset.ducked;
+  if (!menuMusic.paused) {
+    fadeMusic(musicVolume(), false);
+    updateMusicButton(true);
+    return true;
+  }
+  window.clearInterval(musicFadeTimer);
+  menuMusic.volume = 0;
+  try {
+    await menuMusic.play();
+    fadeMusic(musicVolume(), false);
+    updateMusicButton(true);
+    return true;
+  } catch (_) {
+    updateMusicButton(false);
+    return false;
+  }
+}
+
+function fadeOutMusic() {
+  updateMusicButton(false);
+  if (menuMusic.paused) return;
+  menuMusic.dataset.leaving = "true";
+  fadeMusic(0, true);
+}
+
+// The menu bed plays only on the mode menu (AUDIO-DIRECTION.md decision 10a)
+// and, since 2026-10-25, in Stamping. Entering any other mode stops it.
 function stopMenuMusic() {
+  window.clearInterval(musicFadeTimer);
+  musicFadeTimer = null;
+  musicPlace = "menu";
   menuMusic.pause();
+  delete menuMusic.dataset.leaving;
   updateMusicButton(false);
 }
 
 function duckMenuMusic() {
   if (menuMusic && !menuMusic.paused && !menuMusic.dataset.ducked) {
     menuMusic.dataset.ducked = "true";
+    window.clearInterval(musicFadeTimer);
     menuMusic.volume = 0.04;
   }
 }
 
 function restoreMenuMusic() {
   if (menuMusic && menuMusic.dataset.ducked) {
-    menuMusic.volume = MENU_MUSIC_VOLUME;
+    menuMusic.volume = musicVolume();
     delete menuMusic.dataset.ducked;
   }
 }
 
 async function toggleMenuMusic() {
-  if (!menuMusic.paused) {
-    menuMusic.pause();
-    updateMusicButton(false);
+  if (musicPlaying()) {
+    rememberMusic(false);
+    fadeOutMusic();
     return;
   }
-  try {
-    await menuMusic.play();
-    updateMusicButton(true);
-  } catch (_) {
-    updateMusicButton(false);
-  }
+  rememberMusic(true);
+  await startMusic();
 }
+
+// Stamping's door in and out. Entering is always a tap (the mode card), so
+// the iOS autoplay rule is met; if the browser still refuses, the next tap
+// anywhere in Stamping tries once more.
+function enterStampMusic() {
+  musicPlace = "stamp";
+  if (musicPreference() === "off") {
+    if (!menuMusic.paused) fadeOutMusic();
+    else updateMusicButton(false);
+    return;
+  }
+  startMusic().then((playing) => {
+    if (playing || musicPlace !== "stamp") return;
+    const retry = () => {
+      if (musicPlace === "stamp" && musicPreference() !== "off" && menuMusic.paused) startMusic();
+    };
+    document.addEventListener("pointerdown", retry, { once: true, capture: true });
+  });
+}
+
+function leaveStampMusic() {
+  musicPlace = "menu";
+  fadeOutMusic();
+}
+
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden) {
+    if (!menuMusic.paused && musicPlace === "stamp") {
+      window.clearInterval(musicFadeTimer);
+      menuMusic.pause();
+      menuMusic.dataset.hiddenPause = "true";
+    }
+    return;
+  }
+  if (menuMusic.dataset.hiddenPause) {
+    delete menuMusic.dataset.hiddenPause;
+    if (musicPlace === "stamp" && musicPreference() !== "off") startMusic();
+    else updateMusicButton(false);
+  }
+});
 
 // Every line this app can ever speak, keyed by the id its rendered clip is
 // named by (assets/audio/voice/<id>.m4a). voice/lines.json is the canonical
@@ -1229,13 +1349,130 @@ document.querySelector("#modeCbn").addEventListener("click", () => {
   if (window.openCbnGallery) window.openCbnGallery();
 });
 document.querySelector("#modeStamp").addEventListener("click", () => {
-  stopMenuMusic();
+  // Stamping keeps the bed (owner 2026-10-25): no stop here, so music the
+  // child already turned on carries straight on, softer, into Stamping.
   if (window.openStampGallery) window.openStampGallery();
 });
 document.querySelector("#modeMenuVoice").addEventListener("click", () => speak("app.mode-menu-repeat"));
 
 // Other mode scripts stop the menu bed when they open their own screens.
 window.stopMenuMusic = stopMenuMusic;
+window.cgStampMusic = { enter: enterStampMusic, leave: leaveStampMusic, toggle: toggleMenuMusic };
+
+// Owner report 2026-10-25: "i see stickers that cut off at the edges."
+// A scrolling sticker tray used to end wherever the box ended, so the last
+// sticker showed as a sliver -- or sat under the size buttons. A whole-item
+// tray shows only whole stickers: it works out how many fit, gives the rest of
+// the run to a sticky "more" cue that covers whatever would peek in, and snaps
+// scrolling to whole stickers. The cue is a real tap target (>= 64px on its
+// long side): it pages forward, and from the end it goes back to the start.
+// The scroll axis is read from the CSS each time, so one tray can scroll
+// sideways in portrait and downwards in landscape.
+window.wholeItemTray = function wholeItemTray(scroller) {
+  if (!scroller || scroller.dataset.wholeTray) return;
+  scroller.dataset.wholeTray = "1";
+  scroller.classList.add("whole-tray");
+  const MIN_CUE = 64;
+  const cue = document.createElement("div");
+  cue.className = "tray-more";
+  cue.hidden = true;
+  cue.setAttribute("aria-hidden", "true");
+  cue.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  let horizontal = true;
+  let pitch = 0;
+  let shown = 1;
+  let queued = false;
+  let pendingReveal = null;
+
+  const items = () => [...scroller.children].filter((element) => element !== cue && !element.hidden && element.offsetWidth);
+
+  function updateEnd() {
+    const position = horizontal ? scroller.scrollLeft : scroller.scrollTop;
+    const max = horizontal ? scroller.scrollWidth - scroller.clientWidth : scroller.scrollHeight - scroller.clientHeight;
+    cue.classList.toggle("is-end", position >= max - 2);
+  }
+
+  function fit() {
+    queued = false;
+    if (scroller.lastElementChild !== cue) scroller.appendChild(cue);
+    const style = getComputedStyle(scroller);
+    horizontal = /(auto|scroll)/.test(style.overflowX);
+    scroller.classList.toggle("whole-tray--down", !horizontal);
+    const list = items();
+    const client = horizontal ? scroller.clientWidth : scroller.clientHeight;
+    if (!list.length || !client) return;
+    const size = horizontal ? list[0].offsetWidth : list[0].offsetHeight;
+    const gap = parseFloat(horizontal ? style.columnGap : style.rowGap) || 0;
+    const pad = parseFloat(horizontal ? style.paddingLeft : style.paddingTop) || 0;
+    // Snap stickers to just inside the leading padding (not to the bare
+    // edge), so the counted run starts where the first sticker does.
+    scroller.style.scrollPadding = horizontal ? `0 0 0 ${pad}px` : `${pad}px 0 0 0`;
+    const tracks = new Set(list.map((element) => (horizontal ? element.offsetLeft : element.offsetTop))).size;
+    pitch = size + gap;
+    if (pad + tracks * pitch - gap <= client + 0.5) {
+      cue.hidden = true;
+      pendingReveal = null;
+      return;
+    }
+    shown = Math.max(1, Math.floor((client - pad - MIN_CUE) / pitch));
+    const cueSize = Math.max(0, client - pad - shown * pitch);
+    cue.hidden = false;
+    cue.style.width = horizontal ? `${cueSize}px` : "";
+    cue.style.height = horizontal ? "" : `${cueSize}px`;
+    alignToWholeItem(list);
+    updateEnd();
+  }
+
+  // Controller QA 2026-10-25: a scroll set from code (a scene opening on its
+  // group) could land between two items, so the first one showed only its
+  // lower half. Every fit now settles the scroll on a whole-item boundary --
+  // a multiple of the pitch from the start -- and a revealed item is brought
+  // to the leading edge if it is not already wholly in view.
+  function alignToWholeItem(list) {
+    if (!pitch) return;
+    const offset = (element) => (horizontal ? element.offsetLeft : element.offsetTop);
+    const position = horizontal ? scroller.scrollLeft : scroller.scrollTop;
+    const max = horizontal ? scroller.scrollWidth - scroller.clientWidth : scroller.scrollHeight - scroller.clientHeight;
+    let target = Math.round(position / pitch);
+    if (pendingReveal && list.includes(pendingReveal)) {
+      const index = Math.round((offset(pendingReveal) - offset(list[0])) / pitch);
+      if (index < target || index > target + shown - 1) target = index;
+    }
+    pendingReveal = null;
+    const steps = Math.max(0, Math.min(target, Math.floor((max + 0.5) / pitch)));
+    const next = steps * pitch;
+    if (Math.abs(next - position) > 0.5) {
+      scroller.scrollTo(horizontal ? { left: next, behavior: "instant" } : { top: next, behavior: "instant" });
+    }
+  }
+
+  function queueFit() {
+    if (queued) return;
+    queued = true;
+    window.requestAnimationFrame(fit);
+  }
+
+  // Bring one item wholly into view (used when a scene opens on its group).
+  scroller.revealWhole = (element) => {
+    pendingReveal = element;
+    queueFit();
+  };
+
+  cue.addEventListener("click", () => {
+    const step = Math.max(1, shown) * pitch;
+    const atEnd = cue.classList.contains("is-end");
+    const target = atEnd ? 0 : (horizontal ? scroller.scrollLeft : scroller.scrollTop) + step;
+    scroller.scrollTo(horizontal ? { left: target, behavior: "smooth" } : { top: target, behavior: "smooth" });
+    if (window.tinyPop) window.tinyPop(atEnd ? 380 : 460, 0.04);
+  });
+  scroller.addEventListener("scroll", updateEnd, { passive: true });
+  if (window.ResizeObserver) new ResizeObserver(queueFit).observe(scroller);
+  window.addEventListener("resize", queueFit);
+  new MutationObserver((records) => {
+    if (records.some((record) => record.target !== cue && ![...record.addedNodes].includes(cue))) queueFit();
+  }).observe(scroller, { childList: true, subtree: true, attributes: true, attributeFilter: ["hidden"] });
+  queueFit();
+};
 
 function selectTool(tool) {
   currentTool = tool;

@@ -1097,6 +1097,42 @@ button:disabled {
   overscroll-behavior: contain;
 }
 
+/* Owner report 2026-10-25: "i see stickers that cut off at the edges."
+   Whole-item trays (window.wholeItemTray in app.js): the run ends in a sticky
+   "more" cue sized so only whole stickers show beside it, and scrolling snaps
+   to whole stickers. The leading padding leaves room for the selected
+   sticker's outline; the trailing padding is zero so the scroll end lands on
+   a whole sticker. */
+.whole-tray {
+  scroll-snap-type: x mandatory;
+  padding-inline-end: 0 !important;
+}
+.whole-tray--down {
+  scroll-snap-type: y mandatory;
+  padding-bottom: 0 !important;
+}
+.whole-tray > * { flex-shrink: 0; scroll-snap-align: start; }
+.tray-more {
+  position: sticky;
+  right: 0;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  align-self: stretch;
+  scroll-snap-align: none !important;
+  border-radius: 18px;
+  background: linear-gradient(#ffffff, #efe6ff);
+  box-shadow: inset 0 0 0 3px #fff, 0 4px 0 #b8a8da;
+  color: #6f45c8;
+  cursor: pointer;
+}
+.tray-more[hidden] { display: none; }
+.whole-tray--down > .tray-more { right: auto; bottom: 0; }
+.tray-more svg { width: 30px; height: 30px; transition: transform .2s ease; }
+.whole-tray--down > .tray-more svg { transform: rotate(90deg); }
+.tray-more.is-end svg { transform: rotate(180deg); }
+.whole-tray--down > .tray-more.is-end svg { transform: rotate(-90deg); }
+
 .stamp-category-tray button {
   width: 64px;
   height: 64px;
@@ -1128,7 +1164,6 @@ button:disabled {
   flex-wrap: nowrap;
   justify-content: flex-start;
   overscroll-behavior: contain;
-  scrollbar-gutter: stable;
 }
 
 .stamp-tray button {
@@ -1153,13 +1188,35 @@ button:disabled {
 
 .stamp-sizes button {
   min-width: 96px;
-  min-height: 48px;
+  min-height: 64px;
   border: 0;
   border-radius: 18px;
   background: #fff;
   color: #4a3d67;
   font: 800 17px system-ui;
 }
+
+/* Turn and mirror for the selected stamp (owner request 2026-10-25). Drawn
+   icons, 64px and up; hidden by visibility so the size buttons never move. */
+.stamp-sizes .stamp-transform {
+  display: grid;
+  place-items: center;
+  min-width: 72px;
+  width: 72px;
+  padding: 0;
+  background: linear-gradient(145deg, #9d78f1, #7452dc);
+  color: #fff;
+  font-size: 38px;
+  box-shadow: 0 4px 0 #4d319d;
+}
+.stamp-sizes .stamp-transform:active { transform: translateY(2px); box-shadow: 0 2px 0 #4d319d; }
+.stamp-sizes .stamp-transform.is-hidden { visibility: hidden; }
+.stamp-tray button.stamp-tile { padding: 3px; background: transparent; }
+
+/* Stamping's music button sits with the other round header buttons. */
+.stamp-music { position: relative; flex: 0 0 auto; font-size: 30px; }
+.stamp-music > span { display: block; width: 1em; height: 1em; }
+.stamp-music svg { display: block; width: 100%; height: 100%; }
 
 #stampClear.is-armed {
   outline: 5px solid #ffd83d;
@@ -1261,36 +1318,46 @@ button:disabled {
     align-content: center;
   }
 
-  .stamp-controls {
-    width: 82px;
-    grid-template-rows: auto minmax(0, 1fr) auto;
+  /* Owner report 2026-10-25: the old 82px side column stacked groups, stamps
+     and the size buttons; the groups took ~440px, the stamp tray was left one
+     72px row, and the size buttons sat on top of it (the half-covered apple).
+     Now the groups and the stamps are two full-height columns, and the size
+     buttons have their own row under the page, which is width-bound in
+     landscape and leaves room there. */
+  .stamp-board {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    grid-template-rows: minmax(0, 1fr) auto;
+    gap: 8px;
   }
-
-  .stamp-category-tray {
-    display: grid;
-    grid-template-columns: 64px;
-    align-content: start;
-    justify-content: center;
-    overflow-x: hidden;
-    overflow-y: auto;
-    padding: 4px;
+  .stamp-controls { display: contents; }
+  .stamp-board .activity-stage {
+    grid-column: 1;
+    grid-row: 1;
+    grid-template: minmax(0, 1fr) / minmax(0, 1fr);
   }
+  .stamp-board .activity-stage canvas { max-height: 100%; }
 
+  .stamp-category-tray,
   .stamp-tray {
-    display: grid;
-    grid-template-columns: 68px;
-    align-content: start;
-    justify-content: center;
+    grid-row: 1 / -1;
+    flex-direction: column;
+    align-items: center;
+    min-height: 0;
     overflow-x: hidden;
     overflow-y: auto;
-    padding: 4px;
+    padding: 8px 8px 0;
   }
+  .stamp-category-tray { grid-column: 2; width: 82px; }
+  .stamp-tray { grid-column: 3; width: 86px; }
   .stamp-sizes {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 6px;
+    grid-column: 1;
+    grid-row: 2;
+    flex-direction: row;
+    justify-content: center;
+    padding-bottom: 0;
   }
-  .stamp-sizes button { min-width: 0; width: 100%; }
+  .stamp-sizes button { min-width: 120px; }
+  .stamp-sizes .stamp-transform { min-width: 72px; }
 }
 
 @media (max-width: 900px) {
@@ -1317,14 +1384,14 @@ button:disabled {
     justify-content: flex-start;
     overflow-x: auto;
     overflow-y: hidden;
-    padding: 4px 2px;
+    padding: 8px 0 8px 8px;
   }
   .stamp-tray {
     flex-wrap: nowrap;
     justify-content: flex-start;
     overflow-x: auto;
     overflow-y: hidden;
-    padding: 4px 2px;
+    padding: 8px 0 8px 8px;
   }
   #stampGallery { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
@@ -1417,6 +1484,10 @@ button:disabled {
 .blank-screen > .canvas-stage { grid-area: canvas; padding: 4px 8px 7px; }
 .blank-screen > .studio-tools { grid-area: studio; padding-block: 4px 5px; }
 .blank-screen > .color-palette { grid-area: palette; }
+/* blank-page.js sizes the frame to the paper's own shape (owner report
+   2026-10-26): a picture keeps its proportions when the iPad turns, and a
+   picture drawn the other way up sits whole, centred, in the space. These
+   100% values are only the first-paint fallback. */
 .blank-screen .paper-frame {
   width: 100%;
   height: 100%;
@@ -1426,20 +1497,38 @@ button:disabled {
   border-radius: 22px;
   place-items: stretch;
 }
-.blank-tools .primary-tool { flex: 1 0 64px; min-width: 64px; min-height: 68px; padding: 6px 4px; }
-.blank-tools .primary-tool > span:first-child { font-size: 27px; }
-.blank-history { min-width: 64px; min-height: 64px; font-size: 30px; }
-.blank-history:disabled { opacity: .38; filter: grayscale(.7); }
-.blank-choice-tray, .blank-category-tray, .blank-stamp-tray { display: flex; gap: 8px; overflow-x: auto; padding: 7px 3px; scrollbar-width: thin; }
+/* Tool tiles (owner brief, 2026-10-28): the icon sits centred, about 32px,
+   with its label centred beneath -- a row of even tiles instead of wide pills
+   with a tiny icon tucked into the corner. All six icons are drawn in one
+   style and weight (see index.html), and the strip stays one row at 1024x768
+   and 768x1024: six 78px tiles plus gaps want ~510px of the ~730px the
+   portrait strip offers, with no horizontal page scroll. */
+.blank-tools .primary-tool { flex: 1 0 78px; min-width: 78px; min-height: 68px; display: grid; place-content: center; justify-items: center; gap: 3px; padding: 8px 4px; }
+.blank-tools .primary-tool > span:first-child { display: grid; place-items: center; font-size: 32px; line-height: 1; }
+/* Undo/Redo (owner, 2026-10-28, two blank grey squares between the speaker
+   and the broom: "and what's the gray ones?"). They were white arrows on a
+   whitened, greyscaled disabled button, so disabled they read as empty chips.
+   Now: a calm blue button like their neighbours while there is history to
+   step through, and the same arrow only faded (40%) on a light tile in the
+   bar's own style when there is not -- an arrow is always visible. */
+.blank-history { min-width: 64px; min-height: 64px; font-size: 30px; background: linear-gradient(145deg, #6ec6f2, #3f9de0); }
+.blank-history:disabled { background: rgba(255,255,255,.62); color: #4c3e72; opacity: 1; filter: none; }
+.blank-history:disabled svg { opacity: .4; }
+#blankRedo svg { transform: scaleX(-1); }
+.blank-choice-tray, .blank-category-tray, .blank-stamp-tray { display: flex; gap: 8px; overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x proximity; padding: 7px 3px; scrollbar-width: thin; }
+.blank-category-tray, .blank-stamp-tray { padding: 8px 0 10px 8px; }
 .blank-choice-tray[hidden], .blank-stamp-panel[hidden] { display: none; }
 .blank-choice-tray button, .blank-category-tray button, .blank-stamp-choice { flex: 0 0 64px; min-width: 64px; min-height: 64px; border: 3px solid #fff; border-radius: 18px; background: linear-gradient(#fff, #f4ebff); box-shadow: 0 4px 0 rgba(75,48,121,.18); color: #60439b; font: 800 18px/1 system-ui, sans-serif; }
 .blank-choice-tray button { font-size: 34px; }
 /* Slightly larger pack buttons and sticker thumbnails (owner brief, 2026-10-05):
    young thumbs need generous tap targets, and a sticker you can see clearly is
    a sticker you can choose confidently. */
-.blank-category-tray button { flex: 0 0 96px; height: 104px; padding: 4px; white-space: nowrap; overflow: hidden; }
+.blank-category-tray button { flex: 0 0 96px; height: 104px; padding: 4px; white-space: nowrap; overflow: hidden; scroll-snap-align: start; }
 .blank-category-tray button small { display: block; overflow: hidden; font-size: 11px; line-height: 15px; text-overflow: ellipsis; }
-.blank-pack-picture { display: grid; place-items: center; width: 72px; height: 72px; margin: 0 auto 2px; overflow: hidden; }
+/* grid-template pins the one cell to 72x72 so the cover's height:100%
+   resolves: without it a tall cover grew past the box and was cropped (the
+   Mermaid pack showed only the tip of its tail; owner report 2026-10-25). */
+.blank-pack-picture { display: grid; grid-template: 100% / 100%; place-items: center; width: 72px; height: 72px; margin: 0 auto 2px; overflow: hidden; }
 .blank-pack-picture img { display: block; width: 100%; height: 100%; object-fit: contain; }
 .blank-pack-picture--glyph { border-radius: 13px; background: linear-gradient(#fff7ad, #ffb8dc); font-size: 25px; color: #7148ad; }
 .blank-choice-tray .is-selected, .blank-category-tray .is-selected, .blank-stamp-choice.is-selected { outline: 5px solid #ffe26a; outline-offset: 1px; background: #fff8c8; }
@@ -1448,7 +1537,9 @@ button:disabled {
 .blank-stamp-tray { min-height: 88px; }
 .blank-stamp-choice { flex-basis: 88px; width: 88px; height: 88px; padding: 6px; overflow: hidden; }
 .blank-stamp-choice img { display: block; width: 100%; height: 100%; object-fit: contain; }
-.blank-stamp-choice--tile { font-size: 38px; color: #7148ad; background: linear-gradient(#fff7ad, #ffb8dc); }
+/* Tiles are the shared tile pictures (sticker-kit.js); the text fallback keeps the old look. */
+.blank-stamp-choice--tile { padding: 4px; font-size: 38px; color: #7148ad; background: linear-gradient(#fff7ad, #ffb8dc); }
+.blank-stamp-choice--tile:has(img) { background: #fff; }
 
 /* Placed stickers (owner brief, 2026-10-05): live objects above the paper, so
    they stay draggable, resizable and deletable after placement. The layer is
@@ -1472,18 +1563,38 @@ button:disabled {
 }
 .blank-sticker:active { cursor: grabbing; }
 .blank-sticker img { display: block; width: 100%; height: auto; pointer-events: none; }
-.blank-sticker__glyph {
-  display: grid; place-items: center; aspect-ratio: 1; width: 100%;
-  border: .07em solid #7453bd; border-radius: 16%;
-  background: linear-gradient(#fff7ad, #ffb8dc); color: #7148ad;
-  font: 800 1em/1 ui-rounded, system-ui, sans-serif;
+/* The art turns and mirrors inside the sticker (owner request 2026-10-25);
+   the sticker's own box is the turned art's bounding box, so the dashed ring,
+   the delete control and the resize grip stay upright and keep-on-page
+   measures what the child sees. */
+.blank-sticker__art { position: absolute; left: 50%; top: 50%; pointer-events: none; }
+.blank-sticker__art > img { width: 100%; height: 100%; }
+/* In the header's own row, after a small gap; the space is kept while no
+   sticker is selected so the other buttons never jump when one is. */
+.blank-sticker-actions { display: flex; gap: inherit; margin-left: 6px; }
+.blank-sticker-actions[hidden] { display: flex; visibility: hidden; }
+.tool-button--turn { background: linear-gradient(145deg, #9d78f1, #7452dc); font-size: 38px; min-width: 64px; min-height: 64px; }
+.tool-button--turn, .stamp-transform { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; touch-action: manipulation; }
+/* The selected sticker's dashed ring (owner report 2026-10-26: "it leaves gray
+   trail after put there and drag/adjust around the area"). The ring used to be
+   an outline drawn outside the sticker plus a CSS drop-shadow filter on the
+   whole moving sticker. WebKit does not always repaint the area a filtered,
+   outlined element leaves as it moves, so the grey-purple shadow of the ring
+   stayed behind wherever the sticker went. The ring is now an ordinary child
+   box with no filter, and the selected sticker moves on its own compositing
+   layer, so the iPad moves it rather than repainting the paper under it. */
+.blank-sticker::before {
+  content: ""; position: absolute; inset: -10px; display: none;
+  border: 5px dashed #ffe26a; border-radius: 16px; pointer-events: none;
 }
-.blank-sticker.is-selected { outline: 5px dashed #ffe26a; outline-offset: 5px; border-radius: 12px; filter: drop-shadow(0 6px 10px rgba(64, 48, 109, .28)); }
+.blank-sticker.is-selected::before { display: block; }
+.blank-sticker.is-selected { will-change: transform; }
 /* The delete control and the resize handle belong to the selected sticker only:
    at rest a sticker is just art on the page, like every other hotspot here. */
-.blank-sticker__delete, .blank-sticker__handle { position: absolute; display: none; }
+.blank-sticker__delete, .blank-sticker__handle, .blank-sticker__turn { position: absolute; display: none; }
 .blank-sticker.is-selected .blank-sticker__delete,
-.blank-sticker.is-selected .blank-sticker__handle { display: grid; }
+.blank-sticker.is-selected .blank-sticker__handle,
+.blank-sticker.is-selected .blank-sticker__turn { display: grid; }
 .blank-sticker__delete {
   top: -16px; right: -16px; width: 46px; height: 46px; place-items: center;
   border: 3px solid #fff; border-radius: 50%;
@@ -1496,6 +1607,22 @@ button:disabled {
   border: 3px solid #7453bd; border-radius: 50%; background: #fff;
   cursor: nwse-resize; box-shadow: 0 4px 0 rgba(75, 48, 121, .25);
 }
+.blank-sticker__turn {
+  left: -15px; bottom: -15px; width: 46px; height: 46px; padding: 8px;
+  place-items: center; border: 3px solid #7453bd; border-radius: 50%;
+  background: #fff; color: #7453bd; cursor: grab;
+  box-shadow: 0 4px 0 rgba(75, 48, 121, .25);
+  touch-action: pinch-zoom; -webkit-user-select: none; user-select: none;
+  -webkit-touch-callout: none;
+}
+.blank-sticker__turn::before { content: ""; position: absolute; inset: -9px; }
+.blank-sticker__turn svg { display: block; width: 100%; height: 100%; pointer-events: none; }
+.blank-sticker.is-at-top .blank-sticker__delete { top: 4px; }
+.blank-sticker.is-at-left .blank-sticker__turn { left: 4px; }
+.blank-sticker.is-at-right .blank-sticker__delete,
+.blank-sticker.is-at-right .blank-sticker__handle { right: 4px; }
+.blank-sticker.is-at-bottom .blank-sticker__handle { bottom: 4px; }
+.blank-sticker.is-at-bottom .blank-sticker__turn { bottom: 4px; }
 .blank-sticker__handle::after {
   content: ""; width: 15px; height: 15px;
   border-right: 4px solid #7453bd; border-bottom: 4px solid #7453bd;
@@ -1525,23 +1652,11 @@ button:disabled {
   .blank-tools { width: 100%; margin: 0; }
 }
 
-/* The eraser's pink block, the same glyph the brush screen's eraser button
-   wears, sized to sit inside a primary-tool button. */
-.eraser-chip {
-  display: grid;
-  place-items: center;
-  height: 25px;
-}
-
-.eraser-chip i {
-  display: block;
-  width: 31px;
-  height: 21px;
-  border: 3px solid #ae4e7f;
-  border-radius: 7px;
-  background: linear-gradient(90deg, #ff98c5 0 63%, #fff 63%);
-  transform: rotate(-33deg);
-}
+/* The Magic picker's choices (owner brief, 2026-10-28): each button carries a
+   small canvas painted by that brush's own drawing code -- a real sample of
+   the stroke, never a text label. */
+.blank-magic-tray button { display: grid; place-items: center; }
+.blank-magic-tray canvas { display: block; width: 56px; height: 28px; }
 
 /* ==========================================================================
    Pixel Mosaic mode — a pegboard-style tile toy (owner concept, 2026-08-27).

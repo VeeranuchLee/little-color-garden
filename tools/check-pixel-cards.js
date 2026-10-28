@@ -381,6 +381,11 @@ vm.runInNewContext(blankPaletteProgram, {
   window: blankWindow,
   document: blankDocument,
 }, { filename: "app.js#blank-palette" });
+// blank-page.js reads its sticker packs from the shared kit (2026-10-25).
+vm.runInNewContext(fs.readFileSync(path.join(appDir, "sticker-kit.js"), "utf8"), {
+  window: blankWindow,
+  document: blankDocument,
+}, { filename: "sticker-kit.js" });
 vm.runInNewContext(fs.readFileSync(path.join(appDir, "blank-page.js"), "utf8"), {
   window: blankWindow,
   document: blankDocument,
