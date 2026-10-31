@@ -28,7 +28,7 @@
 // 2026-10-25 (no version bump; set at merge): Stamping themes -- five scenes, the
 //      Unicorn and School stamp packs, shared sticker-kit.js (letter/number tiles, sticker packs and the
 //      rotate/mirror helpers), rotate and mirror for stamps and stickers.
-const CACHE_NAME = "little-color-garden-v39";
+const CACHE_NAME = "little-color-garden-v40";
 const PAGE_IDS = [
   "solar-system",
   "space-kid",
